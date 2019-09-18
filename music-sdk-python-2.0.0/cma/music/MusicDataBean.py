@@ -177,14 +177,14 @@ class RetFilesInfo(object):
         strr =""
         for i in range(len(self.fileInfos)):            
             strr += str(self.fileInfos[i].fileName)
-            print  str(self.fileInfos[i].fileName)
+            print(str(self.fileInfos[i].fileName))
             strr += str(self.fileInfos[i].savePath)
             strr += str(self.fileInfos[i].suffix)
             strr += str(self.fileInfos[i].size)
             strr += str(self.fileInfos[i].fileUrl)
             strr += str(self.fileInfos[i].imgBase64)
             strr += str(self.fileInfos[i].attributes)
-        print strr   
+        print(strr)
         
         return  strr #(self.fileInfos)                   
  

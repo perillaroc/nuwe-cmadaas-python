@@ -13,11 +13,10 @@ Modified in 2019/3/6
 '''
 
 import os,socket
-import string,StringIO
-from io import BytesIO
-import ConfigParser
+from io import BytesIO, StringIO
+import configparser
 import pycurl
-import urllib2
+from urllib.request import urlopen
 from cma.music import apiinterface_pb2
 from cma.music import DataFormatUtils
 import json
@@ -30,7 +29,7 @@ class DataQueryClient(object):
 
     language = "Python"; #客户端语言
     clientVersion = "V2.0.0"; #客户端版本
-    getwayFlag = "\"flag\":\"slb\""; #网关返回错误标识
+    getwayFlag = b"\"flag\":\"slb\""; #网关返回错误标识
 
     def __init__(self, serverIp=None, serverPort=None, serviceNodeId=None, connTimeout=None, readTimeout=None, configFile=None):
         '''
@@ -38,7 +37,7 @@ class DataQueryClient(object):
         '''
         #get config file
         config = ""
-        if(configFile is not None):           
+        if(configFile is not None):
             if(not os.path.exists(configFile)):
                 raise RuntimeError("config file is not exist.")
             else:
@@ -50,7 +49,7 @@ class DataQueryClient(object):
             else:
                 raise RuntimeError("default config file is not exist.")
         # read config file object
-        cf = ConfigParser.ConfigParser()
+        cf = configparser.ConfigParser()
         cf.read(config)
         # get server IP
         if(serverIp is None):
@@ -69,25 +68,25 @@ class DataQueryClient(object):
             self.serverId = serviceNodeId
         # get connect time out and read time out
         if(connTimeout is None):
-            self.connTimeout = string.atoi(cf.get("Pb", "music_connTimeout"))
+            self.connTimeout = int(cf.get("Pb", "music_connTimeout"))
         else:
             if connTimeout.isdigit():
-                self.connTimeout = string.atoi(connTimeout)
+                self.connTimeout = int(connTimeout)
         #print self.connTimeout
         if(readTimeout is None):
-            self.readTimeout = string.atoi(cf.get("Pb", "music_readTimeout"))
+            self.readTimeout = int(cf.get("Pb", "music_readTimeout"))
         else:
             if readTimeout.isdigit():
-                self.readTimeout = string.atoi(readTimeout)
+                self.readTimeout = int(readTimeout)
         #print self.readTimeout
-        
+
         # 本机IP
         self.clientIp = socket.gethostbyname(socket.gethostname())
         self.basicUrl = "http://%s:%s/music-ws/api?serviceNodeId=%s&" # 数据读取URL(基本路径) http://ip:port/music-ws/api?serviceNodeId=serverId&
-         
+
         # return error code     
         self.OTHER_ERROR = -10001; #其他异常
-    
+
     def callAPI_to_array2D(self, userId, pwd, interfaceId, params,serverId=None):
         '''
                      站点资料（要素）数据检索
@@ -97,9 +96,9 @@ class DataQueryClient(object):
         method = 'callAPI_to_array2D'
         # 构建music protobuf服务器地址，将请求参数拼接为url
         newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
-        print 'URL: ' + newUrl
+        print('URL: ' + newUrl)
         try:
-            buf = StringIO.StringIO()
+            buf = BytesIO()
             response = pycurl.Curl()
             response.setopt(pycurl.URL, newUrl)
             response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)
@@ -109,11 +108,11 @@ class DataQueryClient(object):
             response.perform()
             response.close()
         except: #http error
-            print "Error retrieving data"
+            print("Error retrieving data")
             retArray2D.request.errorCode = self.OTHER_ERROR
             retArray2D.request.errorMessage = "Error retrieving data"
             return retArray2D
-            
+
         RetByteArraydata = buf.getvalue()
         if(RetByteArraydata.__contains__(DataQueryClient.getwayFlag)): #网关错误
             getwayInfo = json.loads(RetByteArraydata)
@@ -129,9 +128,9 @@ class DataQueryClient(object):
             pbRetArray2D.ParseFromString(RetByteArraydata)
             utils = DataFormatUtils.Utils()
             retArray2D = utils.getArray2D(pbRetArray2D)
-            
+
         return retArray2D
-     
+
     def callAPI_to_dataBlock(self,userId, pwd, interfaceId, params,serverId=None):
         '''
                     数据块检索
@@ -141,9 +140,9 @@ class DataQueryClient(object):
         method = 'callAPI_to_dataBlock'
         # 构建music protobuf服务器地址，将请求参数拼接为url
         newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
-        print 'URL: ' + newUrl
+        print('URL: ' + newUrl)
         try:
-            buf = StringIO.StringIO()  
+            buf = BytesIO()
             response = pycurl.Curl()
             response.setopt(pycurl.URL, newUrl)
             response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)
@@ -153,11 +152,11 @@ class DataQueryClient(object):
             response.perform()
             response.close()
         except: #http error
-            print "Error retrieving data"
+            print("Error retrieving data")
             retDataBlock.request.errorCode = self.OTHER_ERROR
             retDataBlock.request.errorMessage = "Error retrieving data"
             return retDataBlock
-            
+
         RetByteArraydata = buf.getvalue()
         if(RetByteArraydata.__contains__(DataQueryClient.getwayFlag)): #网关错误
             getwayInfo = json.loads(RetByteArraydata)
@@ -174,7 +173,7 @@ class DataQueryClient(object):
             # 格式转换
             utils = DataFormatUtils.Utils()
             retDataBlock = utils.getDataBlock(pbDataBlock)
-            
+
         return retDataBlock
 
     def callAPI_to_gridArray2D(self, userId, pwd, interfaceId, params,serverId=None):
@@ -186,9 +185,9 @@ class DataQueryClient(object):
         method = 'callAPI_to_gridArray2D'
         # 构建music protobuf服务器地址，将请求参数拼接为url
         newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
-        print 'URL: ' + newUrl
+        print('URL: ' + newUrl)
         try:
-            buf = StringIO.StringIO()  
+            buf = BytesIO()
             response = pycurl.Curl()
             response.setopt(pycurl.URL, newUrl)
             response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)
@@ -198,11 +197,11 @@ class DataQueryClient(object):
             response.perform()
             response.close()
         except: #http error
-            print "Error retrieving data"
+            print("Error retrieving data")
             retGridArray2D.request.errorCode = self.OTHER_ERROR
             retGridArray2D.request.errorMessage = "Error retrieving data"
             return retGridArray2D
-            
+
         RetByteArraydata = buf.getvalue()
         if(RetByteArraydata.__contains__(DataQueryClient.getwayFlag)): #网关错误
             getwayInfo = json.loads(RetByteArraydata)
@@ -219,9 +218,9 @@ class DataQueryClient(object):
             # 格式转换
             utils = DataFormatUtils.Utils()
             retGridArray2D = utils.getGridArray2D(pbGridArray2D)
-            
+
         return retGridArray2D
-        
+
     def callAPI_to_fileList(self, userId, pwd, interfaceId, params,serverId=None):
         '''
                      文件存储信息列表检索
@@ -231,9 +230,9 @@ class DataQueryClient(object):
         method = 'callAPI_to_fileList'
         # 构建music protobuf服务器地址，将请求参数拼接为url
         newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
-        print 'URL: ' + newUrl
+        print('URL: ' + newUrl)
         try:
-            buf = StringIO.StringIO()  
+            buf = BytesIO()
             response = pycurl.Curl()
             response.setopt(pycurl.URL, newUrl)
             response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)
@@ -243,11 +242,11 @@ class DataQueryClient(object):
             response.perform()
             response.close()
         except: #http error
-            print "Error retrieving data"
+            print("Error retrieving data")
             retFilesInfo.request.errorCode = self.OTHER_ERROR
             retFilesInfo.request.errorMessage = "Error retrieving data"
             return retFilesInfo
-            
+
         RetByteArraydata = buf.getvalue()
         if(RetByteArraydata.__contains__(DataQueryClient.getwayFlag)): #网关错误
             getwayInfo = json.loads(RetByteArraydata)
@@ -264,7 +263,7 @@ class DataQueryClient(object):
             # 格式转换，生成music的结果
             utils = DataFormatUtils.Utils()
             retFilesInfo = utils.getRetFilesInfo(pbRetFilesInfo)
-            
+
         return retFilesInfo
 
     def callAPI_to_serializedStr(self, userId, pwd, interfaceId, params, dataFormat,serverId=None):
@@ -278,21 +277,21 @@ class DataQueryClient(object):
             params['dataFormat'] = dataFormat
         # 构建music protobuf服务器地址，将请求参数拼接为url
         newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
-        print 'URL: ' + newUrl
+        print('URL: ' + newUrl)
         try:
-            buf = StringIO.StringIO()  
+            buf = BytesIO()
             response = pycurl.Curl()
             response.setopt(pycurl.URL, newUrl)
-            response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)  
+            response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)
             response.setopt(pycurl.TIMEOUT, self.readTimeout)
             response.setopt(pycurl.WRITEFUNCTION, buf.write)
             #response.setopt(pycurl.WRITEDATA, value)
             response.perform()
             response.close()
         except: #http error
-            print "Error retrieving data"
+            print("Error retrieving data")
             return "Error retrieving data"
-        
+
         RetByteArraydata = buf.getvalue()
         if(RetByteArraydata.__contains__(DataQueryClient.getwayFlag)): #网关错误
             getwayInfo = json.loads(RetByteArraydata)
@@ -303,7 +302,7 @@ class DataQueryClient(object):
         else: #服务端返回结果
             # 反序列化为的结果string
             retStr = RetByteArraydata.decode('utf8')
-            
+
         return retStr
 
     def callAPI_to_saveAsFile(self, userId, pwd, interfaceId, params, dataFormat, fileName,serverId=None):
@@ -323,23 +322,23 @@ class DataQueryClient(object):
         params['savepath'] = fileName
         # 构建music protobuf服务器地址，将请求参数拼接为url
         newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
-        print 'URL: ' + newUrl
+        print('URL: ' + newUrl)
         try:
-            buf = StringIO.StringIO()  
+            buf = BytesIO()
             response = pycurl.Curl()
             response.setopt(pycurl.URL, newUrl)
-            response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)  
+            response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)
             response.setopt(pycurl.TIMEOUT, self.readTimeout)
             response.setopt(pycurl.WRITEFUNCTION, buf.write)
             #response.setopt(pycurl.WRITEDATA, value)
             response.perform()
             response.close()
         except: #http error
-            print "Error retrieving data"
+            print("Error retrieving data")
             retFilesInfo.request.errorCode = self.OTHER_ERROR
             retFilesInfo.request.errorMessage = "Error retrieving data"
             return retFilesInfo
-            
+
         RetByteArraydata = buf.getvalue()
         if(RetByteArraydata.__contains__(DataQueryClient.getwayFlag)): #网关错误
             getwayInfo = json.loads(RetByteArraydata)
@@ -364,26 +363,26 @@ class DataQueryClient(object):
                         retFilesInfo.request.errorCode = result[0]
                         retFilesInfo.request.errorMessage = result[1]
                         return retFilesInfo
-            
+
         return retFilesInfo
 
     def callAPI_to_downFile(self, userId, pwd, interfaceId,params, fileDir, serverId=None):
         '''
                     检索并下载文件
         '''
-        file_Dir = fileDir 
+        file_Dir = fileDir
         if file_Dir.endswith(os.sep):
-            pass 
-        else: 
+            pass
+        else:
             file_Dir = file_Dir + os.sep
         retFilesInfo = RetFilesInfo()
         # 所要调用的方法名称   打印该函数名称  
         method = 'callAPI_to_fileList'
         # 构建music protobuf服务器地址，将请求参数拼接为url
         newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
-        print 'URL: ' + newUrl
+        print('URL: ' + newUrl)
         try:
-            buf = StringIO.StringIO()  
+            buf = BytesIO()
             response = pycurl.Curl()
             response.setopt(pycurl.URL, newUrl)
             response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)
@@ -393,11 +392,11 @@ class DataQueryClient(object):
             response.perform()
             response.close()
         except: #http error
-            print "Error retrieving data"
+            print("Error retrieving data")
             retFilesInfo.request.errorCode = self.OTHER_ERROR
             retFilesInfo.request.errorMessage = "Error retrieving data"
             return retFilesInfo
-            
+
         RetByteArraydata = buf.getvalue()
         if(RetByteArraydata.__contains__(DataQueryClient.getwayFlag)): #网关错误
             getwayInfo = json.loads(RetByteArraydata)
@@ -414,7 +413,7 @@ class DataQueryClient(object):
             # 格式转换，生成music的结果
             utils = DataFormatUtils.Utils()
             retFilesInfo = utils.getRetFilesInfo(pbRetFilesInfo)
-         
+
         if(retFilesInfo):
             if(retFilesInfo.request.errorCode == 0):
                 for info in retFilesInfo.fileInfos:
@@ -422,7 +421,7 @@ class DataQueryClient(object):
                     if(result[0]!=0):
                         retFilesInfo.request.errorCode = result[0]
                         retFilesInfo.request.errorMessage = result[1]
-                        return retFilesInfo              
+                        return retFilesInfo
         return retFilesInfo
 
     def callAPI_to_downFile_ByUrl(self,fileURL, save_as):
@@ -431,12 +430,12 @@ class DataQueryClient(object):
         '''
         result = self.downloadFile(fileURL, save_as)
         if(result[0]==0):
-            print 'download file success!'
+            print('download file success!')
         else:
-            print 'download file failed:' + fileURL
-        
+            print('download file failed:' + fileURL)
+
         return result
-                                  
+
     def callAPI_to_gridScalar2D(self, userId, pwd, interfaceId, params,serverId=None):
         '''
                      网格矢量数据
@@ -446,9 +445,9 @@ class DataQueryClient(object):
         method = 'callAPI_to_gridScalar2D'
         # 构建music protobuf服务器地址，将请求参数拼接为url
         newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
-        print 'URL: ' + newUrl
+        print('URL: ' + newUrl)
         try:
-            buf = StringIO.StringIO()  
+            buf = BytesIO()
             response = pycurl.Curl()
             response.setopt(pycurl.URL, newUrl)
             response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)
@@ -458,15 +457,15 @@ class DataQueryClient(object):
             response.perform()
             response.close()
         except: #http error
-            print "Error retrieving data"
+            print("Error retrieving data")
             retGridScalar2D.request.errorCode = self.OTHER_ERROR
             retGridScalar2D.request.errorMessage = "Error retrieving data"
             return retGridScalar2D
-            
+
         buf.flush()
         RetByteArraydata = buf.getvalue()
         buf.close()
-        print len(RetByteArraydata)
+        print(len(RetByteArraydata))
         if(RetByteArraydata.__contains__(DataQueryClient.getwayFlag)): #网关错误
             getwayInfo = json.loads(RetByteArraydata)
             if(getwayInfo is None):
@@ -480,12 +479,12 @@ class DataQueryClient(object):
             pbGridScalar2D = apiinterface_pb2.RetGridScalar2D()
             pbGridScalar2D.ParseFromString(RetByteArraydata)
             # 格式转换，生成music的结果
-            print pbGridScalar2D.request
+            print(pbGridScalar2D.request)
             utils = DataFormatUtils.Utils()
             retGridScalar2D = utils.getGridScalar2D(pbGridScalar2D)
-            
+
         return retGridScalar2D
-         
+
     def callAPI_to_gridVector2D(self, userId, pwd, interfaceId, params,serverId=None):
         '''
                      网格矢量数据
@@ -495,24 +494,24 @@ class DataQueryClient(object):
         method = 'callAPI_to_gridVector2D'
         # 构建music protobuf服务器地址，将请求参数拼接为url
         newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
-        print 'URL: ' + newUrl
+        print('URL: ' + newUrl)
         try:
-            buf = StringIO.StringIO()
-            #buf = BytesIO()  
+            buf = BytesIO()
+            #buf = BytesIO()
             response = pycurl.Curl()
             response.setopt(pycurl.URL, newUrl)
-            response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)     
+            response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)
             response.setopt(pycurl.TIMEOUT, self.readTimeout)
             response.setopt(pycurl.WRITEFUNCTION, buf.write)
             #response.setopt(pycurl.WRITEDATA, value)
             response.perform()
             response.close()
         except: #http error
-            print "Error retrieving data"
+            print("Error retrieving data")
             retGridVector2D.request.errorCode = self.OTHER_ERROR
             retGridVector2D.request.errorMessage = "Error retrieving data"
             return retGridVector2D
-            
+
         RetByteArraydata = buf.getvalue()
         #print len(RetByteArraydata)
         if(RetByteArraydata.__contains__(DataQueryClient.getwayFlag)): #网关错误
@@ -530,9 +529,9 @@ class DataQueryClient(object):
             #print pbGridVector2D.request
             utils = DataFormatUtils.Utils()
             retGridVector2D = utils.getGridVector2D(pbGridVector2D)
-            
+
         return retGridVector2D
-    
+
     def getConcateUrl(self,userId, pwd, interfaceId, params, serverId, method):
         '''
                      将请求参数拼接为url 
@@ -541,7 +540,7 @@ class DataQueryClient(object):
             serverId = self.serverId
         # 初始化，并添加要拼接字符串的数据
         basicUrl = self.basicUrl % (self.serverIp, self.serverPort,serverId)
-        finalUrl = StringIO.StringIO()
+        finalUrl = StringIO()
         finalUrl.write(basicUrl)
         finalUrl.write('method=' + method)
         finalUrl.write('&userId=' + userId)
@@ -550,21 +549,21 @@ class DataQueryClient(object):
         finalUrl.write('&language=' + DataQueryClient.language)
         finalUrl.write('&clientversion=' + DataQueryClient.clientVersion)
         # params从字典型数据转为字符串型，并拼接到finallUrl中
-        for key, value in params.items():    
+        for key, value in params.items():
             finalUrl.write("&%s=%s" % (key, value))
-                
+
         # 返回finalUrl中的所有数据；并关闭对象 释放内存
         newUrl = finalUrl.getvalue()
         finalUrl.close()
-            
+
         return newUrl
-    
+
     def downloadFile(self,fileUrl,saveFile):
         '''
                     下载文件
         '''
         try:
-            response = urllib2.urlopen(fileUrl) 
+            response = urlopen(fileUrl)
             data = response.read()
             if(data.__contains__(DataQueryClient.getwayFlag)): #网关错误
                 getwayInfo = json.loads(data)
@@ -577,5 +576,5 @@ class DataQueryClient(object):
                     code.write(data)
         except:
             return(self.OTHER_ERROR,"download file error")
-        
-        return(0,"")        
+
+        return(0,"")

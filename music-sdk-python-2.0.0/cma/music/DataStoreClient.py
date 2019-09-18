@@ -14,8 +14,9 @@ Created on 2019年3月6日
 '''
 
 import sys,os,socket
-import string,StringIO
-import ConfigParser
+import string
+from io import StringIO
+import configparser
 import pycurl
 import uuid
 import json
@@ -50,7 +51,7 @@ class DataStoreClient(object):
             else:
                 raise RuntimeError("default config file is not exist.")
         # read config file object
-        cf = ConfigParser.ConfigParser()
+        cf = configparser.ConfigParser()
         cf.read(config)
         # get server IP
         if(serverIp is None):
@@ -69,16 +70,16 @@ class DataStoreClient(object):
             self.serverId = serviceNodeId
         # get connect time out and read time out
         if(connTimeout is None):
-            self.connTimeout = string.atoi(cf.get("Pb", "music_connTimeout"))
+            self.connTimeout = int(cf.get("Pb", "music_connTimeout"))
         else:
             if connTimeout.isdigit():
-                self.connTimeout = string.atoi(connTimeout)
+                self.connTimeout = int(connTimeout)
         #print self.connTimeout
         if(readTimeout is None):
-            self.readTimeout = string.atoi(cf.get("Pb", "music_readTimeout"))
+            self.readTimeout = int(cf.get("Pb", "music_readTimeout"))
         else:
             if readTimeout.isdigit():
-                self.readTimeout = string.atoi(readTimeout)
+                self.readTimeout = int(readTimeout)
         #print self.readTimeout    
         
         #获取存储挂载方式，0文件将上传到服务端，1文件通过本地挂载盘写到服务端
@@ -171,7 +172,7 @@ class DataStoreClient(object):
                         uploadUrl = basicUrl
                         uploadUrl += '&userId=%s' % userId
                         uploadUrl += '&pwd=%s' % pwd
-                        print uploadUrl
+                        print(uploadUrl)
                         copyResult = self.uploadFile(uploadUrl,fullFileName,self.connTimeout,self.readTimeout)
                     if(copyResult[0] == False):
                         if(copyResult[1].__contains__(DataStoreClient.getwayFlag)): #网关错误
@@ -278,7 +279,7 @@ class DataStoreClient(object):
         
         # 构建music protobuf服务器地址，将请求参数拼接为url
         newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
-        print 'URL: ' + newUrl
+        print('URL: ' + newUrl)
         
         try:
             buf = StringIO.StringIO()  
@@ -294,7 +295,7 @@ class DataStoreClient(object):
             response.perform()
             response.close()
         except: #http error
-            print "Error retrieving data"
+            print("Error retrieving data")
             requestInfo.errorCode = self.OTHER_ERROR
             requestInfo.errorMessage = "Error retrieving data"
             return requestInfo
@@ -429,7 +430,7 @@ class DataStoreClient(object):
         #写入数据到服务端时，返回的信息
         # 构建music protobuf服务器地址，将请求参数拼接为url
         newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
-        print 'URL: ' + newUrl
+        print('URL: ' + newUrl)
         
         try:
             buf = StringIO.StringIO()  
@@ -446,7 +447,7 @@ class DataStoreClient(object):
             response.perform()
             response.close()
         except: #http error
-            print "Error retrieving data"
+            print("Error retrieving data")
             requestInfo.errorCode = self.OTHER_ERROR
             requestInfo.errorMessage = "Error retrieving data"
             return requestInfo
@@ -485,7 +486,7 @@ class DataStoreClient(object):
         #写入数据到服务端时，返回的信息
         # 构建music protobuf服务器地址，将请求参数拼接为url
         newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
-        print 'URL: ' + newUrl
+        print('URL: ' + newUrl)
         
         try:
             buf = StringIO.StringIO()  
@@ -502,7 +503,7 @@ class DataStoreClient(object):
             response.perform()
             response.close()
         except: #http error
-            print "Error retrieving data"
+            print("Error retrieving data")
             requestInfo.errorCode = self.OTHER_ERROR
             requestInfo.errorMessage = "Error retrieving data"
             return requestInfo
@@ -548,7 +549,7 @@ class DataStoreClient(object):
             response.close()
             RetByteArraydata = buf.getvalue()
         except:
-            print "Error retrieving data"
+            print("Error retrieving data")
             return (False,"Error retrieving data")
         
         if(RetByteArraydata.__contains__(DataStoreClient.getwayFlag)): #网关错误

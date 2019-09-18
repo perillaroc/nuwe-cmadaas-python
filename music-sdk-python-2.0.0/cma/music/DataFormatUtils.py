@@ -47,7 +47,7 @@ class Utils():
 
         return matrix
     
-    def setRequstInfo(self,pbRequestInfo=None):  
+    def setRequstInfo(self,pbRequestInfo=None):
 #         request = MusicDataBean.RequestInfo(pbRequestInfo.errorCode,pbRequestInfo.errorMessage,\
 #                                 pbRequestInfo.requestElems,pbRequestInfo.requestParams,pbRequestInfo.requestTime,\
 #                                 pbRequestInfo.responseTime,pbRequestInfo.rowCount,pbRequestInfo.takeTime)
@@ -92,7 +92,7 @@ class Utils():
                 cnt = len(retArray2D.data) # 获得所有数据的个数
                 #print 'cnt:' + str(cnt)
                 #print 'row:' + str(rows)
-                cols = cnt/rows # 获得数据的列数
+                cols = int(cnt/rows) # 获得数据的列数
                 retArray2D.col = cols
                 #print 'col:' + str(cols) + '\n'
                 # 将获取的数据，转换为二维数组格式

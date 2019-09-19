@@ -190,7 +190,7 @@ class RetFilesInfo(object):
  
     def __str__(self):
         #return self.stringify()
-        return self.fileInfos
+        return str(self.fileInfos)
     
     __repr__ = __str__
   

@@ -15,18 +15,14 @@ def cli(user, password, output_dir, client_config=None):
     server_id = "NMIC_MUSIC_CMADAAS"
 
     params = {
-        'dataCode': "NAFP_ECMF_FOR_FTM_LOW_GLB_ANA",
-        'elements': "TEM",
-        'time': "20190917000000",
+        "dataCode": "NAFP_ECMF_FOR_FTM_LOW_GLB_ANA",
+        "elements": "TEM",
+        "time": "20190917000000",
     }
 
     client = DataQueryClient(configFile=client_config)
     result = client.callAPI_to_downFile(
-        user,
-        password,
-        interface_id,
-        params,
-        output_dir,
+        user, password, interface_id, params, output_dir
     )
 
     print(result)

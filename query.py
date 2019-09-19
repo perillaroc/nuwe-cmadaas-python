@@ -14,12 +14,12 @@ def cli(user, password, client_config=None):
     server_id = "NMIC_MUSIC_CMADAAS"
 
     params = {
-        'dataCode': "SURF_CHN_MUL_HOR",
-        'elements': "Station_Id_d,Lat,Lon,Alti,Day,Hour,PRS_Sea,TEM,"
-                    "DPT,WIN_D_INST,WIN_S_INST,PRE_1h,PRE_6h,PRE_24h,PRS",
-        'timeRange': "[20190817000000,20190817020000)",
-        'orderby': "Station_ID_d:ASC",
-        'limitCnt': "10"
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_Id_d,Lat,Lon,Alti,Day,Hour,PRS_Sea,TEM,"
+        "DPT,WIN_D_INST,WIN_S_INST,PRE_1h,PRE_6h,PRE_24h,PRS",
+        "timeRange": "[20190817000000,20190817020000)",
+        "orderby": "Station_ID_d:ASC",
+        "limitCnt": "10",
     }
 
     client = DataQueryClient(configFile=client_config)

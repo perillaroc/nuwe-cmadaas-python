@@ -1,10 +1,11 @@
-'''
+"""
 Created on 2014/10/20
 
 @author: sheva.wen
-'''
+"""
 from distutils.core import setup
 import os
+
 
 def fullsplit(path, result=None):
     """
@@ -19,13 +20,13 @@ def fullsplit(path, result=None):
     if head == path:
         return result
     return fullsplit(head, [tail] + result)
- 
- 
+
+
 packages = []
-setup (
-       name = 'music-sdk-python',
-       version = '2.0.0',
-       packages = ["cma","cma.music"],
-       author = 'music api dev team',
-       description = 'music api for python',
+setup(
+    name="music-sdk-python",
+    version="2.0.0",
+    packages=["cma", "cma.music"],
+    author="music api dev team",
+    description="music api for python",
 )

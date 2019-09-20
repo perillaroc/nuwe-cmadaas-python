@@ -17,9 +17,10 @@ import json
 import os
 import socket
 from io import BytesIO, StringIO
-from urllib.request import urlopen
+# from urllib.request import urlopen
 
-import pycurl
+# import pycurl
+import requests
 
 from cma.music import DataFormatUtils
 from cma.music import apiinterface_pb2
@@ -47,13 +48,13 @@ class DataQueryClient(object):
     # 网关返回错误标识
 
     def __init__(
-        self,
-        serverIp=None,
-        serverPort=None,
-        serviceNodeId=None,
-        connTimeout=None,
-        readTimeout=None,
-        configFile=None,
+            self,
+            serverIp=None,
+            serverPort=None,
+            serviceNodeId=None,
+            connTimeout=None,
+            readTimeout=None,
+            configFile=None,
     ):
         """
         Constructor
@@ -113,51 +114,58 @@ class DataQueryClient(object):
         self.OTHER_ERROR = -10001
         # 其他异常
 
-    def callAPI_to_array2D(self, userId, pwd, interfaceId, params, serverId=None):
-        """
-                     站点资料（要素）数据检索
-        """
-        retArray2D = RetArray2D()
-        # 所要调用的方法名称
-        method = "callAPI_to_array2D"
-        # 构建music protobuf服务器地址，将请求参数拼接为url
-        newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
-        print("URL: " + newUrl)
+    def do_request(self, fetch_url, response_data):
         try:
-            buf = BytesIO()
-            response = pycurl.Curl()
-            response.setopt(pycurl.URL, newUrl)
-            response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)
-            response.setopt(pycurl.TIMEOUT, self.readTimeout)
-            response.setopt(pycurl.WRITEFUNCTION, buf.write)
-            # response.setopt(pycurl.WRITEDATA, value)
-            response.perform()
-            response.close()
-        except:  # http error
-            print("Error retrieving data")
-            retArray2D.request.errorCode = self.OTHER_ERROR
-            retArray2D.request.errorMessage = "Error retrieving data"
-            return retArray2D
+            response = requests.get(
+                fetch_url,
+                timeout=(self.connTimeout, self.readTimeout),
+                stream=True
+            )
+            response_content = response.content
 
-        RetByteArraydata = buf.getvalue()
-        if RetByteArraydata.__contains__(DataQueryClient.getwayFlag):  # 网关错误
-            getwayInfo = json.loads(RetByteArraydata)
-            if getwayInfo is None:
-                retArray2D.request.errorCode = self.OTHER_ERROR
-                retArray2D.request.errorMessage = (
-                    "parse getway return string error:" + RetByteArraydata
+        except requests.exceptions.RequestException as e:  # http error
+            print("Error retrieving data:", e)
+            response_data.request.errorCode = self.OTHER_ERROR
+            response_data.request.errorMessage = "Error retrieving data"
+            return None
+
+        if DataQueryClient.getwayFlag in response_content:  # 网关错误
+            getway_info = json.loads(response_content)
+            if getway_info is None:
+                response_data.request.errorCode = self.OTHER_ERROR
+                response_data.request.errorMessage = (
+                        "parse getway return string error:" + response_content
                 )
             else:
-                retArray2D.request.errorCode = getwayInfo["returnCode"]
-                retArray2D.request.errorMessage = getwayInfo["returnMessage"]
-        else:  # 服务端返回结果
-            # 反序列化为proto的结果
-            pbRetArray2D = apiinterface_pb2.RetArray2D()
-            pbRetArray2D.ParseFromString(RetByteArraydata)
-            utils = DataFormatUtils.Utils()
-            retArray2D = utils.getArray2D(pbRetArray2D)
+                response_data.request.errorCode = getway_info["returnCode"]
+                response_data.request.errorMessage = getway_info["returnMessage"]
+            return None
+        return response_content
 
-        return retArray2D
+    def callAPI_to_array2D(self, userId, pwd, interfaceId, params, serverId=None):
+        """
+            站点资料（要素）数据检索
+        """
+        ret_array_2d = RetArray2D()
+
+        # 所要调用的方法名称
+        method = "callAPI_to_array2D"
+
+        # 构建music protobuf服务器地址，将请求参数拼接为url
+        fetch_url = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
+        print("URL: " + fetch_url)
+
+        response_content = self.do_request(fetch_url, ret_array_2d)
+        if response_content is None:
+            return ret_array_2d
+
+        # 反序列化为proto的结果
+        pb_ret_array_2d = apiinterface_pb2.RetArray2D()
+        pb_ret_array_2d.ParseFromString(response_content)
+        utils = DataFormatUtils.Utils()
+        ret_array_2d = utils.getArray2D(pb_ret_array_2d)
+
+        return ret_array_2d
 
     def callAPI_to_dataBlock(self, userId, pwd, interfaceId, params, serverId=None):
         """
@@ -297,7 +305,7 @@ class DataQueryClient(object):
         return retFilesInfo
 
     def callAPI_to_serializedStr(
-        self, userId, pwd, interfaceId, params, dataFormat, serverId=None
+            self, userId, pwd, interfaceId, params, dataFormat, serverId=None
     ):
         """
                      检索数据并序列化结果
@@ -343,7 +351,7 @@ class DataQueryClient(object):
         return retStr
 
     def callAPI_to_saveAsFile(
-        self, userId, pwd, interfaceId, params, dataFormat, fileName, serverId=None
+            self, userId, pwd, interfaceId, params, dataFormat, fileName, serverId=None
     ):
         """
                      把结果存成文件下载到本地（检索结果为要素，服务端保存为文件）
@@ -408,7 +416,7 @@ class DataQueryClient(object):
         return retFilesInfo
 
     def callAPI_to_downFile(
-        self, userId, pwd, interfaceId, params, fileDir, serverId=None
+            self, userId, pwd, interfaceId, params, fileDir, serverId=None
     ):
         """
                     检索并下载文件

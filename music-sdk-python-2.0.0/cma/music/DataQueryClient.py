@@ -118,7 +118,7 @@ class DataQueryClient(object):
     def do_request(
             self,
             fetch_url: str,
-            response_data: RetArray2D or RetDataBlock
+            response_data: RetArray2D or RetDataBlock or RetFilesInfo or RetString
     ) -> bytes or None:
         try:
             response = requests.get(
@@ -293,47 +293,42 @@ class DataQueryClient(object):
             self, userId, pwd, interfaceId, params, dataFormat, serverId=None
     ):
         """
-                     检索数据并序列化结果
+            检索数据并序列化结果
         """
         # 所要调用的方法名称
         method = "callAPI_to_serializedStr"
+
         # 添加数据格式
-        if params.has_key("dataFormat") is False:
+        if "dataFormat" not in params:
             params["dataFormat"] = dataFormat
+
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
-        print("URL: " + newUrl)
+        fetch_url = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
+        print("URL: " + fetch_url)
+
         try:
-            buf = BytesIO()
-            response = pycurl.Curl()
-            response.setopt(pycurl.URL, newUrl)
-            response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)
-            response.setopt(pycurl.TIMEOUT, self.readTimeout)
-            response.setopt(pycurl.WRITEFUNCTION, buf.write)
-            # response.setopt(pycurl.WRITEDATA, value)
-            response.perform()
-            response.close()
-        except:  # http error
+            response = requests.get(
+                fetch_url,
+                timeout=(self.connTimeout, self.readTimeout),
+                stream=True
+            )
+            response_content = response.content
+
+        except requests.exceptions.RequestException as e:  # http error
             print("Error retrieving data")
             return "Error retrieving data"
 
-        RetByteArraydata = buf.getvalue()
-        if RetByteArraydata.__contains__(DataQueryClient.getwayFlag):  # 网关错误
-            getwayInfo = json.loads(RetByteArraydata)
-            if getwayInfo is None:
-                retStr = "parse getway return string error:" + RetByteArraydata.decode(
-                    "utf8"
-                )
+        if DataQueryClient.getwayFlag in response_content:  # 网关错误
+            getway_info = json.loads(response_content)
+            if getway_info is None:
+                return "parse getway return string error:" + response_content.decode("utf8")
             else:
-                retStr = "getway error: returnCode=%s returnMessage=%s" % (
-                    getwayInfo["returnCode"],
-                    getwayInfo["returnMessage"],
+                return "getway error: returnCode={return_code} returnMessage={return_message}".format(
+                    return_code=getway_info["returnCode"],
+                    return_message=getway_info["returnMessage"],
                 )
-        else:  # 服务端返回结果
-            # 反序列化为的结果string
-            retStr = RetByteArraydata.decode("utf8")
 
-        return retStr
+        return response_content.decode("utf8")
 
     def callAPI_to_saveAsFile(
             self, userId: str, pwd: str, interfaceId: str, params: dict, dataFormat: str, fileName: str, serverId=None

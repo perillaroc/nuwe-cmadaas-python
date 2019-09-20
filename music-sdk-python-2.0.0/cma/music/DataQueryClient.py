@@ -79,37 +79,37 @@ class DataQueryClient(object):
         cf.read(config)
         # get server IP
         if serverIp is None:
-            self.serverIp = cf.get("Pb", "music_server")
+            self.server_ip = cf.get("Pb", "music_server")
         else:
-            self.serverIp = serverIp
+            self.server_ip = serverIp
         # get server port
         if serverPort is None:
-            self.serverPort = cf.getint("Pb", "music_port")
+            self.server_port = cf.getint("Pb", "music_port")
         else:
-            self.serverPort = serverPort
+            self.server_port = serverPort
         # get service Node ID
         if serviceNodeId is None:
-            self.serverId = cf.get("Pb", "music_ServiceId")
+            self.server_id = cf.get("Pb", "music_ServiceId")
         else:
-            self.serverId = serviceNodeId
+            self.server_id = serviceNodeId
         # get connect time out and read time out
         if connTimeout is None:
-            self.connTimeout = int(cf.get("Pb", "music_connTimeout"))
+            self.connect_timeout = int(cf.get("Pb", "music_connTimeout"))
         else:
             if connTimeout.isdigit():
-                self.connTimeout = int(connTimeout)
+                self.connect_timeout = int(connTimeout)
         # print self.connTimeout
         if readTimeout is None:
-            self.readTimeout = int(cf.get("Pb", "music_readTimeout"))
+            self.read_timeout = int(cf.get("Pb", "music_readTimeout"))
         else:
             if readTimeout.isdigit():
-                self.readTimeout = int(readTimeout)
+                self.read_timeout = int(readTimeout)
         # print self.readTimeout
 
         # 本机IP
-        self.clientIp = socket.gethostbyname(socket.gethostname())
-        self.basicUrl = (
-            "http://%s:%s/music-ws/api?serviceNodeId=%s&"
+        self.client_ip = socket.gethostbyname(socket.gethostname())
+        self.basic_url = (
+            "http://{server_ip}:{server_port}/music-ws/api?serviceNodeId={server_id}&"
         )  # 数据读取URL(基本路径) http://ip:port/music-ws/api?serviceNodeId=serverId&
 
         # return error code
@@ -124,7 +124,7 @@ class DataQueryClient(object):
         try:
             response = requests.get(
                 fetch_url,
-                timeout=(self.connTimeout, self.readTimeout),
+                timeout=(self.connect_timeout, self.read_timeout),
                 stream=True
             )
             response_content = response.content
@@ -158,7 +158,7 @@ class DataQueryClient(object):
         method = "callAPI_to_array2D"
 
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        fetch_url = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
+        fetch_url = self.get_concate_url(userId, pwd, interfaceId, params, serverId, method)
         print("URL: " + fetch_url)
 
         response_content = self.do_request(fetch_url, ret_array_2d)
@@ -183,7 +183,7 @@ class DataQueryClient(object):
         # 所要调用的方法名称
         method = "callAPI_to_dataBlock"
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
+        newUrl = self.get_concate_url(userId, pwd, interfaceId, params, serverId, method)
         print("URL: " + newUrl)
 
         response_content = self.do_request(newUrl, retDataBlock)
@@ -206,14 +206,14 @@ class DataQueryClient(object):
         # 所要调用的方法名称
         method = "callAPI_to_gridArray2D"
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
+        newUrl = self.get_concate_url(userId, pwd, interfaceId, params, serverId, method)
         print("URL: " + newUrl)
         try:
             buf = BytesIO()
             response = pycurl.Curl()
             response.setopt(pycurl.URL, newUrl)
-            response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)
-            response.setopt(pycurl.TIMEOUT, self.readTimeout)
+            response.setopt(pycurl.CONNECTTIMEOUT, self.connect_timeout)
+            response.setopt(pycurl.TIMEOUT, self.read_timeout)
             response.setopt(pycurl.WRITEFUNCTION, buf.write)
             # response.setopt(pycurl.WRITEDATA, value)
             response.perform()
@@ -253,14 +253,14 @@ class DataQueryClient(object):
         # 所要调用的方法名称
         method = "callAPI_to_fileList"
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
+        newUrl = self.get_concate_url(userId, pwd, interfaceId, params, serverId, method)
         print("URL: " + newUrl)
         try:
             buf = BytesIO()
             response = pycurl.Curl()
             response.setopt(pycurl.URL, newUrl)
-            response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)
-            response.setopt(pycurl.TIMEOUT, self.readTimeout)
+            response.setopt(pycurl.CONNECTTIMEOUT, self.connect_timeout)
+            response.setopt(pycurl.TIMEOUT, self.read_timeout)
             response.setopt(pycurl.WRITEFUNCTION, buf.write)
             # response.setopt(pycurl.WRITEDATA, value)
             response.perform()
@@ -304,13 +304,13 @@ class DataQueryClient(object):
             params["dataFormat"] = dataFormat
 
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        fetch_url = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
+        fetch_url = self.get_concate_url(userId, pwd, interfaceId, params, serverId, method)
         print("URL: " + fetch_url)
 
         try:
             response = requests.get(
                 fetch_url,
-                timeout=(self.connTimeout, self.readTimeout),
+                timeout=(self.connect_timeout, self.read_timeout),
                 stream=True
             )
             response_content = response.content
@@ -353,7 +353,7 @@ class DataQueryClient(object):
         params["savepath"] = fileName
 
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        fetch_url = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
+        fetch_url = self.get_concate_url(userId, pwd, interfaceId, params, serverId, method)
         print("URL: " + fetch_url)
 
         response_content = self.do_request(fetch_url, ret_files_info)
@@ -391,7 +391,7 @@ class DataQueryClient(object):
         method = "callAPI_to_fileList"
 
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        fetch_url = self.getConcateUrl(user_id, pwd, interface_id, params, server_id, method)
+        fetch_url = self.get_concate_url(user_id, pwd, interface_id, params, server_id, method)
         print("URL: " + fetch_url)
 
         response_content = self.do_request(fetch_url, ret_files_info)
@@ -435,14 +435,14 @@ class DataQueryClient(object):
         # 所要调用的方法名称
         method = "callAPI_to_gridScalar2D"
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
+        newUrl = self.get_concate_url(userId, pwd, interfaceId, params, serverId, method)
         print("URL: " + newUrl)
         try:
             buf = BytesIO()
             response = pycurl.Curl()
             response.setopt(pycurl.URL, newUrl)
-            response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)
-            response.setopt(pycurl.TIMEOUT, self.readTimeout)
+            response.setopt(pycurl.CONNECTTIMEOUT, self.connect_timeout)
+            response.setopt(pycurl.TIMEOUT, self.read_timeout)
             response.setopt(pycurl.WRITEFUNCTION, buf.write)
             # response.setopt(pycurl.WRITEDATA, value)
             response.perform()
@@ -486,15 +486,15 @@ class DataQueryClient(object):
         # 所要调用的方法名称
         method = "callAPI_to_gridVector2D"
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
+        newUrl = self.get_concate_url(userId, pwd, interfaceId, params, serverId, method)
         print("URL: " + newUrl)
         try:
             buf = BytesIO()
             # buf = BytesIO()
             response = pycurl.Curl()
             response.setopt(pycurl.URL, newUrl)
-            response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)
-            response.setopt(pycurl.TIMEOUT, self.readTimeout)
+            response.setopt(pycurl.CONNECTTIMEOUT, self.connect_timeout)
+            response.setopt(pycurl.TIMEOUT, self.read_timeout)
             response.setopt(pycurl.WRITEFUNCTION, buf.write)
             # response.setopt(pycurl.WRITEDATA, value)
             response.perform()
@@ -527,31 +527,36 @@ class DataQueryClient(object):
 
         return retGridVector2D
 
-    def getConcateUrl(self, userId, pwd, interfaceId, params, serverId, method):
+    def get_concate_url(self, user_id, pwd, interface_id, params, server_id, method):
         """
-                     将请求参数拼接为url 
+            将请求参数拼接为url
         """
-        if serverId is None:
-            serverId = self.serverId
+        if server_id is None:
+            server_id = self.server_id
         # 初始化，并添加要拼接字符串的数据
-        basicUrl = self.basicUrl % (self.serverIp, self.serverPort, serverId)
-        finalUrl = StringIO()
-        finalUrl.write(basicUrl)
-        finalUrl.write("method=" + method)
-        finalUrl.write("&userId=" + userId)
-        finalUrl.write("&pwd=" + pwd)
-        finalUrl.write("&interfaceId=" + interfaceId)
-        finalUrl.write("&language=" + DataQueryClient.language)
-        finalUrl.write("&clientversion=" + DataQueryClient.clientVersion)
+        basic_url = self.basic_url.format(
+            server_ip=self.server_ip,
+            server_port=self.server_port,
+            server_id=server_id)
+
+        final_url = StringIO()
+        final_url.write(basic_url)
+        final_url.write("method=" + method)
+        final_url.write("&userId=" + user_id)
+        final_url.write("&pwd=" + pwd)
+        final_url.write("&interfaceId=" + interface_id)
+        final_url.write("&language=" + DataQueryClient.language)
+        final_url.write("&clientversion=" + DataQueryClient.clientVersion)
+
         # params从字典型数据转为字符串型，并拼接到finallUrl中
         for key, value in params.items():
-            finalUrl.write("&%s=%s" % (key, value))
+            final_url.write("&%s=%s" % (key, value))
 
         # 返回finalUrl中的所有数据；并关闭对象 释放内存
-        newUrl = finalUrl.getvalue()
-        finalUrl.close()
+        new_url = final_url.getvalue()
+        final_url.close()
 
-        return newUrl
+        return new_url
 
     def __download_file(self, file_url: str, save_file: str or pathlib.Path) -> (int, str):
         """

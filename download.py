@@ -1,6 +1,7 @@
 # coding=UTF-8
 from cma.music.DataQueryClient import DataQueryClient
 import click
+import pathlib
 
 
 @click.command()
@@ -15,10 +16,12 @@ def cli(user, password, output_dir, client_config=None):
     server_id = "NMIC_MUSIC_CMADAAS"
 
     params = {
-        "dataCode": "NAFP_ECMF_FOR_FTM_LOW_GLB_ANA",
-        "elements": "TEM",
+        "dataCode": "NAFP_FOR_FTM_KWBC_GLB",
         "time": "20190917000000",
     }
+
+    output_path = pathlib.Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
 
     client = DataQueryClient(configFile=client_config)
     result = client.callAPI_to_downFile(

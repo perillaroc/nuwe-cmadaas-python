@@ -268,7 +268,6 @@ class FileInfo(object):
 
 
 class RetFilesInfo(object):
-
     """
            返回文件索引信息
     """

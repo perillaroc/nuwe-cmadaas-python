@@ -354,4 +354,3 @@ class Utils:
 
         return storeInfos.SerializeToString()
 """
-

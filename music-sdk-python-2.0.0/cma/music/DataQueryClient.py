@@ -12,14 +12,17 @@ Modified in 2019/3/6
 @author: wufy
 """
 
-import os, socket
-from io import BytesIO, StringIO
 import configparser
-import pycurl
-from urllib.request import urlopen
-from cma.music import apiinterface_pb2
-from cma.music import DataFormatUtils
 import json
+import os
+import socket
+from io import BytesIO, StringIO
+from urllib.request import urlopen
+
+import pycurl
+
+from cma.music import DataFormatUtils
+from cma.music import apiinterface_pb2
 from cma.music.MusicDataBean import (
     RetArray2D,
     RetGridArray2D,
@@ -40,6 +43,7 @@ class DataQueryClient(object):
     clientVersion = "V2.0.0"
     # 客户端版本
     getwayFlag = b'"flag":"slb"'
+
     # 网关返回错误标识
 
     def __init__(
@@ -621,4 +625,3 @@ class DataQueryClient(object):
             return (self.OTHER_ERROR, "download file error")
 
         return (0, "")
-

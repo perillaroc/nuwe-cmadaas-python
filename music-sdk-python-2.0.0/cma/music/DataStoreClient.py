@@ -13,16 +13,19 @@ Created on 2019年3月6日
 @author: wufy
 """
 
-import sys, os, socket
-import string
-from io import StringIO
 import configparser
-import pycurl
-import uuid
 import json
+import os
+import socket
+import sys
+import uuid
+from io import StringIO
+from shutil import copyfile
+
+import pycurl
+
 from cma.music import DataFormatUtils, apiinterface_pb2
 from cma.music.MusicDataBean import RequestInfo
-from shutil import copyfile
 
 
 class DataStoreClient(object):
@@ -35,6 +38,7 @@ class DataStoreClient(object):
     clientVersion = "V2.0.0"
     # 客户端版本
     getwayFlag = '"flag":"slb"'
+
     # 网关返回错误标识
 
     def __init__(
@@ -652,4 +656,3 @@ class DataStoreClient(object):
             return (False, RetByteArraydata)
 
         return (True, RetByteArraydata)
-

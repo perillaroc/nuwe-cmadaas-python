@@ -18,6 +18,7 @@ import os
 import socket
 from io import BytesIO, StringIO
 import warnings
+import pathlib
 # from urllib.request import urlopen
 
 # import pycurl
@@ -377,64 +378,42 @@ class DataQueryClient(object):
         return ret_files_info
 
     def callAPI_to_downFile(
-            self, userId, pwd, interfaceId, params, fileDir, serverId=None
+            self, user_id: str, pwd: str, interface_id: str, params: dict, file_dir: str, server_id: None or str=None
     ):
         """
                     检索并下载文件
         """
-        file_Dir = fileDir
-        if file_Dir.endswith(os.sep):
-            pass
-        else:
-            file_Dir = file_Dir + os.sep
-        retFilesInfo = RetFilesInfo()
+        file_dir_path = pathlib.Path(file_dir)
+
+        ret_files_info = RetFilesInfo()
+
         # 所要调用的方法名称   打印该函数名称
         method = "callAPI_to_fileList"
+
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        newUrl = self.getConcateUrl(userId, pwd, interfaceId, params, serverId, method)
-        print("URL: " + newUrl)
-        try:
-            buf = BytesIO()
-            response = pycurl.Curl()
-            response.setopt(pycurl.URL, newUrl)
-            response.setopt(pycurl.CONNECTTIMEOUT, self.connTimeout)
-            response.setopt(pycurl.TIMEOUT, self.readTimeout)
-            response.setopt(pycurl.WRITEFUNCTION, buf.write)
-            # response.setopt(pycurl.WRITEDATA, value)
-            response.perform()
-            response.close()
-        except:  # http error
-            print("Error retrieving data")
-            retFilesInfo.request.errorCode = self.OTHER_ERROR
-            retFilesInfo.request.errorMessage = "Error retrieving data"
-            return retFilesInfo
+        fetch_url = self.getConcateUrl(user_id, pwd, interface_id, params, server_id, method)
+        print("URL: " + fetch_url)
 
-        RetByteArraydata = buf.getvalue()
-        if RetByteArraydata.__contains__(DataQueryClient.getwayFlag):  # 网关错误
-            getwayInfo = json.loads(RetByteArraydata)
-            if getwayInfo is None:
-                retFilesInfo.request.errorCode = self.OTHER_ERROR
-                retFilesInfo.request.errorMessage = "parse getway return string error!"
-            else:
-                retFilesInfo.request.errorCode = getwayInfo["returnCode"]
-                retFilesInfo.request.errorMessage = getwayInfo["returnMessage"]
-        else:  # 服务端返回结果
-            # 反序列化为proto的结果
-            pbRetFilesInfo = apiinterface_pb2.RetFilesInfo()
-            pbRetFilesInfo.ParseFromString(RetByteArraydata)
-            # 格式转换，生成music的结果
-            utils = DataFormatUtils.Utils()
-            retFilesInfo = utils.getRetFilesInfo(pbRetFilesInfo)
+        response_content = self.do_request(fetch_url, ret_files_info)
+        if response_content is None:
+            return ret_files_info
 
-        if retFilesInfo:
-            if retFilesInfo.request.errorCode == 0:
-                for info in retFilesInfo.fileInfos:
-                    result = self.__download_file(info.fileUrl, file_Dir + info.fileName)
-                    if result[0] != 0:
-                        retFilesInfo.request.errorCode = result[0]
-                        retFilesInfo.request.errorMessage = result[1]
-                        return retFilesInfo
-        return retFilesInfo
+        # 反序列化为proto的结果
+        pb_ret_files_info = apiinterface_pb2.RetFilesInfo()
+        pb_ret_files_info.ParseFromString(response_content)
+        # 格式转换，生成music的结果
+        utils = DataFormatUtils.Utils()
+        ret_files_info = utils.getRetFilesInfo(pb_ret_files_info)
+
+        if ret_files_info and ret_files_info.request.errorCode == 0:
+            for info in ret_files_info.fileInfos:
+                result = self.__download_file(info.fileUrl, file_dir_path.joinpath(info.fileName))
+                if result[0] != 0:
+                    ret_files_info.request.errorCode = result[0]
+                    ret_files_info.request.errorMessage = result[1]
+                    return ret_files_info
+
+        return ret_files_info
 
     def callAPI_to_downFile_ByUrl(self, fileURL, save_as):
         """
@@ -574,7 +553,7 @@ class DataQueryClient(object):
 
         return newUrl
 
-    def __download_file(self, file_url: str, save_file: str) -> (int, str):
+    def __download_file(self, file_url: str, save_file: str or pathlib.Path) -> (int, str):
         """
             下载文件
         """

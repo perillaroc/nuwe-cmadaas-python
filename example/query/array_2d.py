@@ -22,7 +22,7 @@ def cli(user, password, client_config=None):
         "limitCnt": "10",
     }
 
-    client = DataQueryClient(configFile=client_config)
+    client = DataQueryClient(config_file=client_config)
     result = client.callAPI_to_array2D(user, password, interface_id, params)
 
     print(result)

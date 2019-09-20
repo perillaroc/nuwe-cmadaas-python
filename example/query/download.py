@@ -23,7 +23,7 @@ def cli(user, password, output_dir, client_config=None):
     output_path = pathlib.Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 
-    client = DataQueryClient(configFile=client_config)
+    client = DataQueryClient(config_file=client_config)
     result = client.callAPI_to_downFile(
         user, password, interface_id, params, output_dir
     )

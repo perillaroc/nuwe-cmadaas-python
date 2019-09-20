@@ -8,6 +8,8 @@ verify_ssl = true
 [packages]
 numpy = "*"
 requests = "*"
+protobuf = "*"
+click = "*"
 
 [requires]
 python_version = "3.7"

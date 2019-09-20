@@ -16,12 +16,11 @@ import configparser
 import json
 import os
 import socket
-from io import BytesIO, StringIO
+from io import BytesIO
 import warnings
 import pathlib
-# from urllib.request import urlopen
+import logging
 
-# import pycurl
 import requests
 
 from cma.music import DataFormatUtils
@@ -36,121 +35,48 @@ from cma.music.MusicDataBean import (
 )
 
 
+logger = logging.getLogger()
+
+
 class DataQueryClient(object):
     """
     data query interface class
     """
-
-    language = "Python"
-    # 客户端语言
-    clientVersion = "V2.0.0"
-    # 客户端版本
-    getwayFlag = b'"flag":"slb"'
-
-    # 网关返回错误标识
+    language = "Python"  # 客户端语言
+    clientVersion = "V2.0.0"  # 客户端版本
+    getwayFlag = b'"flag":"slb"'  # 网关返回错误标识
 
     def __init__(
             self,
-            serverIp=None,
-            serverPort=None,
-            serviceNodeId=None,
-            connTimeout=None,
-            readTimeout=None,
-            configFile=None,
+            server_ip: str = None,
+            server_port: int = None,
+            service_node_id: str = None,
+            connection_timeout: int = None,
+            read_timeout: int = None,
+            config_file: str = None,
     ):
-        """
-        Constructor
-        """
-        # get config file
-        config = ""
-        if configFile is not None:
-            if not os.path.exists(configFile):
-                raise RuntimeError("config file is not exist.")
-            else:
-                config = configFile
-        else:
-            defaultConfig = "client.config"
-            if os.path.exists(defaultConfig):
-                config = defaultConfig
-            else:
-                raise RuntimeError("default config file is not exist.")
-        # read config file object
-        cf = configparser.ConfigParser()
-        cf.read(config)
-        # get server IP
-        if serverIp is None:
-            self.server_ip = cf.get("Pb", "music_server")
-        else:
-            self.server_ip = serverIp
-        # get server port
-        if serverPort is None:
-            self.server_port = cf.getint("Pb", "music_port")
-        else:
-            self.server_port = serverPort
-        # get service Node ID
-        if serviceNodeId is None:
-            self.server_id = cf.get("Pb", "music_ServiceId")
-        else:
-            self.server_id = serviceNodeId
-        # get connect time out and read time out
-        if connTimeout is None:
-            self.connect_timeout = int(cf.get("Pb", "music_connTimeout"))
-        else:
-            if connTimeout.isdigit():
-                self.connect_timeout = int(connTimeout)
-        # print self.connTimeout
-        if readTimeout is None:
-            self.read_timeout = int(cf.get("Pb", "music_readTimeout"))
-        else:
-            if readTimeout.isdigit():
-                self.read_timeout = int(readTimeout)
-        # print self.readTimeout
+        self.server_ip = server_ip
+        self.server_port = server_port
+        self.server_id = service_node_id
+        self.connect_timeout = connection_timeout
+        self.read_timeout = read_timeout
 
         # 本机IP
         self.client_ip = socket.gethostbyname(socket.gethostname())
+
+        # 数据读取URL(基本路径) http://ip:port/music-ws/api?serviceNodeId=serverId&
         self.basic_url = (
             "http://{server_ip}:{server_port}/music-ws/api?serviceNodeId={server_id}&"
-        )  # 数据读取URL(基本路径) http://ip:port/music-ws/api?serviceNodeId=serverId&
+        )
 
         # return error code
-        self.OTHER_ERROR = -10001
-        # 其他异常
+        self.OTHER_ERROR = -10001  # 其他异常
 
-    def do_request(
-            self,
-            fetch_url: str,
-            response_data: RetArray2D or RetDataBlock or RetFilesInfo or RetString
-    ) -> bytes or None:
-        try:
-            response = requests.get(
-                fetch_url,
-                timeout=(self.connect_timeout, self.read_timeout),
-                stream=True
-            )
-            response_content = response.content
+        self._load_config(config_file)
 
-        except requests.exceptions.RequestException as e:  # http error
-            print("Error retrieving data:", e)
-            response_data.request.errorCode = self.OTHER_ERROR
-            response_data.request.errorMessage = "Error retrieving data"
-            return None
-
-        if DataQueryClient.getwayFlag in response_content:  # 网关错误
-            getway_info = json.loads(response_content)
-            if getway_info is None:
-                response_data.request.errorCode = self.OTHER_ERROR
-                response_data.request.errorMessage = (
-                        "parse getway return string error:" + response_content
-                )
-            else:
-                response_data.request.errorCode = getway_info["returnCode"]
-                response_data.request.errorMessage = getway_info["returnMessage"]
-            return None
-        return response_content
-
-    def callAPI_to_array2D(self, userId, pwd, interfaceId, params, serverId=None):
+    def callAPI_to_array2D(self, user_id: str, pwd: str, interface_id: str, params: dict, server_id: str = None):
         """
-            站点资料（要素）数据检索
+        站点资料（要素）数据检索
         """
         ret_array_2d = RetArray2D()
 
@@ -158,10 +84,10 @@ class DataQueryClient(object):
         method = "callAPI_to_array2D"
 
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        fetch_url = self.get_concate_url(userId, pwd, interfaceId, params, serverId, method)
-        print("URL: " + fetch_url)
+        fetch_url = self._get_fetch_url(user_id, pwd, interface_id, params, server_id, method)
+        logger.info(f"URL: {fetch_url}")
 
-        response_content = self.do_request(fetch_url, ret_array_2d)
+        response_content = self._do_request(fetch_url, ret_array_2d)
         if response_content is None:
             return ret_array_2d
 
@@ -173,30 +99,30 @@ class DataQueryClient(object):
 
         return ret_array_2d
 
-    def callAPI_to_dataBlock(self, userId, pwd, interfaceId, params, serverId=None):
+    def callAPI_to_dataBlock(self, user_id: str, pwd: str, interface_id: str, params: dict, server_id: str = None):
         """
             数据块检索
         """
         warnings.warn("callAPI_to_dataBlock is not tested")
 
-        retDataBlock = RetDataBlock()
+        ret_data_block = RetDataBlock()
         # 所要调用的方法名称
         method = "callAPI_to_dataBlock"
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        newUrl = self.get_concate_url(userId, pwd, interfaceId, params, serverId, method)
-        print("URL: " + newUrl)
+        fetch_url = self._get_fetch_url(user_id, pwd, interface_id, params, server_id, method)
+        logger.info(f"URL: {fetch_url}")
 
-        response_content = self.do_request(newUrl, retDataBlock)
+        response_content = self._do_request(fetch_url, ret_data_block)
         if response_content is None:
             return response_content
 
-        pbDataBlock = apiinterface_pb2.RetDataBlock()
-        pbDataBlock.ParseFromString(response_content)
+        pb_data_block = apiinterface_pb2.RetDataBlock()
+        pb_data_block.ParseFromString(response_content)
         # 格式转换
         utils = DataFormatUtils.Utils()
-        retDataBlock = utils.getDataBlock(pbDataBlock)
+        ret_data_block = utils.getDataBlock(pb_data_block)
 
-        return retDataBlock
+        return ret_data_block
 
     def callAPI_to_gridArray2D(self, userId, pwd, interfaceId, params, serverId=None):
         """
@@ -206,7 +132,7 @@ class DataQueryClient(object):
         # 所要调用的方法名称
         method = "callAPI_to_gridArray2D"
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        newUrl = self.get_concate_url(userId, pwd, interfaceId, params, serverId, method)
+        newUrl = self._get_fetch_url(userId, pwd, interfaceId, params, serverId, method)
         print("URL: " + newUrl)
         try:
             buf = BytesIO()
@@ -253,7 +179,7 @@ class DataQueryClient(object):
         # 所要调用的方法名称
         method = "callAPI_to_fileList"
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        newUrl = self.get_concate_url(userId, pwd, interfaceId, params, serverId, method)
+        newUrl = self._get_fetch_url(userId, pwd, interfaceId, params, serverId, method)
         print("URL: " + newUrl)
         try:
             buf = BytesIO()
@@ -294,7 +220,7 @@ class DataQueryClient(object):
             self, userId, pwd, interfaceId, params, dataFormat, serverId=None
     ):
         """
-            检索数据并序列化结果
+        检索数据并序列化结果
         """
         # 所要调用的方法名称
         method = "callAPI_to_serializedStr"
@@ -304,8 +230,8 @@ class DataQueryClient(object):
             params["dataFormat"] = dataFormat
 
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        fetch_url = self.get_concate_url(userId, pwd, interfaceId, params, serverId, method)
-        print("URL: " + fetch_url)
+        fetch_url = self._get_fetch_url(userId, pwd, interfaceId, params, serverId, method)
+        logger.info(f"URL: {fetch_url}")
 
         try:
             response = requests.get(
@@ -316,7 +242,7 @@ class DataQueryClient(object):
             response_content = response.content
 
         except requests.exceptions.RequestException as e:  # http error
-            print("Error retrieving data")
+            logger.warning("Error retrieving data")
             return "Error retrieving data"
 
         if DataQueryClient.getwayFlag in response_content:  # 网关错误
@@ -332,44 +258,47 @@ class DataQueryClient(object):
         return response_content.decode("utf8")
 
     def callAPI_to_saveAsFile(
-            self, userId: str, pwd: str, interfaceId: str, params: dict, dataFormat: str, fileName: str, serverId=None
+            self, user_id: str, pwd: str, interface_id: str, params: dict, data_format: str, file_name: str,
+            server_id: str = None
     ):
         """
-            把结果存成文件下载到本地（检索结果为要素，服务端保存为文件）
+        把结果存成文件下载到本地（检索结果为要素，服务端保存为文件）
         """
         ret_files_info = RetFilesInfo()
+
         # 所要调用的方法名称
         method = "callAPI_to_saveAsFile"
 
         # 添加数据格式
         if "dataFormat" not in params:
-            params["dataFormat"] = dataFormat
+            params["dataFormat"] = data_format
 
-        if fileName is None:
+        if file_name is None:
             ret_files_info.request.errorCode = self.OTHER_ERROR
-            ret_files_info.request.errorMessage = ("error:savePath can't null,"
-                                                   "the format is dir/file.formart(ex. /data/saveas.xml)")
+            ret_files_info.request.errorMessage = (
+                "error:savePath can't null, the format is dir/file.formart. For example /data/saveas.xml)"
+            )
             return ret_files_info
-        params["savepath"] = fileName
+
+        params["savepath"] = file_name
 
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        fetch_url = self.get_concate_url(userId, pwd, interfaceId, params, serverId, method)
-        print("URL: " + fetch_url)
+        fetch_url = self._get_fetch_url(user_id, pwd, interface_id, params, server_id, method)
+        logger.info(f"URL: {fetch_url}")
 
-        response_content = self.do_request(fetch_url, ret_files_info)
+        response_content = self._do_request(fetch_url, ret_files_info)
         if response_content is None:
             return ret_files_info
 
         pb_ret_files_info = apiinterface_pb2.RetFilesInfo()
         pb_ret_files_info.ParseFromString(response_content)
-        # 格式转换，生成music的结果
         utils = DataFormatUtils.Utils()
         ret_files_info = utils.getRetFilesInfo(pb_ret_files_info)
 
         # 将数据保存到本地
         if ret_files_info and ret_files_info.request.errorCode == 0:
-            result = self.__download_file(
-                ret_files_info.fileInfos[0].fileUrl, fileName
+            result = self._download_file(
+                ret_files_info.fileInfos[0].fileUrl, file_name
             )
             if result[0] != 0:
                 ret_files_info.request.errorCode = result[0]
@@ -378,10 +307,10 @@ class DataQueryClient(object):
         return ret_files_info
 
     def callAPI_to_downFile(
-            self, user_id: str, pwd: str, interface_id: str, params: dict, file_dir: str, server_id: None or str=None
+            self, user_id: str, pwd: str, interface_id: str, params: dict, file_dir: str, server_id: str = None
     ):
         """
-                    检索并下载文件
+        检索并下载文件
         """
         file_dir_path = pathlib.Path(file_dir)
 
@@ -391,23 +320,21 @@ class DataQueryClient(object):
         method = "callAPI_to_fileList"
 
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        fetch_url = self.get_concate_url(user_id, pwd, interface_id, params, server_id, method)
-        print("URL: " + fetch_url)
+        fetch_url = self._get_fetch_url(user_id, pwd, interface_id, params, server_id, method)
+        logger.info(f"URL: {fetch_url}")
 
-        response_content = self.do_request(fetch_url, ret_files_info)
+        response_content = self._do_request(fetch_url, ret_files_info)
         if response_content is None:
             return ret_files_info
 
-        # 反序列化为proto的结果
         pb_ret_files_info = apiinterface_pb2.RetFilesInfo()
         pb_ret_files_info.ParseFromString(response_content)
-        # 格式转换，生成music的结果
         utils = DataFormatUtils.Utils()
         ret_files_info = utils.getRetFilesInfo(pb_ret_files_info)
 
         if ret_files_info and ret_files_info.request.errorCode == 0:
             for info in ret_files_info.fileInfos:
-                result = self.__download_file(info.fileUrl, file_dir_path.joinpath(info.fileName))
+                result = self._download_file(info.fileUrl, file_dir_path.joinpath(info.fileName))
                 if result[0] != 0:
                     ret_files_info.request.errorCode = result[0]
                     ret_files_info.request.errorMessage = result[1]
@@ -419,7 +346,7 @@ class DataQueryClient(object):
         """
                     根据url下载文件
         """
-        result = self.__download_file(fileURL, save_as)
+        result = self._download_file(fileURL, save_as)
         if result[0] == 0:
             print("download file success!")
         else:
@@ -435,7 +362,7 @@ class DataQueryClient(object):
         # 所要调用的方法名称
         method = "callAPI_to_gridScalar2D"
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        newUrl = self.get_concate_url(userId, pwd, interfaceId, params, serverId, method)
+        newUrl = self._get_fetch_url(userId, pwd, interfaceId, params, serverId, method)
         print("URL: " + newUrl)
         try:
             buf = BytesIO()
@@ -486,7 +413,7 @@ class DataQueryClient(object):
         # 所要调用的方法名称
         method = "callAPI_to_gridVector2D"
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        newUrl = self.get_concate_url(userId, pwd, interfaceId, params, serverId, method)
+        newUrl = self._get_fetch_url(userId, pwd, interfaceId, params, serverId, method)
         print("URL: " + newUrl)
         try:
             buf = BytesIO()
@@ -527,40 +454,93 @@ class DataQueryClient(object):
 
         return retGridVector2D
 
-    def get_concate_url(self, user_id, pwd, interface_id, params, server_id, method):
+    def _load_config(self, config_file: str) -> None:
+        if config_file is not None:
+            if not os.path.exists(config_file):
+                raise RuntimeError("config file is not exist.")
+            else:
+                config = config_file
+        else:
+            default_config = "client.config"
+            if pathlib.Path(default_config).exists():
+                config = default_config
+            else:
+                raise RuntimeError("default config file is not exist.")
+
+        cf = configparser.ConfigParser()
+        cf.read(config)
+
+        if self.server_ip is None:
+            self.server_ip = cf.get("Pb", "music_server")
+
+        if self.server_port is None:
+            self.server_port = cf.getint("Pb", "music_port")
+
+        if self.server_id is None:
+            self.server_id = cf.get("Pb", "music_ServiceId")
+
+        if self.connect_timeout is None:
+            self.connect_timeout = int(cf.get("Pb", "music_connTimeout"))
+
+        if self.read_timeout is None:
+            self.read_timeout = int(cf.get("Pb", "music_readTimeout"))
+
+    def _get_fetch_url(self, user_id: str, pwd: str, interface_id: str, params: dict, server_id: str,
+                       method: str) -> str:
         """
-            将请求参数拼接为url
+        将请求参数拼接为url
         """
         if server_id is None:
             server_id = self.server_id
-        # 初始化，并添加要拼接字符串的数据
+
         basic_url = self.basic_url.format(
             server_ip=self.server_ip,
             server_port=self.server_port,
             server_id=server_id)
 
-        final_url = StringIO()
-        final_url.write(basic_url)
-        final_url.write("method=" + method)
-        final_url.write("&userId=" + user_id)
-        final_url.write("&pwd=" + pwd)
-        final_url.write("&interfaceId=" + interface_id)
-        final_url.write("&language=" + DataQueryClient.language)
-        final_url.write("&clientversion=" + DataQueryClient.clientVersion)
+        fetch_url = (f"{basic_url}method={method}&userId={user_id}&pwd={pwd}&interfaceId={interface_id}"
+                     f"&language={DataQueryClient.language}&clientversion={DataQueryClient.clientVersion}")
 
-        # params从字典型数据转为字符串型，并拼接到finallUrl中
         for key, value in params.items():
-            final_url.write("&%s=%s" % (key, value))
+            fetch_url += f"&{key}={value}"
 
-        # 返回finalUrl中的所有数据；并关闭对象 释放内存
-        new_url = final_url.getvalue()
-        final_url.close()
+        return fetch_url
 
-        return new_url
+    def _do_request(
+            self,
+            fetch_url: str,
+            response_data: RetArray2D or RetDataBlock or RetFilesInfo
+    ) -> bytes or None:
+        try:
+            response = requests.get(
+                fetch_url,
+                timeout=(self.connect_timeout, self.read_timeout),
+                stream=True
+            )
+            response_content = response.content
 
-    def __download_file(self, file_url: str, save_file: str or pathlib.Path) -> (int, str):
+        except requests.exceptions.RequestException as e:  # http error
+            print(f"Error retrieving data: {e}")
+            response_data.request.errorCode = self.OTHER_ERROR
+            response_data.request.errorMessage = "Error retrieving data"
+            return None
+
+        if DataQueryClient.getwayFlag in response_content:  # 网关错误
+            getway_info = json.loads(response_content)
+            if getway_info is None:
+                response_data.request.errorCode = self.OTHER_ERROR
+                response_data.request.errorMessage = (
+                        "parse getway return string error:" + response_content
+                )
+            else:
+                response_data.request.errorCode = getway_info["returnCode"]
+                response_data.request.errorMessage = getway_info["returnMessage"]
+            return None
+        return response_content
+
+    def _download_file(self, file_url: str, save_file: str or pathlib.Path) -> (int, str):
         """
-            下载文件
+        下载文件
         """
         try:
             response = requests.get(file_url, stream=True)
@@ -574,7 +554,10 @@ class DataQueryClient(object):
 
             with open(save_file, "wb") as f:
                 f.write(response_content)
-        except:
-            return self.OTHER_ERROR, "download file error"
 
-        return 0, ""
+        except requests.exceptions.RequestException as e:  # http error
+            return self.OTHER_ERROR, "request error"
+        except IOError:
+            return self.OTHER_ERROR, "create file error"
+
+        return 0, None

@@ -23,14 +23,14 @@ def cli(user, password, output_file, client_config=None):
         "limitCnt": "10",
     }
 
-    client = DataQueryClient(configFile=client_config)
+    client = DataQueryClient(config_file=client_config)
     result = client.callAPI_to_saveAsFile(
         user,
         password,
         interface_id,
         params,
-        dataFormat="json",
-        fileName=output_file
+        data_format="json",
+        file_name=output_file
     )
 
     print(result)

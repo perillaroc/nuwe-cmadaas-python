@@ -68,15 +68,15 @@ result = client.callAPI_to_array2D(user, password, interface_id, params)
 Python 2 将于 2019 年底停止维护，所以还是需要开发基于 Python 3 的访问库。
 本项目移植的内容包括：
 
-- 为浮点数除法添加显式类型转换（float）
-- 使用 io.StringIO 代替 StringIO.StringIO
-- 使用 io.BytesIO 代替 StringIO
-- 使用 urllib.request.urlopen 代替 urllib2.urlopen
-- 使用 configparser 代替 ConfigParser
-- 使用 int 代替 string.stoi
-- 修改 print 语句
+- 为浮点数除法添加显式类型转换（`float`）
+- 使用 `io.StringIO` 代替 `StringIO.StringIO`
+- 使用 `io.BytesIO` 代替 `StringIO`
+- 使用 `urllib.request.urlopen` 代替 `urllib2.urlopen`
+- 使用 `configparser` 代替 `ConfigParser`
+- 使用 `int` 代替 `string.stoi`
+- 修改 `print` 语句
 
-详细的代码改动请参考：commit ad7cff8c
+详细的代码改动请参考：[commit ad7cff8c](https://github.com/perillaroc/cimiss-python-api/commit/ad7cff8cc2bc443713e39f96b184912241a430b9)
 
 ### 使用 Requests 代替 pyCURL
 
@@ -85,8 +85,8 @@ pyCURL 比 Request 速度更快，但更多情况下，速度的快慢取决于�
 
 ## License
 
-`cimiss-python-api` 中包含 music-sdk-python-2.0.0 的源码，并对部分源码进行修改。
-music-sdk-python-2.0.0 版权属于国家气象信息中心，因软件包中未明确列出软件版权，
+`cimiss-python-api` 中包含 **music-sdk-python-2.0.0** 的源码，并对部分源码进行修改。
+**music-sdk-python-2.0.0** 版权属于**国家气象信息中心**，因软件包中未明确列出软件版权，
 本项目目前对该源码进行一定的修改。如有侵权，请联系perillaroc或发issue声明。
 
 `cimiss-python-api` 其余代码由 perillaroc 开发，并采用 MIT 协议。

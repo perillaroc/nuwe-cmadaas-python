@@ -23,7 +23,7 @@ def cli(user, password, client_config=None):
     }
 
     client = DataQueryClient(config_file=client_config)
-    result = client.callAPI_to_serializedStr(user, password, interface_id, params, dataFormat="json")
+    result = client.callAPI_to_serializedStr(user, password, interface_id, params, data_format="json")
 
     print(result)
 

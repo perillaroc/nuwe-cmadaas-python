@@ -14,12 +14,12 @@ Modified in 2019/3/6
 
 import configparser
 import json
-import os
-import socket
-from io import BytesIO
-import warnings
-import pathlib
 import logging
+import os
+import pathlib
+import socket
+import warnings
+from io import BytesIO
 
 import requests
 
@@ -33,7 +33,6 @@ from cma.music.MusicDataBean import (
     RetDataBlock,
     RetGridScalar2D,
 )
-
 
 logger = logging.getLogger()
 
@@ -192,7 +191,7 @@ class DataQueryClient(object):
         return ret_files_info
 
     def callAPI_to_serializedStr(
-        self, userId, pwd, interfaceId, params, dataFormat, serverId=None
+        self, user_id: str, pwd: str, interface_id: str, params: dict, data_format: str, server_id: str = None
     ):
         """
         检索数据并序列化结果
@@ -202,11 +201,11 @@ class DataQueryClient(object):
 
         # 添加数据格式
         if "dataFormat" not in params:
-            params["dataFormat"] = dataFormat
+            params["dataFormat"] = data_format
 
         # 构建music protobuf服务器地址，将请求参数拼接为url
         fetch_url = self._get_fetch_url(
-            userId, pwd, interfaceId, params, serverId, method
+            user_id, pwd, interface_id, params, server_id, method
         )
         logger.info(f"URL: {fetch_url}")
 
@@ -307,10 +306,8 @@ class DataQueryClient(object):
 
         ret_files_info = RetFilesInfo()
 
-        # 所要调用的方法名称   打印该函数名称
         method = "callAPI_to_fileList"
 
-        # 构建music protobuf服务器地址，将请求参数拼接为url
         fetch_url = self._get_fetch_url(
             user_id, pwd, interface_id, params, server_id, method
         )
@@ -337,117 +334,82 @@ class DataQueryClient(object):
 
         return ret_files_info
 
-    def callAPI_to_downFile_ByUrl(self, fileURL, save_as):
+    def callAPI_to_downFile_ByUrl(self, file_url: str, save_as: str):
         """
-                    根据url下载文件
+        根据url下载文件
         """
-        result = self._download_file(fileURL, save_as)
+        result = self._download_file(file_url, save_as)
         if result[0] == 0:
-            print("download file success!")
+            logger.info("download file success!")
         else:
-            print("download file failed:" + fileURL)
+            logger.info("download file failed:" + file_url)
 
         return result
 
-    def callAPI_to_gridScalar2D(self, userId, pwd, interfaceId, params, serverId=None):
+    def callAPI_to_gridScalar2D(
+            self,
+            user_id: str,
+            pwd: str,
+            interface_id: str,
+            params: dict,
+            server_id: str = None
+    ) -> RetGridScalar2D:
         """
-                     网格矢量数据
+        网格矢量数据
         """
-        retGridScalar2D = RetGridScalar2D()
-        # 所要调用的方法名称
+        warnings.warn("callAPI_to_gridScalar2D is not tested")
+
+        ret_grid_scalar_2d = RetGridScalar2D()
+
         method = "callAPI_to_gridScalar2D"
-        # 构建music protobuf服务器地址，将请求参数拼接为url
-        newUrl = self._get_fetch_url(userId, pwd, interfaceId, params, serverId, method)
-        print("URL: " + newUrl)
-        try:
-            buf = BytesIO()
-            response = pycurl.Curl()
-            response.setopt(pycurl.URL, newUrl)
-            response.setopt(pycurl.CONNECTTIMEOUT, self.connect_timeout)
-            response.setopt(pycurl.TIMEOUT, self.read_timeout)
-            response.setopt(pycurl.WRITEFUNCTION, buf.write)
-            # response.setopt(pycurl.WRITEDATA, value)
-            response.perform()
-            response.close()
-        except:  # http error
-            print("Error retrieving data")
-            retGridScalar2D.request.errorCode = self.OTHER_ERROR
-            retGridScalar2D.request.errorMessage = "Error retrieving data"
-            return retGridScalar2D
 
-        buf.flush()
-        RetByteArraydata = buf.getvalue()
-        buf.close()
-        print(len(RetByteArraydata))
-        if RetByteArraydata.__contains__(DataQueryClient.getwayFlag):  # 网关错误
-            getwayInfo = json.loads(RetByteArraydata)
-            if getwayInfo is None:
-                retGridScalar2D.request.errorCode = self.OTHER_ERROR
-                retGridScalar2D.request.errorMessage = (
-                    "parse getway return string error!"
-                )
-            else:
-                retGridScalar2D.request.errorCode = getwayInfo["returnCode"]
-                retGridScalar2D.request.errorMessage = getwayInfo["returnMessage"]
-        else:  # 服务端返回结果
-            # 反序列化为proto的结果
-            pbGridScalar2D = apiinterface_pb2.RetGridScalar2D()
-            pbGridScalar2D.ParseFromString(RetByteArraydata)
-            # 格式转换，生成music的结果
-            print(pbGridScalar2D.request)
-            utils = DataFormatUtils.Utils()
-            retGridScalar2D = utils.get_grid_scalar_2d(pbGridScalar2D)
+        fetch_url = self._get_fetch_url(
+            user_id, pwd, interface_id, params, server_id, method
+        )
+        logger.info(f"URL: {fetch_url}")
 
-        return retGridScalar2D
+        response_content = self._do_request(fetch_url, ret_grid_scalar_2d)
+        if response_content is None:
+            return ret_grid_scalar_2d
 
-    def callAPI_to_gridVector2D(self, userId, pwd, interfaceId, params, serverId=None):
+        pb_grid_scalar_2d = apiinterface_pb2.RetGridScalar2D()
+        pb_grid_scalar_2d.ParseFromString(response_content)
+        utils = DataFormatUtils.Utils()
+        ret_grid_scalar_2d = utils.get_grid_scalar_2d(pb_grid_scalar_2d)
+
+        return ret_grid_scalar_2d
+
+    def callAPI_to_gridVector2D(
+            self,
+            user_id: str,
+            pwd: str,
+            interface_id: str,
+            params: dict,
+            server_id: str = None
+    ) -> RetGridVector2D:
         """
-                     网格矢量数据
+        网格矢量数据
         """
-        retGridVector2D = RetGridVector2D()
-        # 所要调用的方法名称
+        warnings.warn("callAPI_to_gridVector2D is not tested")
+
+        ret_grid_vector_2d = RetGridVector2D()
         method = "callAPI_to_gridVector2D"
-        # 构建music protobuf服务器地址，将请求参数拼接为url
-        newUrl = self._get_fetch_url(userId, pwd, interfaceId, params, serverId, method)
-        print("URL: " + newUrl)
-        try:
-            buf = BytesIO()
-            # buf = BytesIO()
-            response = pycurl.Curl()
-            response.setopt(pycurl.URL, newUrl)
-            response.setopt(pycurl.CONNECTTIMEOUT, self.connect_timeout)
-            response.setopt(pycurl.TIMEOUT, self.read_timeout)
-            response.setopt(pycurl.WRITEFUNCTION, buf.write)
-            # response.setopt(pycurl.WRITEDATA, value)
-            response.perform()
-            response.close()
-        except:  # http error
-            print("Error retrieving data")
-            retGridVector2D.request.errorCode = self.OTHER_ERROR
-            retGridVector2D.request.errorMessage = "Error retrieving data"
-            return retGridVector2D
 
-        RetByteArraydata = buf.getvalue()
-        # print len(RetByteArraydata)
-        if RetByteArraydata.__contains__(DataQueryClient.getwayFlag):  # 网关错误
-            getwayInfo = json.loads(RetByteArraydata)
-            if getwayInfo is None:
-                retGridVector2D.request.errorCode = self.OTHER_ERROR
-                retGridVector2D.request.errorMessage = (
-                    "parse getway return string error!"
-                )
-            else:
-                retGridVector2D.request.errorCode = getwayInfo["returnCode"]
-                retGridVector2D.request.errorMessage = getwayInfo["returnMessage"]
-        else:  # 服务端返回结果
-            # 反序列化为proto的结果
-            pbGridVector2D = apiinterface_pb2.RetGridVector2D()
-            pbGridVector2D.ParseFromString(RetByteArraydata)
-            # print pbGridVector2D.request
-            utils = DataFormatUtils.Utils()
-            retGridVector2D = utils.get_grid_vector_2d(pbGridVector2D)
+        fetch_url = self._get_fetch_url(
+            user_id, pwd, interface_id, params, server_id, method
+        )
+        logger.info(f"URL: {fetch_url}")
 
-        return retGridVector2D
+        response_content = self._do_request(fetch_url, ret_grid_vector_2d)
+        if response_content is None:
+            return ret_grid_vector_2d
+
+        pb_grid_vector_2d = apiinterface_pb2.RetGridVector2D()
+        pb_grid_vector_2d.ParseFromString(response_content)
+        utils = DataFormatUtils.Utils()
+        ret_grid_vector_2d = utils.get_grid_vector_2d(pb_grid_vector_2d)
+
+        return ret_grid_vector_2d
 
     def _load_config(self, config_file: str) -> None:
         if config_file is not None:

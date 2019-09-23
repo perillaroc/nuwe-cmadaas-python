@@ -403,7 +403,7 @@ class DataStoreClient(object):
             pbRequestInfo.ParseFromString(RetByteArraydata)
             # 格式转换，生成music的结果
             utils = DataFormatUtils.Utils()
-            requestInfo = utils.getRequestInfo(pbRequestInfo)
+            requestInfo = utils.get_request_info(pbRequestInfo)
 
         return requestInfo
 
@@ -557,7 +557,7 @@ class DataStoreClient(object):
             pbRequestInfo.ParseFromString(RetByteArraydata)
             # 格式转换，生成music的结果
             utils = DataFormatUtils.Utils()
-            requestInfo = utils.getRequestInfo(pbRequestInfo)
+            requestInfo = utils.get_request_info(pbRequestInfo)
 
         return requestInfo
 
@@ -623,7 +623,7 @@ class DataStoreClient(object):
             pbRequestInfo.ParseFromString(RetByteArraydata)
             # 格式转换，生成music的结果
             utils = DataFormatUtils.Utils()
-            requestInfo = utils.getRequestInfo(pbRequestInfo)
+            requestInfo = utils.get_request_info(pbRequestInfo)
 
         return requestInfo
 

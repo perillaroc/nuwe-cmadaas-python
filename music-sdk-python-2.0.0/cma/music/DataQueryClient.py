@@ -95,7 +95,7 @@ class DataQueryClient(object):
         pb_ret_array_2d = apiinterface_pb2.RetArray2D()
         pb_ret_array_2d.ParseFromString(response_content)
         utils = DataFormatUtils.Utils()
-        ret_array_2d = utils.getArray2D(pb_ret_array_2d)
+        ret_array_2d = utils.get_array_2d(pb_ret_array_2d)
 
         return ret_array_2d
 
@@ -120,7 +120,7 @@ class DataQueryClient(object):
         pb_data_block.ParseFromString(response_content)
         # 格式转换
         utils = DataFormatUtils.Utils()
-        ret_data_block = utils.getDataBlock(pb_data_block)
+        ret_data_block = utils.get_data_block(pb_data_block)
 
         return ret_data_block
 
@@ -167,7 +167,7 @@ class DataQueryClient(object):
             pbGridArray2D.ParseFromString(RetByteArraydata)
             # 格式转换
             utils = DataFormatUtils.Utils()
-            retGridArray2D = utils.getGridArray2D(pbGridArray2D)
+            retGridArray2D = utils.get_grid_array_2d(pbGridArray2D)
 
         return retGridArray2D
 
@@ -212,7 +212,7 @@ class DataQueryClient(object):
             pbRetFilesInfo.ParseFromString(RetByteArraydata)
             # 格式转换，生成music的结果
             utils = DataFormatUtils.Utils()
-            retFilesInfo = utils.getRetFilesInfo(pbRetFilesInfo)
+            retFilesInfo = utils.get_ret_files_info(pbRetFilesInfo)
 
         return retFilesInfo
 
@@ -293,7 +293,7 @@ class DataQueryClient(object):
         pb_ret_files_info = apiinterface_pb2.RetFilesInfo()
         pb_ret_files_info.ParseFromString(response_content)
         utils = DataFormatUtils.Utils()
-        ret_files_info = utils.getRetFilesInfo(pb_ret_files_info)
+        ret_files_info = utils.get_ret_files_info(pb_ret_files_info)
 
         # 将数据保存到本地
         if ret_files_info and ret_files_info.request.errorCode == 0:
@@ -330,7 +330,7 @@ class DataQueryClient(object):
         pb_ret_files_info = apiinterface_pb2.RetFilesInfo()
         pb_ret_files_info.ParseFromString(response_content)
         utils = DataFormatUtils.Utils()
-        ret_files_info = utils.getRetFilesInfo(pb_ret_files_info)
+        ret_files_info = utils.get_ret_files_info(pb_ret_files_info)
 
         if ret_files_info and ret_files_info.request.errorCode == 0:
             for info in ret_files_info.fileInfos:
@@ -401,7 +401,7 @@ class DataQueryClient(object):
             # 格式转换，生成music的结果
             print(pbGridScalar2D.request)
             utils = DataFormatUtils.Utils()
-            retGridScalar2D = utils.getGridScalar2D(pbGridScalar2D)
+            retGridScalar2D = utils.get_grid_scalar_2d(pbGridScalar2D)
 
         return retGridScalar2D
 
@@ -450,7 +450,7 @@ class DataQueryClient(object):
             pbGridVector2D.ParseFromString(RetByteArraydata)
             # print pbGridVector2D.request
             utils = DataFormatUtils.Utils()
-            retGridVector2D = utils.getGridVector2D(pbGridVector2D)
+            retGridVector2D = utils.get_grid_vector_2d(pbGridVector2D)
 
         return retGridVector2D
 

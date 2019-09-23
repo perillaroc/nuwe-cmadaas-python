@@ -24,15 +24,15 @@ class RequestInfo(object):
     """
 
     def __init__(
-            self,
-            error_code: int = 0,
-            error_message: str = "",
-            request_elems: str = "",
-            request_params: str = "",
-            request_time: str = "",
-            response_time: str = "",
-            row_count: int = 0,
-            take_time: int = 0,
+        self,
+        error_code: int = 0,
+        error_message: str = "",
+        request_elems: str = "",
+        request_params: str = "",
+        request_time: str = "",
+        response_time: str = "",
+        row_count: int = 0,
+        take_time: int = 0,
     ):
         self.error_code = error_code  # 错误编码
         self.error_message = error_message  # 错误信息
@@ -102,21 +102,21 @@ class RetGridArray2D(object):
     """
 
     def __init__(
-            self,
-            data=None,
-            request=None,
-            start_lat=0.0,
-            start_lon=0.0,
-            end_lat=0.0,
-            end_lon=0.0,
-            lat_count=0,
-            lon_count=0,
-            lon_step=0.0,
-            lat_step=0.0,
-            units="",
-            user_ele_name="",
-            lats=None,
-            lons=None,
+        self,
+        data=None,
+        request=None,
+        start_lat=0.0,
+        start_lon=0.0,
+        end_lat=0.0,
+        end_lon=0.0,
+        lat_count=0,
+        lon_count=0,
+        lon_step=0.0,
+        lat_step=0.0,
+        units="",
+        user_ele_name="",
+        lats=None,
+        lons=None,
     ):
         self.data = data  # 返回格点数据
         if request is None:
@@ -143,21 +143,21 @@ class RetGridScalar2D(object):
     """
 
     def __init__(
-            self,
-            data=None,
-            request=None,
-            start_lat=0.0,
-            start_lon=0.0,
-            end_lat=0.0,
-            end_lon=0.0,
-            lat_count=0,
-            lon_count=0,
-            lon_step=0.0,
-            lat_step=0.0,
-            units="",
-            user_ele_name="",
-            lats=None,
-            lons=None,
+        self,
+        data=None,
+        request=None,
+        start_lat=0.0,
+        start_lon=0.0,
+        end_lat=0.0,
+        end_lon=0.0,
+        lat_count=0,
+        lon_count=0,
+        lon_step=0.0,
+        lat_step=0.0,
+        units="",
+        user_ele_name="",
+        lats=None,
+        lons=None,
     ):
         self.data = data  # 返回格点数据
         if request is None:
@@ -184,22 +184,22 @@ class RetGridVector2D(object):
     """
 
     def __init__(
-            self,
-            u_datas=None,
-            v_datas=None,
-            request=None,
-            start_lat=0.0,
-            start_lon=0.0,
-            end_lat=0.0,
-            end_lon=0.0,
-            lat_count=0,
-            lon_count=0,
-            lon_step=0.0,
-            lat_step=0.0,
-            u_ele_name="",
-            v_ele_name="",
-            lats=None,
-            lons=None,
+        self,
+        u_datas=None,
+        v_datas=None,
+        request=None,
+        start_lat=0.0,
+        start_lon=0.0,
+        end_lat=0.0,
+        end_lon=0.0,
+        lat_count=0,
+        lon_count=0,
+        lon_step=0.0,
+        lat_step=0.0,
+        u_ele_name="",
+        v_ele_name="",
+        lats=None,
+        lons=None,
     ):
         if request is None:
             self.request = RequestInfo()  # 请求信息
@@ -227,14 +227,14 @@ class FileInfo(object):
     """
 
     def __init__(
-            self,
-            file_name="",
-            save_path="",
-            suffix="",
-            size="",
-            file_url="",
-            img_base64="",
-            attributes=None,
+        self,
+        file_name="",
+        save_path="",
+        suffix="",
+        size="",
+        file_url="",
+        img_base64="",
+        attributes=None,
     ):
         self.file_name = file_name  # 文件名
         self.save_path = save_path  # 文件全路径

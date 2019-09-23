@@ -49,16 +49,20 @@ class Utils:
         """
         matrix = [[0 for col in range(cols)] for row in range(rows)]
         for i in range(rows):
-            matrix[i] = data[i * cols: i * cols + cols]
+            matrix[i] = data[i * cols : i * cols + cols]
 
         return matrix
 
     @classmethod
-    def set_request_info(cls, pb_request_info: pb.RequestInfo = None) -> MusicDataBean.RequestInfo:
+    def set_request_info(
+        cls, pb_request_info: pb.RequestInfo = None
+    ) -> MusicDataBean.RequestInfo:
         return Utils.get_request_info(pb_request_info)
 
     @classmethod
-    def get_request_info(cls, pb_request_info: pb.RequestInfo) -> MusicDataBean.RequestInfo:
+    def get_request_info(
+        cls, pb_request_info: pb.RequestInfo
+    ) -> MusicDataBean.RequestInfo:
         """
         将protobuf类实例转换为music RequestInfo结构数据
         """
@@ -80,7 +84,9 @@ class Utils:
         """
         将protobuf类实例转换为music RetArray2D结构数据
         """
-        ret_array_2d = MusicDataBean.RetArray2D(pb_ret_array_2d.data, pb_ret_array_2d.request)
+        ret_array_2d = MusicDataBean.RetArray2D(
+            pb_ret_array_2d.data, pb_ret_array_2d.request
+        )
 
         # 如果该结果数据存在，则将获取的数据，转换为二维数组格式
         if ret_array_2d:
@@ -104,12 +110,16 @@ class Utils:
         return ret_array_2d
 
     @classmethod
-    def get_data_block(cls, pb_ret_data_block: pb.RetDataBlock) -> MusicDataBean.RetDataBlock:
+    def get_data_block(
+        cls, pb_ret_data_block: pb.RetDataBlock
+    ) -> MusicDataBean.RetDataBlock:
         """
         将protobuf类实例转换为music RetDataBlock结构数据
         """
         ret_data_block = MusicDataBean.RetDataBlock(
-            pb_ret_data_block.dataName, pb_ret_data_block.byteArray, pb_ret_data_block.request
+            pb_ret_data_block.dataName,
+            pb_ret_data_block.byteArray,
+            pb_ret_data_block.request,
         )
         if ret_data_block is not None:
             ret_data_block.request = Utils.set_request_info(pb_ret_data_block.request)
@@ -117,7 +127,9 @@ class Utils:
         return ret_data_block
 
     @classmethod
-    def get_grid_array_2d(cls, pb_ret_grid_array_2d: pb.RetGridArray2D) -> MusicDataBean.RetGridArray2D:
+    def get_grid_array_2d(
+        cls, pb_ret_grid_array_2d: pb.RetGridArray2D
+    ) -> MusicDataBean.RetGridArray2D:
         """
         将protobuf类实例转换为music RetGridArray2D结构数据
         """
@@ -126,7 +138,9 @@ class Utils:
         )
         # 如果该结果数据存在，则将获取的数据，转换为二维数组格式
         if ret_grid_array_2d:
-            ret_grid_array_2d.request = Utils.set_request_info(pb_ret_grid_array_2d.request)
+            ret_grid_array_2d.request = Utils.set_request_info(
+                pb_ret_grid_array_2d.request
+            )
             ret_code = ret_grid_array_2d.request.error_code
             if ret_code == 0:
                 ret_grid_array_2d.start_lat = pb_ret_grid_array_2d.startLat
@@ -156,12 +170,16 @@ class Utils:
                 rows = ret_grid_array_2d.request.rowCount  # 获得数据的行数
                 data_len = len(ret_grid_array_2d.data)  # 获得所有数据的个数
                 cols = data_len / rows
-                ret_grid_array_2d.data = Utils.set_matrix(rows, cols, ret_grid_array_2d.data)
+                ret_grid_array_2d.data = Utils.set_matrix(
+                    rows, cols, ret_grid_array_2d.data
+                )
 
         return ret_grid_array_2d
 
     @classmethod
-    def get_grid_scalar_2d(cls, pb_ret_grid_scalar_2d: pb.RetGridScalar2D) -> MusicDataBean.RetGridScalar2D:
+    def get_grid_scalar_2d(
+        cls, pb_ret_grid_scalar_2d: pb.RetGridScalar2D
+    ) -> MusicDataBean.RetGridScalar2D:
         """
         将protobuf类实例转换为music RetGridScalar2D结构数据
         """
@@ -170,7 +188,9 @@ class Utils:
         )
         # 如果该结果数据存在，则将获取的数据，转换为二维数组格式
         if ret_grid_scalar_2d:
-            ret_grid_scalar_2d.request = Utils.set_request_info(pb_ret_grid_scalar_2d.request)
+            ret_grid_scalar_2d.request = Utils.set_request_info(
+                pb_ret_grid_scalar_2d.request
+            )
             ret_code = ret_grid_scalar_2d.request.error_code
             if ret_code == 0:
                 ret_grid_scalar_2d.start_lat = pb_ret_grid_scalar_2d.startLat
@@ -198,7 +218,9 @@ class Utils:
         return ret_grid_scalar_2d
 
     @classmethod
-    def get_grid_vector_2d(cls, pb_ret_grid_vector_2d: pb.RetGridVector2D) -> MusicDataBean.RetGridVector2D:
+    def get_grid_vector_2d(
+        cls, pb_ret_grid_vector_2d: pb.RetGridVector2D
+    ) -> MusicDataBean.RetGridVector2D:
         """
         将protobuf类实例转换为music RetGridVector2D结构数据
         """
@@ -209,7 +231,9 @@ class Utils:
         )
         # 如果该结果数据存在，则将获取的数据，转换为二维数组格式
         if ret_grid_vector_2d:
-            ret_grid_vector_2d.request = Utils.set_request_info(pb_ret_grid_vector_2d.request)
+            ret_grid_vector_2d.request = Utils.set_request_info(
+                pb_ret_grid_vector_2d.request
+            )
             ret_code = ret_grid_vector_2d.request.error_code
             if ret_code == 0:
                 ret_grid_vector_2d.start_lat = pb_ret_grid_vector_2d.startLat
@@ -239,7 +263,9 @@ class Utils:
         return ret_grid_vector_2d
 
     @classmethod
-    def get_ret_files_info(cls, pb_ret_files_info: pb.RetFilesInfo) -> MusicDataBean.RetFilesInfo:
+    def get_ret_files_info(
+        cls, pb_ret_files_info: pb.RetFilesInfo
+    ) -> MusicDataBean.RetFilesInfo:
         """
         将protobuf类实例转换为music RetFilesInfo结构数据
         """

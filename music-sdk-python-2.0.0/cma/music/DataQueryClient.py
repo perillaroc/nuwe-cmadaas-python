@@ -133,7 +133,7 @@ class DataQueryClient(object):
 
         response_content = self._do_request(fetch_url, ret_data_block)
         if response_content is None:
-            return response_content
+            return ret_data_block
 
         pb_data_block = apiinterface_pb2.RetDataBlock()
         pb_data_block.ParseFromString(response_content)
@@ -143,52 +143,30 @@ class DataQueryClient(object):
 
         return ret_data_block
 
-    def callAPI_to_gridArray2D(self, userId, pwd, interfaceId, params, serverId=None):
+    def callAPI_to_gridArray2D(self, user_id: str, pwd: str, interface_id: str, params: dict, server_id: str = None):
         """
-                     网格数据检索
+        网格数据检索
         """
-        retGridArray2D = RetGridArray2D()
+        ret_grid_array_2d = RetGridArray2D()
+
         # 所要调用的方法名称
         method = "callAPI_to_gridArray2D"
         # 构建music protobuf服务器地址，将请求参数拼接为url
-        newUrl = self._get_fetch_url(userId, pwd, interfaceId, params, serverId, method)
-        print("URL: " + newUrl)
-        try:
-            buf = BytesIO()
-            response = pycurl.Curl()
-            response.setopt(pycurl.URL, newUrl)
-            response.setopt(pycurl.CONNECTTIMEOUT, self.connect_timeout)
-            response.setopt(pycurl.TIMEOUT, self.read_timeout)
-            response.setopt(pycurl.WRITEFUNCTION, buf.write)
-            # response.setopt(pycurl.WRITEDATA, value)
-            response.perform()
-            response.close()
-        except:  # http error
-            print("Error retrieving data")
-            retGridArray2D.request.errorCode = self.OTHER_ERROR
-            retGridArray2D.request.errorMessage = "Error retrieving data"
-            return retGridArray2D
+        fetch_url = self._get_fetch_url(
+            user_id, pwd, interface_id, params, server_id, method
+        )
+        logger.info(f"URL: {fetch_url}")
 
-        RetByteArraydata = buf.getvalue()
-        if RetByteArraydata.__contains__(DataQueryClient.getwayFlag):  # 网关错误
-            getwayInfo = json.loads(RetByteArraydata)
-            if getwayInfo is None:
-                retGridArray2D.request.errorCode = self.OTHER_ERROR
-                retGridArray2D.request.errorMessage = (
-                    "parse getway return string error!"
-                )
-            else:
-                retGridArray2D.request.errorCode = getwayInfo["returnCode"]
-                retGridArray2D.request.errorMessage = getwayInfo["returnMessage"]
-        else:  # 服务端返回结果
-            # 反序列化为proto的结果
-            pbGridArray2D = apiinterface_pb2.RetGridArray2D()
-            pbGridArray2D.ParseFromString(RetByteArraydata)
-            # 格式转换
-            utils = DataFormatUtils.Utils()
-            retGridArray2D = utils.get_grid_array_2d(pbGridArray2D)
+        response_content = self._do_request(fetch_url, ret_grid_array_2d)
+        if response_content is None:
+            return ret_grid_array_2d
 
-        return retGridArray2D
+        pb_grid_array_2d = apiinterface_pb2.RetGridArray2D()
+        pb_grid_array_2d.ParseFromString(response_content)
+        utils = DataFormatUtils.Utils()
+        ret_grid_array_2d = utils.get_grid_array_2d(pb_grid_array_2d)
+
+        return ret_grid_array_2d
 
     def callAPI_to_fileList(self, userId, pwd, interfaceId, params, serverId=None):
         """

@@ -49,7 +49,7 @@ class Utils:
         """
         matrix = [[0 for col in range(cols)] for row in range(rows)]
         for i in range(rows):
-            matrix[i] = data[i * cols : i * cols + cols]
+            matrix[i] = data[i * cols: i * cols + cols]
 
         return matrix
 
@@ -169,7 +169,7 @@ class Utils:
                 ret_grid_array_2d.user_ele_name = pb_ret_grid_array_2d.userEleName
                 rows = ret_grid_array_2d.request.rowCount  # 获得数据的行数
                 data_len = len(ret_grid_array_2d.data)  # 获得所有数据的个数
-                cols = data_len / rows
+                cols = int(data_len / rows)
                 ret_grid_array_2d.data = Utils.set_matrix(
                     rows, cols, ret_grid_array_2d.data
                 )

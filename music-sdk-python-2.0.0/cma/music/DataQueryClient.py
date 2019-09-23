@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: UTF-8 -*-
 """
 data query interface class
@@ -15,11 +14,8 @@ Modified in 2019/3/6
 import configparser
 import json
 import logging
-import os
 import pathlib
-import socket
 import warnings
-from io import BytesIO
 
 import requests
 
@@ -60,9 +56,6 @@ class DataQueryClient(object):
         self.server_id = service_node_id
         self.connect_timeout = connection_timeout
         self.read_timeout = read_timeout
-
-        # 本机IP
-        self.client_ip = socket.gethostbyname(socket.gethostname())
 
         # 数据读取URL(基本路径) http://ip:port/music-ws/api?serviceNodeId=serverId&
         self.basic_url = (
@@ -224,9 +217,7 @@ class DataQueryClient(object):
         if DataQueryClient.getwayFlag in response_content:  # 网关错误
             getway_info = json.loads(response_content)
             if getway_info is None:
-                return "parse getway return string error:" + response_content.decode(
-                    "utf8"
-                )
+                return "parse getway return string error:" + response_content.decode("utf8")
             else:
                 return "getway error: returnCode={return_code} returnMessage={return_message}".format(
                     return_code=getway_info["returnCode"],
@@ -250,21 +241,19 @@ class DataQueryClient(object):
         """
         ret_files_info = RetFilesInfo()
 
-        # 所要调用的方法名称
         method = "callAPI_to_saveAsFile"
 
-        # 添加数据格式
         if "dataFormat" not in params:
             params["dataFormat"] = data_format
 
         if file_name is None:
             ret_files_info.request.errorCode = self.OTHER_ERROR
-            ret_files_info.request.errorMessage = "error:savePath can't null, the format is dir/file.formart. For example /data/saveas.xml)"
+            ret_files_info.request.errorMessage = ("error:savePath can't null, the format is dir/file.formart. "
+                                                    "For example /data/saveas.xml)")
             return ret_files_info
 
         params["savepath"] = file_name
 
-        # 构建music protobuf服务器地址，将请求参数拼接为url
         fetch_url = self._get_fetch_url(
             user_id, pwd, interface_id, params, server_id, method
         )
@@ -413,7 +402,7 @@ class DataQueryClient(object):
 
     def _load_config(self, config_file: str) -> None:
         if config_file is not None:
-            if not os.path.exists(config_file):
+            if not pathlib.Path(config_file).exists():
                 raise RuntimeError("config file is not exist.")
             else:
                 config = config_file
@@ -489,11 +478,15 @@ class DataQueryClient(object):
             return None
 
         if DataQueryClient.getwayFlag in response_content:  # 网关错误
+            """
+            出错返回消息示例：
+                {"returnCode":-1004,"flag":"slb","returnMessage":"Password Error"}
+            """
             getway_info = json.loads(response_content)
             if getway_info is None:
                 response_data.request.errorCode = self.OTHER_ERROR
                 response_data.request.errorMessage = (
-                    "parse getway return string error:" + response_content
+                    "parse getway return string error:" + response_content.decode('utf-8')
                 )
             else:
                 response_data.request.errorCode = getway_info["returnCode"]

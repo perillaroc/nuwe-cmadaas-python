@@ -1,0 +1,119 @@
+syntax = "proto3";
+
+package cma.music.pb;
+
+message RequestInfo{
+    int32 errorCode = 1;
+    string errorMessage =2;
+    string requestElems = 3;
+    string requestParams = 4;
+    string requestTime = 5;
+    string responseTime = 6;
+    int32 rowCount = 7;
+    int32 takeTime = 8;
+    int32 colCount = 9;
+}
+
+message RetArray2D{
+    repeated string data = 1;
+    RequestInfo request = 2;
+    repeated string elementNames = 3;
+}
+
+message RetGridArray2D{
+    repeated float data = 1;
+    RequestInfo request = 2;
+    float startLat = 3;
+    float startLon = 4;
+    float endLat = 5;
+    float endLon = 6;
+    int32 latCount = 7;
+    int32 lonCount = 8;
+    float lonStep = 9;
+    float latStep = 10;
+    repeated float lats = 11;
+    repeated float lons = 12;
+    string units = 13;
+    string userEleName = 14;
+}
+
+message FileInfo{
+    string fileName = 1;
+    string savePath = 2;
+    string suffix = 3;
+    string size = 4;
+    string fileUrl = 5;
+    string imgBase64 = 6;
+    repeated string attributes = 7;
+}
+
+message RetFilesInfo{
+    repeated FileInfo fileInfos = 1;
+    RequestInfo request = 2;
+}
+
+message StoreArray2D{
+    repeated string data = 1;
+    int32 row = 2;
+    int32 col = 3;
+    int32 fileflag = 4;
+    repeated string filenames = 5;
+    int32 is_backstage = 6;
+    string client_mount_path = 7;
+    string server_mount_path = 8;
+}
+
+message RetDataBlock{
+    string dataName = 1;
+    bytes byteArray = 2;
+    RequestInfo request = 3;
+}
+
+message RetGridVector2D{
+    repeated float u_datas = 1;
+    repeated float v_data2 = 2;
+    RequestInfo request = 3;
+    float startLat = 4;
+    float startLon = 5;
+    float endLat = 6;
+    float endLon = 7;
+    int32 latCount = 8;
+    int32 lonCount = 9;
+    float lonStep = 10;
+    float latStep = 11;
+    repeated float lats = 12;
+    repeated float lons = 13;
+    string u_EleName = 14;
+    string v_EleName = 15;
+}
+
+message RetGridScalar2D{
+    repeated float datas = 1;
+    RequestInfo request = 2;
+    float startLat = 3;
+    float startLon = 4;
+    float endLat = 5;
+    float endLon = 6;
+    int32 latCount = 7;
+    int32 lonCount = 8;
+    float lonStep = 9;
+    float latStep = 10;
+    repeated float lats = 11;
+    repeated float lons = 12;
+    string units = 13;
+    string userEleName = 14;
+}
+
+message StoreGridData{
+    repeated string attributes = 1;
+    int32 pointflag = 2;
+    repeated float Lats = 3;
+    repeated float Lons = 4;
+    repeated float datas = 5;
+}
+
+message StoreBlockData{
+    repeated string attributes = 1;
+    bytes data = 2;
+}
+

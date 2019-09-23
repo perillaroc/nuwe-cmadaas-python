@@ -298,7 +298,7 @@ class DataQueryClient(object):
         # 将数据保存到本地
         if ret_files_info and ret_files_info.request.errorCode == 0:
             result = self._download_file(
-                ret_files_info.fileInfos[0].fileUrl, file_name
+                ret_files_info.file_infos[0].fileUrl, file_name
             )
             if result[0] != 0:
                 ret_files_info.request.errorCode = result[0]
@@ -333,7 +333,7 @@ class DataQueryClient(object):
         ret_files_info = utils.get_ret_files_info(pb_ret_files_info)
 
         if ret_files_info and ret_files_info.request.errorCode == 0:
-            for info in ret_files_info.fileInfos:
+            for info in ret_files_info.file_infos:
                 result = self._download_file(info.fileUrl, file_dir_path.joinpath(info.fileName))
                 if result[0] != 0:
                     ret_files_info.request.errorCode = result[0]

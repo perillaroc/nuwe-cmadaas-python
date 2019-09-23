@@ -161,8 +161,8 @@ class DataStoreClient(object):
         flagIsDelete = 0  # 是否为文件索引删除
         # 如果inArray2D为空，则返回
         if (inArray2D == None) or (len(inArray2D) == 0):
-            requestInfo.errorCode = self.OTHER_ERROR
-            requestInfo.errorMessage = "Input data cant null!"
+            requestInfo.error_code = self.OTHER_ERROR
+            requestInfo.error_message = "Input data cant null!"
             return requestInfo
 
         inArray2DSize = len(inArray2D)
@@ -173,8 +173,8 @@ class DataStoreClient(object):
         else:
             fileNum = len(inFilePaths)
             if inArray2DSize != fileNum or inArray2DSize == 0 or fileNum == 0:
-                requestInfo.errorCode = self.OTHER_ERROR
-                requestInfo.errorMessage = "Error:Input data number not right!"
+                requestInfo.error_code = self.OTHER_ERROR
+                requestInfo.error_message = "Error:Input data number not right!"
                 return requestInfo
 
         if flagIsDelete == 1:  # 删除文件索引信息
@@ -185,8 +185,8 @@ class DataStoreClient(object):
             # 获得文件大小(该二维数组中的所有文件大小)
             fileSize = self.getdirsize(inFilePaths)
             if fileSize <= 0:
-                requestInfo.errorCode = self.OTHER_ERROR
-                requestInfo.errorMessage = "Error:Input files can't exist empty file!"
+                requestInfo.error_code = self.OTHER_ERROR
+                requestInfo.error_message = "Error:Input files can't exist empty file!"
                 return requestInfo
             else:
                 # http传输
@@ -223,17 +223,17 @@ class DataStoreClient(object):
                         ):  # 网关错误
                             getwayInfo = json.loads(copyResult[1])
                             if getwayInfo is None:
-                                requestInfo.errorCode = self.OTHER_ERROR
-                                requestInfo.errorMessage = (
+                                requestInfo.error_code = self.OTHER_ERROR
+                                requestInfo.error_message = (
                                     "parse getway return string error!"
                                 )
                             else:
-                                requestInfo.errorCode = getwayInfo["returnCode"]
-                                requestInfo.errorMessage = getwayInfo["returnMessage"]
+                                requestInfo.error_code = getwayInfo["returnCode"]
+                                requestInfo.error_message = getwayInfo["returnMessage"]
                             return requestInfo
                         else:
-                            requestInfo.errorCode = self.OTHER_ERROR
-                            requestInfo.errorMessage = (
+                            requestInfo.error_code = self.OTHER_ERROR
+                            requestInfo.error_message = (
                                 "upload file fail:" + copyResult[1]
                             )
                             return requestInfo
@@ -282,8 +282,8 @@ class DataStoreClient(object):
         requestInfo = RequestInfo()
         method = "callAPI_to_storeGridData"  # 调用函数（方法）名称
         if (interfaceId == "saveGridData") and (inGridData.attributes is None):
-            requestInfo.errorCode = self.OTHER_ERROR
-            requestInfo.errorMessage = "Input data attributes can't null!"
+            requestInfo.error_code = self.OTHER_ERROR
+            requestInfo.error_message = "Input data attributes can't null!"
             return requestInfo
 
         if (inGridData.data is not None) and (len(inGridData.data) > 0):  # 不是删除
@@ -291,16 +291,16 @@ class DataStoreClient(object):
                 if (len(inGridData.lats) != len(inGridData.lons)) or (
                     len(inGridData.data) != len(inGridData.lons)
                 ):
-                    requestInfo.errorCode = self.OTHER_ERROR
-                    requestInfo.errorMessage = "Input data size is wrong!"
+                    requestInfo.error_code = self.OTHER_ERROR
+                    requestInfo.error_message = "Input data size is wrong!"
                     return requestInfo
             else:
                 if len(inGridData.data) != (
                     ((int)(inGridData.lats[0] + 0.5))
                     * ((int)(inGridData.lons[0] + 0.5))
                 ):
-                    requestInfo.errorCode = self.OTHER_ERROR
-                    requestInfo.errorMessage = "Input data size is wrong!"
+                    requestInfo.error_code = self.OTHER_ERROR
+                    requestInfo.error_message = "Input data size is wrong!"
                     return requestInfo
 
         return self.callAPI_to_storeGridDataInfo(
@@ -319,8 +319,8 @@ class DataStoreClient(object):
         if ((interfaceId == "saveBlockData") or (interfaceId == "saveBlockData")) and (
             attributes is None
         ):
-            requestInfo.errorCode = self.OTHER_ERROR
-            requestInfo.errorMessage = "Input data attributes can't null!"
+            requestInfo.error_code = self.OTHER_ERROR
+            requestInfo.error_message = "Input data attributes can't null!"
             return requestInfo
 
         return self.callAPI_to_storeBlockDataInfo(
@@ -344,8 +344,8 @@ class DataStoreClient(object):
         requestInfo = RequestInfo()
         # 如果inArray2D为空，则返回
         if (inArray2D == None) or (len(inArray2D) == 0):
-            requestInfo.errorCode = self.OTHER_ERROR
-            requestInfo.errorMessage = "Input data cant null!"
+            requestInfo.error_code = self.OTHER_ERROR
+            requestInfo.error_message = "Input data cant null!"
             return requestInfo
 
         # 格式转换，生成Music的结果的对象
@@ -358,8 +358,8 @@ class DataStoreClient(object):
             fileRow = len(inFilePaths)
             array2DRow = len(inArray2D)
             if fileRow != array2DRow:
-                requestInfo.errorCode = self.OTHER_ERROR
-                requestInfo.errorMessage = (
+                requestInfo.error_code = self.OTHER_ERROR
+                requestInfo.error_message = (
                     "Input fileinfo and file number does not match !"
                 )
                 return requestInfo
@@ -384,19 +384,19 @@ class DataStoreClient(object):
             response.close()
         except:  # http error
             print("Error retrieving data")
-            requestInfo.errorCode = self.OTHER_ERROR
-            requestInfo.errorMessage = "Error retrieving data"
+            requestInfo.error_code = self.OTHER_ERROR
+            requestInfo.error_message = "Error retrieving data"
             return requestInfo
 
         RetByteArraydata = buf.getvalue()
         if RetByteArraydata.__contains__(DataStoreClient.getwayFlag):  # 网关错误
             getwayInfo = json.loads(RetByteArraydata)
             if getwayInfo is None:
-                requestInfo.errorCode = self.OTHER_ERROR
-                requestInfo.errorMessage = "parse getway return string error!"
+                requestInfo.error_code = self.OTHER_ERROR
+                requestInfo.error_message = "parse getway return string error!"
             else:
-                requestInfo.errorCode = getwayInfo["returnCode"]
-                requestInfo.errorMessage = getwayInfo["returnMessage"]
+                requestInfo.error_code = getwayInfo["returnCode"]
+                requestInfo.error_message = getwayInfo["returnMessage"]
         else:  # 服务端返回结果
             # 反序列化为proto的结果
             pbRequestInfo = apiinterface_pb2.RequestInfo()
@@ -538,19 +538,19 @@ class DataStoreClient(object):
             response.close()
         except:  # http error
             print("Error retrieving data")
-            requestInfo.errorCode = self.OTHER_ERROR
-            requestInfo.errorMessage = "Error retrieving data"
+            requestInfo.error_code = self.OTHER_ERROR
+            requestInfo.error_message = "Error retrieving data"
             return requestInfo
 
         RetByteArraydata = buf.getvalue()
         if RetByteArraydata.__contains__(DataStoreClient.getwayFlag):  # 网关错误
             getwayInfo = json.loads(RetByteArraydata)
             if getwayInfo is None:
-                requestInfo.errorCode = self.OTHER_ERROR
-                requestInfo.errorMessage = "parse getway return string error!"
+                requestInfo.error_code = self.OTHER_ERROR
+                requestInfo.error_message = "parse getway return string error!"
             else:
-                requestInfo.errorCode = getwayInfo["returnCode"]
-                requestInfo.errorMessage = getwayInfo["returnMessage"]
+                requestInfo.error_code = getwayInfo["returnCode"]
+                requestInfo.error_message = getwayInfo["returnMessage"]
         else:  # 服务端返回结果
             # 反序列化为proto的结果
             pbRequestInfo = apiinterface_pb2.RequestInfo()
@@ -604,19 +604,19 @@ class DataStoreClient(object):
             response.close()
         except:  # http error
             print("Error retrieving data")
-            requestInfo.errorCode = self.OTHER_ERROR
-            requestInfo.errorMessage = "Error retrieving data"
+            requestInfo.error_code = self.OTHER_ERROR
+            requestInfo.error_message = "Error retrieving data"
             return requestInfo
 
         RetByteArraydata = buf.getvalue()
         if RetByteArraydata.__contains__(DataStoreClient.getwayFlag):  # 网关错误
             getwayInfo = json.loads(RetByteArraydata)
             if getwayInfo is None:
-                requestInfo.errorCode = self.OTHER_ERROR
-                requestInfo.errorMessage = "parse getway return string error!"
+                requestInfo.error_code = self.OTHER_ERROR
+                requestInfo.error_message = "parse getway return string error!"
             else:
-                requestInfo.errorCode = getwayInfo["returnCode"]
-                requestInfo.errorMessage = getwayInfo["returnMessage"]
+                requestInfo.error_code = getwayInfo["returnCode"]
+                requestInfo.error_message = getwayInfo["returnMessage"]
         else:  # 服务端返回结果
             # 反序列化为proto的结果
             pbRequestInfo = apiinterface_pb2.RequestInfo()

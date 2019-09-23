@@ -86,8 +86,8 @@ class Utils:
         if ret_array_2d:
             # 将获取请求信息，转换为子类对象，进行封装
             ret_array_2d.request = Utils.set_request_info(pb_ret_array_2d.request)
-            ret_array_2d.elementNames = pb_ret_array_2d.elementNames
-            ret_code = ret_array_2d.request.errorCode  # 获得错误编码
+            ret_array_2d.element_names = pb_ret_array_2d.elementNames
+            ret_code = ret_array_2d.request.error_code  # 获得错误编码
             # 返回码为0，表示返回结果成功
             if ret_code == 0:
                 rows = ret_array_2d.request.rowCount  # 获得数据的行数
@@ -127,32 +127,32 @@ class Utils:
         # 如果该结果数据存在，则将获取的数据，转换为二维数组格式
         if ret_grid_array_2d:
             ret_grid_array_2d.request = Utils.set_request_info(pb_ret_grid_array_2d.request)
-            ret_code = ret_grid_array_2d.request.errorCode
+            ret_code = ret_grid_array_2d.request.error_code
             if ret_code == 0:
-                ret_grid_array_2d.startLat = pb_ret_grid_array_2d.startLat
-                ret_grid_array_2d.startLon = pb_ret_grid_array_2d.startLon
-                ret_grid_array_2d.endLat = pb_ret_grid_array_2d.endLat
-                ret_grid_array_2d.endLon = pb_ret_grid_array_2d.endLon
-                ret_grid_array_2d.latCount = pb_ret_grid_array_2d.latCount
-                ret_grid_array_2d.lonCount = pb_ret_grid_array_2d.lonCount
-                ret_grid_array_2d.lonStep = pb_ret_grid_array_2d.lonStep
-                ret_grid_array_2d.latStep = pb_ret_grid_array_2d.latStep
+                ret_grid_array_2d.start_lat = pb_ret_grid_array_2d.startLat
+                ret_grid_array_2d.start_lon = pb_ret_grid_array_2d.startLon
+                ret_grid_array_2d.end_lat = pb_ret_grid_array_2d.endLat
+                ret_grid_array_2d.end_lon = pb_ret_grid_array_2d.endLon
+                ret_grid_array_2d.lat_count = pb_ret_grid_array_2d.latCount
+                ret_grid_array_2d.lon_count = pb_ret_grid_array_2d.lonCount
+                ret_grid_array_2d.lon_step = pb_ret_grid_array_2d.lonStep
+                ret_grid_array_2d.lat_step = pb_ret_grid_array_2d.latStep
                 if pb_ret_grid_array_2d.lats is None:
-                    start_lat = ret_grid_array_2d.startLat
-                    lat_step = ret_grid_array_2d.latStep
-                    for i in range(ret_grid_array_2d.latCount):
+                    start_lat = ret_grid_array_2d.start_lat
+                    lat_step = ret_grid_array_2d.lat_step
+                    for i in range(ret_grid_array_2d.lat_count):
                         ret_grid_array_2d.lats.append(start_lat + i * lat_step)
                 else:
                     ret_grid_array_2d.lats = pb_ret_grid_array_2d.lats
                 if pb_ret_grid_array_2d.lons is None:
-                    start_lon = ret_grid_array_2d.startLon
-                    lon_step = ret_grid_array_2d.lonStep
-                    for i in range(ret_grid_array_2d.lonCount):
+                    start_lon = ret_grid_array_2d.start_lon
+                    lon_step = ret_grid_array_2d.lon_step
+                    for i in range(ret_grid_array_2d.lon_count):
                         ret_grid_array_2d.lons.append(start_lon + i * lon_step)
                 else:
                     ret_grid_array_2d.lons = pb_ret_grid_array_2d.lons
                 ret_grid_array_2d.units = pb_ret_grid_array_2d.units
-                ret_grid_array_2d.userEleName = pb_ret_grid_array_2d.userEleName
+                ret_grid_array_2d.user_ele_name = pb_ret_grid_array_2d.userEleName
                 rows = ret_grid_array_2d.request.rowCount  # 获得数据的行数
                 data_len = len(ret_grid_array_2d.data)  # 获得所有数据的个数
                 cols = data_len / rows
@@ -171,27 +171,27 @@ class Utils:
         # 如果该结果数据存在，则将获取的数据，转换为二维数组格式
         if ret_grid_scalar_2d:
             ret_grid_scalar_2d.request = Utils.set_request_info(pb_ret_grid_scalar_2d.request)
-            ret_code = ret_grid_scalar_2d.request.errorCode
+            ret_code = ret_grid_scalar_2d.request.error_code
             if ret_code == 0:
-                ret_grid_scalar_2d.startLat = pb_ret_grid_scalar_2d.startLat
-                ret_grid_scalar_2d.startLon = pb_ret_grid_scalar_2d.startLon
-                ret_grid_scalar_2d.endLat = pb_ret_grid_scalar_2d.endLat
-                ret_grid_scalar_2d.endLon = pb_ret_grid_scalar_2d.endLon
-                ret_grid_scalar_2d.latCount = pb_ret_grid_scalar_2d.latCount
-                ret_grid_scalar_2d.lonCount = pb_ret_grid_scalar_2d.lonCount
-                ret_grid_scalar_2d.lonStep = pb_ret_grid_scalar_2d.lonStep
-                ret_grid_scalar_2d.latStep = pb_ret_grid_scalar_2d.latStep
+                ret_grid_scalar_2d.start_lat = pb_ret_grid_scalar_2d.startLat
+                ret_grid_scalar_2d.start_lon = pb_ret_grid_scalar_2d.startLon
+                ret_grid_scalar_2d.end_lat = pb_ret_grid_scalar_2d.endLat
+                ret_grid_scalar_2d.end_lon = pb_ret_grid_scalar_2d.endLon
+                ret_grid_scalar_2d.lat_count = pb_ret_grid_scalar_2d.latCount
+                ret_grid_scalar_2d.lon_count = pb_ret_grid_scalar_2d.lonCount
+                ret_grid_scalar_2d.lon_step = pb_ret_grid_scalar_2d.lonStep
+                ret_grid_scalar_2d.lat_step = pb_ret_grid_scalar_2d.latStep
                 ret_grid_scalar_2d.lats = pb_ret_grid_scalar_2d.lats
                 ret_grid_scalar_2d.lons = pb_ret_grid_scalar_2d.lons
                 ret_grid_scalar_2d.units = pb_ret_grid_scalar_2d.units
-                ret_grid_scalar_2d.userEleName = pb_ret_grid_scalar_2d.userEleName
+                ret_grid_scalar_2d.user_ele_name = pb_ret_grid_scalar_2d.userEleName
                 #                 rows = ret_grid_scalar_2d.request.rowCount    # 获得数据的行数
                 #                 dataLen = len(ret_grid_scalar_2d.data)        # 获得所有数据的个数
                 #                 cols = dataLen/rows
                 #                 ret_grid_scalar_2d.data = self.set_matrix(rows,cols,ret_grid_scalar_2d.data)
                 ret_grid_scalar_2d.data = Utils.set_matrix(
-                    ret_grid_scalar_2d.latCount,
-                    ret_grid_scalar_2d.lonCount,
+                    ret_grid_scalar_2d.lat_count,
+                    ret_grid_scalar_2d.lon_count,
                     ret_grid_scalar_2d.data,
                 )
 
@@ -210,25 +210,25 @@ class Utils:
         # 如果该结果数据存在，则将获取的数据，转换为二维数组格式
         if ret_grid_vector_2d:
             ret_grid_vector_2d.request = Utils.set_request_info(pb_ret_grid_vector_2d.request)
-            ret_code = ret_grid_vector_2d.request.errorCode
+            ret_code = ret_grid_vector_2d.request.error_code
             if ret_code == 0:
-                ret_grid_vector_2d.startLat = pb_ret_grid_vector_2d.startLat
-                ret_grid_vector_2d.startLon = pb_ret_grid_vector_2d.startLon
-                ret_grid_vector_2d.endLat = pb_ret_grid_vector_2d.endLat
-                ret_grid_vector_2d.endLon = pb_ret_grid_vector_2d.endLon
-                ret_grid_vector_2d.latCount = pb_ret_grid_vector_2d.latCount
-                ret_grid_vector_2d.lonCount = pb_ret_grid_vector_2d.lonCount
-                ret_grid_vector_2d.lonStep = pb_ret_grid_vector_2d.lonStep
-                ret_grid_vector_2d.latStep = pb_ret_grid_vector_2d.latStep
+                ret_grid_vector_2d.start_lat = pb_ret_grid_vector_2d.startLat
+                ret_grid_vector_2d.start_lon = pb_ret_grid_vector_2d.startLon
+                ret_grid_vector_2d.end_lat = pb_ret_grid_vector_2d.endLat
+                ret_grid_vector_2d.end_lon = pb_ret_grid_vector_2d.endLon
+                ret_grid_vector_2d.lat_count = pb_ret_grid_vector_2d.latCount
+                ret_grid_vector_2d.lon_count = pb_ret_grid_vector_2d.lonCount
+                ret_grid_vector_2d.lon_step = pb_ret_grid_vector_2d.lonStep
+                ret_grid_vector_2d.lat_step = pb_ret_grid_vector_2d.latStep
                 ret_grid_vector_2d.lats = pb_ret_grid_vector_2d.lats
                 ret_grid_vector_2d.lons = pb_ret_grid_vector_2d.lons
-                ret_grid_vector_2d.u_EleName = pb_ret_grid_vector_2d.u_EleName
-                ret_grid_vector_2d.v_EleName = pb_ret_grid_vector_2d.v_EleName
+                ret_grid_vector_2d.u_ele_name = pb_ret_grid_vector_2d.u_EleName
+                ret_grid_vector_2d.v_ele_name = pb_ret_grid_vector_2d.v_EleName
                 #                 rows = pbRetGridVector2D.request.rowCount    # 获得数据的行数
                 #                 dataLen = len(ret_grid_vector_2d.u_datas)        # 获得所有数据的个数
                 #                 cols = dataLen/rows
-                rows = ret_grid_vector_2d.latCount
-                cols = ret_grid_vector_2d.lonCount
+                rows = ret_grid_vector_2d.lat_count
+                cols = ret_grid_vector_2d.lon_count
                 ret_grid_vector_2d.u_datas = Utils.set_matrix(
                     rows, cols, ret_grid_vector_2d.u_datas
                 )
@@ -247,11 +247,11 @@ class Utils:
         # 如果该结果数据存在，将获取请求信息，转换为子类对象，进行封装
         if ret_files_info:
             ret_files_info.request = Utils.set_request_info(pb_ret_files_info.request)
-            ret_code = ret_files_info.request.errorCode
+            ret_code = ret_files_info.request.error_code
             if ret_code == 0:
                 file_infos = pb_ret_files_info.fileInfos
                 for i in range(len(file_infos)):
-                    ret_files_info.fileInfos.append(Utils.set_file_info(file_infos[i]))
+                    ret_files_info.file_infos.append(Utils.set_file_info(file_infos[i]))
 
         return ret_files_info
 

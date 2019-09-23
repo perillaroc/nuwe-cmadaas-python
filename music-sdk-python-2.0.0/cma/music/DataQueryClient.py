@@ -118,7 +118,7 @@ class DataQueryClient(object):
         server_id: str = None,
     ):
         """
-            数据块检索
+        数据块检索
         """
         warnings.warn("callAPI_to_dataBlock is not tested")
 
@@ -168,50 +168,28 @@ class DataQueryClient(object):
 
         return ret_grid_array_2d
 
-    def callAPI_to_fileList(self, userId, pwd, interfaceId, params, serverId=None):
+    def callAPI_to_fileList(self, user_id: str, pwd: str, interface_id: str, params: dict, server_id: str = None):
         """
-                     文件存储信息列表检索
+        文件存储信息列表检索
         """
-        retFilesInfo = RetFilesInfo()
-        # 所要调用的方法名称
+        ret_files_info = RetFilesInfo()
+
         method = "callAPI_to_fileList"
-        # 构建music protobuf服务器地址，将请求参数拼接为url
-        newUrl = self._get_fetch_url(userId, pwd, interfaceId, params, serverId, method)
-        print("URL: " + newUrl)
-        try:
-            buf = BytesIO()
-            response = pycurl.Curl()
-            response.setopt(pycurl.URL, newUrl)
-            response.setopt(pycurl.CONNECTTIMEOUT, self.connect_timeout)
-            response.setopt(pycurl.TIMEOUT, self.read_timeout)
-            response.setopt(pycurl.WRITEFUNCTION, buf.write)
-            # response.setopt(pycurl.WRITEDATA, value)
-            response.perform()
-            response.close()
-        except:  # http error
-            print("Error retrieving data")
-            retFilesInfo.request.errorCode = self.OTHER_ERROR
-            retFilesInfo.request.errorMessage = "Error retrieving data"
-            return retFilesInfo
+        fetch_url = self._get_fetch_url(
+            user_id, pwd, interface_id, params, server_id, method
+        )
+        logger.info(f"URL: {fetch_url}")
 
-        RetByteArraydata = buf.getvalue()
-        if RetByteArraydata.__contains__(DataQueryClient.getwayFlag):  # 网关错误
-            getwayInfo = json.loads(RetByteArraydata)
-            if getwayInfo is None:
-                retFilesInfo.request.errorCode = self.OTHER_ERROR
-                retFilesInfo.request.errorMessage = "parse getway return string error!"
-            else:
-                retFilesInfo.request.errorCode = getwayInfo["returnCode"]
-                retFilesInfo.request.errorMessage = getwayInfo["returnMessage"]
-        else:  # 服务端返回结果
-            # 反序列化为proto的结果
-            pbRetFilesInfo = apiinterface_pb2.RetFilesInfo()
-            pbRetFilesInfo.ParseFromString(RetByteArraydata)
-            # 格式转换，生成music的结果
-            utils = DataFormatUtils.Utils()
-            retFilesInfo = utils.get_ret_files_info(pbRetFilesInfo)
+        response_content = self._do_request(fetch_url, ret_files_info)
+        if response_content is None:
+            return ret_files_info
 
-        return retFilesInfo
+        pb_ret_files_info = apiinterface_pb2.RetFilesInfo()
+        pb_ret_files_info.ParseFromString(response_content)
+        utils = DataFormatUtils.Utils()
+        ret_files_info = utils.get_ret_files_info(pb_ret_files_info)
+
+        return ret_files_info
 
     def callAPI_to_serializedStr(
         self, userId, pwd, interfaceId, params, dataFormat, serverId=None

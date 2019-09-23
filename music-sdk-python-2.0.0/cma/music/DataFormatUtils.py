@@ -8,6 +8,7 @@ Modified in 2018/11/18
 @author: wufeng & lr
 """
 from cma.music import MusicDataBean
+from cma.music import apiinterface_pb2 as pb
 
 
 class Utils:
@@ -19,7 +20,7 @@ class Utils:
         pass
 
     @classmethod
-    def convert_to_dict(cls, obj):
+    def convert_to_dict(cls, obj) -> dict:
         """
         把Object对象转换成Dict对象
         """
@@ -28,7 +29,7 @@ class Utils:
         return result
 
     @classmethod
-    def convert_to_dicts(cls, objs):
+    def convert_to_dicts(cls, objs) -> list:
         """
         把对象列表转换为字典列表
         """
@@ -42,7 +43,7 @@ class Utils:
         return obj_list
 
     @classmethod
-    def set_matrix(cls, rows, cols, data):
+    def set_matrix(cls, rows: int, cols: int, data: list) -> list:
         """
         按行列转换数据为二维数组
         """
@@ -53,29 +54,29 @@ class Utils:
         return matrix
 
     @classmethod
-    def set_request_info(cls, pb_request_info=None):
+    def set_request_info(cls, pb_request_info: pb.RequestInfo = None) -> MusicDataBean.RequestInfo:
         return Utils.get_request_info(pb_request_info)
 
     @classmethod
-    def get_request_info(cls, pb_ret_request_info):
+    def get_request_info(cls, pb_request_info: pb.RequestInfo) -> MusicDataBean.RequestInfo:
         """
         将protobuf类实例转换为music RequestInfo结构数据
         """
         request_info = MusicDataBean.RequestInfo(
-            pb_ret_request_info.errorCode,
-            pb_ret_request_info.errorMessage,
-            pb_ret_request_info.requestElems,
-            pb_ret_request_info.requestParams,
-            pb_ret_request_info.requestTime,
-            pb_ret_request_info.responseTime,
-            pb_ret_request_info.rowCount,
-            pb_ret_request_info.takeTime,
+            pb_request_info.errorCode,
+            pb_request_info.errorMessage,
+            pb_request_info.requestElems,
+            pb_request_info.requestParams,
+            pb_request_info.requestTime,
+            pb_request_info.responseTime,
+            pb_request_info.rowCount,
+            pb_request_info.takeTime,
         )
 
         return request_info
 
     @classmethod
-    def get_array_2d(cls, pb_ret_array_2d):
+    def get_array_2d(cls, pb_ret_array_2d: pb.RetArray2D) -> MusicDataBean.RetArray2D:
         """
         将protobuf类实例转换为music RetArray2D结构数据
         """
@@ -103,7 +104,7 @@ class Utils:
         return ret_array_2d
 
     @classmethod
-    def get_data_block(cls, pb_ret_data_block):
+    def get_data_block(cls, pb_ret_data_block: pb.RetDataBlock) -> MusicDataBean.RetDataBlock:
         """
         将protobuf类实例转换为music RetDataBlock结构数据
         """
@@ -116,7 +117,7 @@ class Utils:
         return ret_data_block
 
     @classmethod
-    def get_grid_array_2d(cls, pb_ret_grid_array_2d):
+    def get_grid_array_2d(cls, pb_ret_grid_array_2d: pb.RetGridArray2D) -> MusicDataBean.RetGridArray2D:
         """
         将protobuf类实例转换为music RetGridArray2D结构数据
         """
@@ -160,7 +161,7 @@ class Utils:
         return ret_grid_array_2d
 
     @classmethod
-    def get_grid_scalar_2d(cls, pb_ret_grid_scalar_2d):
+    def get_grid_scalar_2d(cls, pb_ret_grid_scalar_2d: pb.RetGridScalar2D) -> MusicDataBean.RetGridScalar2D:
         """
         将protobuf类实例转换为music RetGridScalar2D结构数据
         """
@@ -197,7 +198,7 @@ class Utils:
         return ret_grid_scalar_2d
 
     @classmethod
-    def get_grid_vector_2d(cls, pb_ret_grid_vector_2d):
+    def get_grid_vector_2d(cls, pb_ret_grid_vector_2d: pb.RetGridVector2D) -> MusicDataBean.RetGridVector2D:
         """
         将protobuf类实例转换为music RetGridVector2D结构数据
         """
@@ -238,7 +239,7 @@ class Utils:
         return ret_grid_vector_2d
 
     @classmethod
-    def get_ret_files_info(cls, pb_ret_files_info):
+    def get_ret_files_info(cls, pb_ret_files_info: pb.RetFilesInfo) -> MusicDataBean.RetFilesInfo:
         """
         将protobuf类实例转换为music RetFilesInfo结构数据
         """
@@ -255,7 +256,7 @@ class Utils:
         return ret_files_info
 
     @classmethod
-    def set_file_info(cls, pb_file_info):
+    def set_file_info(cls, pb_file_info: pb.FileInfo) -> MusicDataBean.FileInfo:
         """
         将protobuf类实例转换为music FileInfo结构数据
         """

@@ -10,6 +10,7 @@ from nuwe_cimiss.data import (
     Array2D,
     DataBlock,
     GridArray2D,
+    FilesInfo
 )
 
 logger = logging.getLogger()
@@ -113,6 +114,26 @@ class CimissClient(object):
         data = GridArray2D()
 
         method = self.callAPI_to_gridArray2D.__name__
+
+        return self._do_request(
+            interface_id,
+            method,
+            params,
+            server_id,
+            success_handler=Connection.generate_pack_success_handler(data),
+            failure_handler=Connection.generate_pack_failure_handler(data),
+            exception_handler=Connection.generate_exception_handler(data),
+        )
+
+    def callAPI_to_fileList(
+            self,
+            interface_id: str,
+            params: dict,
+            server_id: str = None
+    ):
+        data = FilesInfo()
+
+        method = self.callAPI_to_fileList.__name__
 
         return self._do_request(
             interface_id,

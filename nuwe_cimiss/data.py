@@ -201,3 +201,57 @@ class GridArray2D(ResponseData):
         data_count = len(ret_grid_array_2d.data)
         col_count = int(data_count/row_count)
         self.data = np.array(ret_grid_array_2d.data).reshape([row_count, col_count])
+
+
+class FileInfo(object):
+    def __init__(
+            self,
+            file_name: str = "",
+            save_path: str = "",
+            suffix: str = "",
+            size: str = "",
+            file_url: str = "",
+            image_base64: str = "",
+            attributes: List[str] = None,
+    ):
+        self.file_name = file_name
+        self.save_path = save_path
+        self.suffix = suffix
+        self.size = size
+        self.file_url = file_url
+        self.image_base64 = image_base64
+        self.attributes = attributes
+
+    @classmethod
+    def create_from_protobuf(cls, pb_file_info: pb.FileInfo):
+        return FileInfo(
+            file_name=pb_file_info.fileName,
+            save_path=pb_file_info.savePath,
+            suffix=pb_file_info.suffix,
+            size=pb_file_info.size,
+            file_url=pb_file_info.fileUrl,
+            image_base64=pb_file_info.imgBase64,
+            attributes=pb_file_info.attributes,
+        )
+
+
+class FilesInfo(ResponseData):
+    protobuf_object_type = pb.RetFilesInfo
+
+    def __init__(self, files_info: List[FileInfo] = None, request: RequestInfo = None):
+        super().__init__(request)
+        self.files_info = files_info
+
+    def load_from_protobuf_content(self, content: bytes):
+        protobuf_object = self.protobuf_object_type()
+        protobuf_object.ParseFromString(content)
+        self.load_from_protobuf_object(protobuf_object)
+
+    def load_from_protobuf_object(self, ret_files_info: pb.RetFilesInfo):
+        self.request = RequestInfo.create_from_protobuf(ret_files_info.request)
+
+        if self.request.error_code != 0:
+            return
+
+        files_info = ret_files_info.fileInfos
+        self.files_info = [FileInfo.create_from_protobuf(info) for info in files_info]

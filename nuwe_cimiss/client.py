@@ -1,9 +1,10 @@
 # coding: utf-8
 import configparser
+import json
 import logging
 import pathlib
-from typing import Callable, Any
 import warnings
+from typing import Callable, Any
 
 from nuwe_cimiss.connection import Connection
 from nuwe_cimiss.data import (
@@ -143,6 +144,45 @@ class CimissClient(object):
             success_handler=Connection.generate_pack_success_handler(data),
             failure_handler=Connection.generate_pack_failure_handler(data),
             exception_handler=Connection.generate_exception_handler(data),
+        )
+
+    def callAPI_to_serializedStr(
+            self,
+            interface_id: str,
+            params: dict,
+            data_format: str,
+            server_id: str = None
+    ):
+        if "dataFormat" not in params:
+            params["dataFormat"] = data_format
+
+        method = self.callAPI_to_serializedStr.__name__
+
+        def handle_success(content: bytes) -> str:
+            return content.decode("utf8")
+
+        def handle_failure(content: bytes) -> str:
+            getway_info = json.loads(content)
+            if getway_info is None:
+                return "parse getway return string error:" + content.decode("utf8")
+            else:
+                return "getway error: returnCode={return_code} returnMessage={return_message}".format(
+                    return_code=getway_info["returnCode"],
+                    return_message=getway_info["returnMessage"],
+                )
+
+        def handle_exception(exception: Exception):
+            logger.warning("Error retrieving data: " + str(exception))
+            return "Error retrieving data"
+
+        return self._do_request(
+            interface_id,
+            method,
+            params,
+            server_id,
+            success_handler=handle_success,
+            failure_handler=handle_failure,
+            exception_handler=handle_exception,
         )
 
     def _load_config(self) -> None:

@@ -61,8 +61,16 @@ class ResponseData(object):
     def load_from_protobuf_content(self, content: bytes):
         pass
 
+    @classmethod
+    def create_from_protobuf(cls, content: bytes):
+        data = cls()
+        data.load_from_protobuf_content(content)
+        return data
+
 
 class Array2D(ResponseData):
+    protobuf_object_type = pb.RetArray2D
+
     def __init__(
             self,
             data: np.array = None,
@@ -78,9 +86,9 @@ class Array2D(ResponseData):
         self.col_count = col_count
 
     def load_from_protobuf_content(self, content: bytes):
-        pb_ret_array_2d = pb.RetArray2D()
-        pb_ret_array_2d.ParseFromString(content)
-        self.load_from_protobuf_object(pb_ret_array_2d)
+        protobuf_object = self.protobuf_object_type()
+        protobuf_object.ParseFromString(content)
+        self.load_from_protobuf_object(protobuf_object)
 
     def load_from_protobuf_object(self, ret_array_2d: pb.RetArray2D):
         self.request = RequestInfo.create_from_protobuf(ret_array_2d.request)
@@ -96,9 +104,26 @@ class Array2D(ResponseData):
 
         self.data = np.array(ret_array_2d.data).reshape([self.row_count, self.col_count])
 
-    @classmethod
-    def create_from_protobuf(cls, content: bytes):
-        array_2d = Array2D()
-        array_2d.load_from_protobuf_content(content)
-        return array_2d
 
+class DataBlock(ResponseData):
+    protobuf_object_type = pb.RetDataBlock
+
+    def __init__(
+            self,
+            data_name: str = None,
+            data: bytes = None,
+            request: RequestInfo = None,
+    ):
+        super().__init__(request=request)
+        self.data_name = data_name
+        self.data = data
+
+    def load_from_protobuf_content(self, content: bytes):
+        protobuf_object = self.protobuf_object_type()
+        protobuf_object.ParseFromString(content)
+        self.load_from_protobuf_object(protobuf_object)
+
+    def load_from_protobuf_object(self, ret_data_block: pb.RetDataBlock):
+        self.request = RequestInfo.create_from_protobuf(ret_data_block.request)
+        self.data_name = ret_data_block.dataName
+        self.data = ret_data_block.byteArray

@@ -3,10 +3,12 @@ import configparser
 import logging
 import pathlib
 from typing import Callable, Any
+import warnings
 
 from nuwe_cimiss.connection import Connection
 from nuwe_cimiss.data import (
-    Array2D
+    Array2D,
+    DataBlock,
 )
 
 logger = logging.getLogger()
@@ -70,6 +72,35 @@ class CimissClient(object):
             success_handler=Connection.generate_pack_success_handler(array_2d),
             failure_handler=Connection.generate_pack_failure_handler(array_2d),
             exception_handler=Connection.generate_exception_handler(array_2d),
+        )
+
+    def callAPI_to_dataBlock(
+            self,
+            interface_id: str,
+            params: dict,
+            server_id: str = None
+    ) -> DataBlock:
+        """
+        数据块检索
+
+        :param interface_id:
+        :param params:
+        :param server_id:
+        :return:
+        """
+        warnings.warn("callAPI_to_dataBlock is not tested")
+        data_block = DataBlock()
+
+        method = self.callAPI_to_dataBlock.__name__
+
+        return self._do_request(
+            interface_id,
+            method,
+            params,
+            server_id,
+            success_handler=Connection.generate_pack_success_handler(data_block),
+            failure_handler=Connection.generate_pack_failure_handler(data_block),
+            exception_handler=Connection.generate_exception_handler(data_block),
         )
 
     def _load_config(self) -> None:

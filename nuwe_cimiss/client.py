@@ -158,6 +158,53 @@ class CimissClient(object):
             exception_handler=handle_exception,
         )
 
+    def callAPI_to_saveAsFile(
+        self,
+        interface_id: str,
+        params: dict,
+        data_format: str,
+        file_name: str,
+        server_id: str = None,
+    ):
+        data = FilesInfo()
+
+        if "dataFormat" not in params:
+            params["dataFormat"] = data_format
+
+        method = self.callAPI_to_saveAsFile.__name__
+
+        if file_name is None:
+            data.request.errorCode = Connection.otherError
+            data.request.errorMessage = (
+                "error:savePath can't null, the format is dir/file.formart. "
+                "For example /data/saveas.xml)")
+            return data
+
+        params["savepath"] = file_name
+
+        def handle_success(content: bytes):
+            loaded_data = Connection.generate_pack_success_handler(data)(content)
+            if loaded_data.request.error_code != 0:
+                return loaded_data
+
+            result = self._connection.download_file(
+                loaded_data.files_info[0].file_url, file_name
+            )
+            if result[0] != 0:
+                loaded_data.request.errorCode = result[0]
+                loaded_data.request.errorMessage = result[1]
+            return loaded_data
+
+        return self._do_request(
+            interface_id,
+            method,
+            params,
+            server_id,
+            success_handler=handle_success,
+            failure_handler=Connection.generate_pack_failure_handler(data),
+            exception_handler=Connection.generate_exception_handler(data),
+        )
+
     def callAPI_to_downFile(
         self,
         interface_id: str,

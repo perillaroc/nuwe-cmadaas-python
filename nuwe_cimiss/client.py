@@ -11,7 +11,9 @@ from nuwe_cimiss.data import (
     Array2D,
     DataBlock,
     GridArray2D,
-    FilesInfo
+    FilesInfo,
+    GridScalar2D,
+    GridVector2D,
 )
 
 logger = logging.getLogger()
@@ -75,35 +77,6 @@ class CimissClient(object):
             success_handler=Connection.generate_pack_success_handler(array_2d),
             failure_handler=Connection.generate_pack_failure_handler(array_2d),
             exception_handler=Connection.generate_exception_handler(array_2d),
-        )
-
-    def callAPI_to_dataBlock(
-            self,
-            interface_id: str,
-            params: dict,
-            server_id: str = None
-    ) -> DataBlock:
-        """
-        数据块检索
-
-        :param interface_id:
-        :param params:
-        :param server_id:
-        :return:
-        """
-        warnings.warn("callAPI_to_dataBlock is not tested")
-        data_block = DataBlock()
-
-        method = self.callAPI_to_dataBlock.__name__
-
-        return self._do_request(
-            interface_id,
-            method,
-            params,
-            server_id,
-            success_handler=Connection.generate_pack_success_handler(data_block),
-            failure_handler=Connection.generate_pack_failure_handler(data_block),
-            exception_handler=Connection.generate_exception_handler(data_block),
         )
 
     def callAPI_to_gridArray2D(
@@ -220,6 +193,69 @@ class CimissClient(object):
             params,
             server_id,
             success_handler=success_handler,
+            failure_handler=Connection.generate_pack_failure_handler(data),
+            exception_handler=Connection.generate_exception_handler(data),
+        )
+
+    def callAPI_to_dataBlock(
+            self,
+            interface_id: str,
+            params: dict,
+            server_id: str = None
+    ) -> DataBlock:
+        warnings.warn("callAPI_to_dataBlock is not tested")
+        data_block = DataBlock()
+
+        method = self.callAPI_to_dataBlock.__name__
+
+        return self._do_request(
+            interface_id,
+            method,
+            params,
+            server_id,
+            success_handler=Connection.generate_pack_success_handler(data_block),
+            failure_handler=Connection.generate_pack_failure_handler(data_block),
+            exception_handler=Connection.generate_exception_handler(data_block),
+        )
+
+    def callAPI_to_gridScalar2D(
+            self,
+            interface_id: str,
+            params: dict,
+            server_id: str = None
+    ):
+        warnings.warn("callAPI_to_gridScalar2D is not tested")
+        data = GridScalar2D()
+
+        method = self.callAPI_to_gridScalar2D.__name__
+
+        return self._do_request(
+            interface_id,
+            method,
+            params,
+            server_id,
+            success_handler=Connection.generate_pack_success_handler(data),
+            failure_handler=Connection.generate_pack_failure_handler(data),
+            exception_handler=Connection.generate_exception_handler(data),
+        )
+
+    def callAPI_to_gridVector2D(
+            self,
+            interface_id: str,
+            params: dict,
+            server_id: str = None
+    ):
+        warnings.warn("callAPI_to_gridVector2D is not tested")
+        data = GridVector2D()
+
+        method = self.callAPI_to_gridVector2D.__name__
+
+        return self._do_request(
+            interface_id,
+            method,
+            params,
+            server_id,
+            success_handler=Connection.generate_pack_success_handler(data),
             failure_handler=Connection.generate_pack_failure_handler(data),
             exception_handler=Connection.generate_exception_handler(data),
         )

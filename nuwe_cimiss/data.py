@@ -255,3 +255,137 @@ class FilesInfo(ResponseData):
 
         files_info = ret_files_info.fileInfos
         self.files_info = [FileInfo.create_from_protobuf(info) for info in files_info]
+
+
+class GridVector2D(ResponseData):
+    protobuf_object_type = pb.RetGridVector2D
+
+    def __init__(
+            self,
+            u_data: List[float] = None,
+            v_data: List[float] = None,
+            request: RequestInfo = None,
+            start_lat: float = 0,
+            start_lon: float = 0,
+            end_lat: float = 0,
+            end_lon: float = 0,
+            lat_count: int = 0,
+            lon_count: int = 0,
+            lon_step: float = 0,
+            lat_step: float = 0,
+            lats: List[float] = None,
+            lons: List[float] = None,
+            u_element_name: str = "",
+            v_element_name: str = "",
+    ):
+        super().__init__(request)
+        self.u_data = u_data
+        self.v_data = v_data
+        self.start_lat = start_lat
+        self.start_lon = start_lon
+        self.end_lat = end_lat
+        self.end_lon = end_lon
+        self.lat_count = lat_count
+        self.lon_count = lon_count
+        self.lon_step = lon_step
+        self.lat_step = lat_step
+        self.lats = lats
+        self.lons = lons
+        self.u_element_name = u_element_name
+        self.v_element_name = v_element_name
+
+    def load_from_protobuf_content(self, content: bytes):
+        protobuf_object = self.protobuf_object_type()
+        protobuf_object.ParseFromString(content)
+        self.load_from_protobuf_object(protobuf_object)
+
+    def load_from_protobuf_object(self, ret_grid_vector_2d: pb.RetGridVector2D):
+        self.request = RequestInfo.create_from_protobuf(ret_grid_vector_2d.request)
+
+        if self.request.error_code != 0:
+            return
+
+        self.start_lat = ret_grid_vector_2d.startLat
+        self.start_lon = ret_grid_vector_2d.startLon
+        self.end_lat = ret_grid_vector_2d.endLat
+        self.end_lon = ret_grid_vector_2d.endLon
+        self.lat_count = ret_grid_vector_2d.latCount
+        self.lon_count = ret_grid_vector_2d.lonCount
+        self.lon_step = ret_grid_vector_2d.lonStep
+        self.lat_step = ret_grid_vector_2d.latStep
+
+        self.lats = ret_grid_vector_2d.lats
+        self.lons = ret_grid_vector_2d.lons
+
+        self.u_element_name = ret_grid_vector_2d.u_EleName
+        self.v_element_name = ret_grid_vector_2d.v_EleName
+
+        row_count = self.lat_count
+        col_count = self.lon_count
+        self.u_data = np.array(ret_grid_vector_2d.u_datas).reshape([row_count, col_count])
+        self.v_data = np.array(ret_grid_vector_2d.v_data2).reshape([row_count, col_count])
+
+
+class GridScalar2D(ResponseData):
+    protobuf_object_type = pb.RetGridScalar2D
+
+    def __init__(
+            self,
+            data: List[float] = None,
+            request: RequestInfo = None,
+            start_lat: float = 0,
+            start_lon: float = 0,
+            end_lat: float = 0,
+            end_lon: float = 0,
+            lat_count: int = 0,
+            lon_count: int = 0,
+            lon_step: float = 0,
+            lat_step: float = 0,
+            lats: List[float] = None,
+            lons: List[float] = None,
+            units: str = "",
+            user_element_name: str = "",
+    ):
+        super().__init__(request)
+        self.data = data
+        self.start_lat = start_lat
+        self.start_lon = start_lon
+        self.end_lat = end_lat
+        self.end_lon = end_lon
+        self.lat_count = lat_count
+        self.lon_count = lon_count
+        self.lon_step = lon_step
+        self.lat_step = lat_step
+        self.lats = lats
+        self.lons = lons
+        self.units = units
+        self.user_element_name = user_element_name
+
+    def load_from_protobuf_content(self, content: bytes):
+        protobuf_object = self.protobuf_object_type()
+        protobuf_object.ParseFromString(content)
+        self.load_from_protobuf_object(protobuf_object)
+
+    def load_from_protobuf_object(self, ret_grid_scalar_2d: pb.RetGridScalar2D):
+        self.request = RequestInfo.create_from_protobuf(ret_grid_scalar_2d.request)
+
+        if self.request.error_code != 0:
+            return
+
+        self.start_lat = ret_grid_scalar_2d.startLat
+        self.start_lon = ret_grid_scalar_2d.startLon
+        self.end_lat = ret_grid_scalar_2d.endLat
+        self.end_lon = ret_grid_scalar_2d.endLon
+        self.lat_count = ret_grid_scalar_2d.latCount
+        self.lon_count = ret_grid_scalar_2d.lonCount
+        self.lon_step = ret_grid_scalar_2d.lonStep
+        self.lat_step = ret_grid_scalar_2d.latStep
+
+        self.lats = ret_grid_scalar_2d.lats
+        self.lons = ret_grid_scalar_2d.lons
+
+        self.user_element_name = ret_grid_scalar_2d.userEleName
+
+        row_count = self.lat_count
+        col_count = self.lon_count
+        self.data = np.array(ret_grid_scalar_2d.data).reshape([row_count, col_count])

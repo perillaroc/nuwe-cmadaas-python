@@ -127,3 +127,77 @@ class DataBlock(ResponseData):
         self.request = RequestInfo.create_from_protobuf(ret_data_block.request)
         self.data_name = ret_data_block.dataName
         self.data = ret_data_block.byteArray
+
+
+class GridArray2D(ResponseData):
+    protobuf_object_type = pb.RetGridArray2D
+
+    def __init__(
+            self,
+            data: List[float] = None,
+            request: RequestInfo = None,
+            start_lat: float = 0,
+            start_lon: float = 0,
+            end_lat: float = 0,
+            end_lon: float = 0,
+            lat_count: int = 0,
+            lon_count: int = 0,
+            lon_step: float = 0,
+            lat_step: float = 0,
+            lats: List[float] = None,
+            lons: List[float] = None,
+            units: str = "",
+            user_element_name: str = "",
+    ):
+        super().__init__(request=request)
+        self.data = data
+        self.start_lat = start_lat
+        self.start_lon = start_lon
+        self.end_lat = end_lat
+        self.end_lon = end_lon
+        self.lat_count = lat_count
+        self.lon_count = lon_count
+        self.lon_step = lon_step
+        self.lat_step = lat_step
+        self.lats = lats
+        self.lons = lons
+        self.units = units
+        self.user_element_name = user_element_name
+
+    def load_from_protobuf_content(self, content: bytes):
+        protobuf_object = self.protobuf_object_type()
+        protobuf_object.ParseFromString(content)
+        self.load_from_protobuf_object(protobuf_object)
+
+    def load_from_protobuf_object(self, ret_grid_array_2d: pb.RetGridArray2D):
+        self.request = RequestInfo.create_from_protobuf(ret_grid_array_2d.request)
+
+        if self.request.error_code != 0:
+            return
+
+        self.start_lat = ret_grid_array_2d.startLat
+        self.start_lon = ret_grid_array_2d.startLon
+        self.end_lat = ret_grid_array_2d.endLat
+        self.end_lon = ret_grid_array_2d.endLon
+        self.lat_count = ret_grid_array_2d.latCount
+        self.lon_count = ret_grid_array_2d.lonCount
+        self.lon_step = ret_grid_array_2d.lonStep
+        self.lat_step = ret_grid_array_2d.latStep
+
+        if ret_grid_array_2d.lats is not None:
+            self.lats = ret_grid_array_2d.lats
+        else:
+            self.lats = [self.start_lat + i * self.lat_step for i in range(self.lat_count)]
+
+        if ret_grid_array_2d.lons is not None:
+            self.lons = ret_grid_array_2d.lons
+        else:
+            self.lons = [self.start_lon + i * self.lon_step for i in range(self.lon_count)]
+
+        self.units = ret_grid_array_2d.units
+        self.user_element_name = ret_grid_array_2d.userEleName
+
+        row_count = self.request.row_count
+        data_count = len(ret_grid_array_2d.data)
+        col_count = int(data_count/row_count)
+        self.data = np.array(ret_grid_array_2d.data).reshape([row_count, col_count])

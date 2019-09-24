@@ -185,6 +185,45 @@ class CimissClient(object):
             exception_handler=handle_exception,
         )
 
+    def callAPI_to_downFile(
+        self,
+        interface_id: str,
+        params: dict,
+        file_dir: str,
+        server_id: str = None,
+    ):
+        file_dir_path = pathlib.Path(file_dir)
+
+        data = FilesInfo()
+
+        method = self.callAPI_to_fileList.__name__
+
+        def success_handler(content: bytes):
+            files_info = Connection.generate_pack_success_handler(data)(content)
+            if files_info.request.error_code != 0:
+                return files_info
+
+            for file_info in files_info.files_info:
+                result = self._connection.download_file(
+                    file_info.file_url, file_dir_path.joinpath(file_info.file_name)
+                )
+                if result[0] != 0:
+                    files_info.request.errorCode = result[0]
+                    files_info.request.errorMessage = result[1]
+                    return files_info
+
+            return files_info
+
+        return self._do_request(
+            interface_id,
+            method,
+            params,
+            server_id,
+            success_handler=success_handler,
+            failure_handler=Connection.generate_pack_failure_handler(data),
+            exception_handler=Connection.generate_exception_handler(data),
+        )
+
     def _load_config(self) -> None:
         if self.config_file is not None:
             self.config_file = pathlib.Path(self.config_file)

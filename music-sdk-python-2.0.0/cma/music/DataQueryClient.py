@@ -311,10 +311,10 @@ class DataQueryClient(object):
         utils = DataFormatUtils.Utils()
         ret_files_info = utils.get_ret_files_info(pb_ret_files_info)
 
-        if ret_files_info and ret_files_info.request.errorCode == 0:
+        if ret_files_info and ret_files_info.request.error_code == 0:
             for info in ret_files_info.file_infos:
                 result = self._download_file(
-                    info.fileUrl, file_dir_path.joinpath(info.fileName)
+                    info.file_url, file_dir_path.joinpath(info.file_name)
                 )
                 if result[0] != 0:
                     ret_files_info.request.errorCode = result[0]

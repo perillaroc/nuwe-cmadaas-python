@@ -2,6 +2,7 @@
 import json
 import logging
 from typing import Callable, Any
+import pathlib
 
 import requests
 
@@ -44,6 +45,29 @@ class Connection(object):
             return failure_handler(response_content)
 
         return success_handler(response_content)
+
+    def download_file(
+        self, file_url: str, save_file: str or pathlib.Path
+    ) -> (int, str):
+        try:
+            response = requests.get(file_url, stream=True)
+            response_content = response.content
+            if self._check_getway_flag(response_content):
+                getway_info = json.loads(response_content)
+                if getway_info is None:
+                    return Connection.otherError, "parse getway return string error!"
+                else:
+                    return getway_info["returnCode"], getway_info["returnMessage"]
+
+            with open(save_file, "wb") as f:
+                f.write(response_content)
+
+        except requests.exceptions.RequestException as e:  # http error
+            return Connection.otherError, "request error"
+        except IOError:
+            return Connection.otherError, "create file error"
+
+        return 0, None
 
     @classmethod
     def generate_pack_failure_handler(

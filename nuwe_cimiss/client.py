@@ -1,9 +1,9 @@
 # coding: utf-8
 import configparser
 import json
+import logging
 import pathlib
 from typing import Callable, Any
-import logging
 
 import requests
 
@@ -62,20 +62,18 @@ class CimissClient(object):
             server_id: str = None
     ) -> Array2D:
         array_2d = Array2D()
+
         method = self.callAPI_to_array2D.__name__
 
-        fetch_url = self._get_fetch_url(
-            interface_id, method, params, server_id
+        return self.do_request(
+            interface_id,
+            method,
+            params,
+            server_id,
+            success_handler=CimissClient._generate_pack_success_handler(array_2d),
+            failure_handler=CimissClient._generate_pack_failure_handler(array_2d),
+            exception_handler=CimissClient._generate_exception_handler(array_2d),
         )
-        logger.info(f"fetch url: {fetch_url}")
-
-        response_content = self._do_request(fetch_url, array_2d, self._pack_response_error)
-        if response_content is None:
-            return array_2d
-
-        array_2d.load_from_protobuf_content(response_content)
-
-        return array_2d
 
     def _load_config(self) -> None:
         if self.config_file is not None:
@@ -106,11 +104,11 @@ class CimissClient(object):
             self.read_timeout = int(cf.get("Pb", "music_readTimeout"))
 
     def _get_fetch_url(
-        self,
-        interface_id: str,
-        method: str,
-        params: dict,
-        server_id: str = None,
+            self,
+            interface_id: str,
+            method: str,
+            params: dict,
+            server_id: str = None,
     ) -> str:
         if server_id is None:
             server_id = self.server_id
@@ -129,12 +127,36 @@ class CimissClient(object):
 
         return fetch_url
 
-    def _do_request(
+    def do_request(
+            self,
+            interface_id,
+            method,
+            params,
+            server_id,
+            success_handler: Callable[[bytes], Any],
+            failure_handler: Callable[[bytes], Any],
+            exception_handler: Callable[[Exception], Any],
+    ):
+        fetch_url = self._get_fetch_url(
+            interface_id, method, params, server_id
+        )
+        logger.info(f"fetch url: {fetch_url}")
+
+        result = self._send_request(
+            fetch_url,
+            success_handler,
+            failure_handler,
+            exception_handler
+        )
+        return result
+
+    def _send_request(
             self,
             fetch_url: str,
-            response_data: ResponseData,
-            handler: Callable[[ResponseData, bytes], Any]
-    ) -> Any:
+            success_handler: Callable[[bytes], Any],
+            failure_handler: Callable[[bytes], Any],
+            exception_handler: Callable[[Exception], Any],
+    ):
         try:
             response = requests.get(
                 fetch_url,
@@ -144,38 +166,57 @@ class CimissClient(object):
             response_content = response.content
 
         except requests.exceptions.RequestException as e:  # http error
-            logger.warning(f"Error retrieving data: {e}")
-            response_data.request.errorCode = CimissClient.otherError
-            response_data.request.errorMessage = "Error retrieving data"
-            return None
+            return exception_handler(e)
 
         if self._check_getway_flag(response_content):
-            handler(response_data, response_content)
-            return None
+            return failure_handler(response_content)
 
-        return response_content
+        return success_handler(response_content)
 
     @classmethod
     def _check_getway_flag(cls, response_data: bytes) -> bool:
         return CimissClient.getwayFlag in response_data
 
     @classmethod
-    def _pack_response_error(
+    def _generate_pack_failure_handler(
             cls,
             response_data: ResponseData,
-            response_content: bytes,
     ):
         """
         出错返回消息示例：
             {"returnCode":-1004,"flag":"slb","returnMessage":"Password Error"}
         """
-        getway_info = json.loads(response_content)
-        if getway_info is None:
+        def failure_handler(response_content: bytes):
+            getway_info = json.loads(response_content)
+            if getway_info is None:
+                response_data.request.errorCode = CimissClient.otherError
+                response_data.request.errorMessage = (
+                        "parse getway return string error:" + response_content.decode('utf-8')
+                )
+            else:
+                response_data.request.errorCode = getway_info["returnCode"]
+                response_data.request.errorMessage = getway_info["returnMessage"]
+            return response_data
+        return failure_handler
+
+    @classmethod
+    def _generate_exception_handler(
+            cls,
+            response_data: ResponseData,
+    ):
+        def handle_exception(e: Exception) -> ResponseData:
+            logger.warning(f"Error retrieving data: {e}")
             response_data.request.errorCode = CimissClient.otherError
-            response_data.request.errorMessage = (
-                    "parse getway return string error:" + response_content.decode('utf-8')
-            )
-        else:
-            response_data.request.errorCode = getway_info["returnCode"]
-            response_data.request.errorMessage = getway_info["returnMessage"]
-        return None
+            response_data.request.errorMessage = "Error retrieving data"
+            return response_data
+        return handle_exception
+
+    @classmethod
+    def _generate_pack_success_handler(
+            cls,
+            response_data: ResponseData,
+    ):
+        def handle_success(response_content: bytes) -> ResponseData:
+            response_data.load_from_protobuf_content(response_content)
+            return response_data
+        return handle_success

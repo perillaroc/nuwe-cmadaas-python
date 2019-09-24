@@ -58,6 +58,9 @@ class ResponseData(object):
     ):
         self.request = request
 
+    def load_from_protobuf_content(self, content: bytes):
+        pass
+
 
 class Array2D(ResponseData):
     def __init__(

@@ -1,10 +1,10 @@
-# cimiss-python-api
+# nuwe-cimiss-python
 
 中国气象局 CIMISS 数据库 MUSIC 接口的 python API。
 
 ## 安装
 
-使用如下代码安装`nuwe_cimiss`包。
+使用如下命令安装`nuwe_cimiss`包。
 
 ```
 python setup.py install
@@ -91,6 +91,6 @@ pyCURL 比 Request 速度更快，但更多情况下，速度的快慢取决于�
 
 ## License
 
-`cimiss-python-api` 未做特殊声明部分代码由 perillaroc 开发，并采用 MIT 协议。
+`nuwe-cimiss-api` 未做特殊声明部分代码由 perillaroc 开发，并采用 MIT 协议。
 
 其中，**music-sdk-python-2.0.0** 版权属于**国家气象信息中心**。

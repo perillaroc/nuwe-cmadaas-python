@@ -1,5 +1,5 @@
 # coding=UTF-8
-from nuwe_cimiss.client import CimissClient
+from nuwe_cimiss import CimissClient
 import click
 
 

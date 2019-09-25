@@ -1,13 +1,10 @@
 # cimiss-python-api
 
 中国气象局 CIMISS 数据库 MUSIC 接口的 python API。
-在 music-sdk-python-2.0.0 版本基础上修改，
-适用于 Python 3 版本，并支持 Windows 和 Linux。
-
 
 ## 安装
 
-在 music-sdk-python-2.0.0 目录下安装cma包：
+使用如下代码安装`nuwe_cimiss`包。
 
 ```
 python setup.py install
@@ -17,10 +14,10 @@ python setup.py install
 
 MUSIC 接口仅适用于气象局内网用户，使用前请先申请账户。
 
-使用 `cma.music.DataQueryClient` 类从 CIMISS 中检索数据。
+使用 `nuwe_cimiss.CimissClient` 类从 CIMISS 中检索数据。
 
 需要提供 CIMISS 服务的相关参数，可以保存在当前目录 `client.conf` 文件中，
-或者在创建 `cma.music.DataQueryClient` 对象时显式指定。参数包括：
+或者在创建 `nuwe_cimiss.CimissClient` 对象显式指定。参数包括：
 
 - `music_server`: MUSIC接口ip地址，必须指定
 - `music_port`：MUSIC接口端口号，必须指定
@@ -31,7 +28,7 @@ MUSIC 接口仅适用于气象局内网用户，使用前请先申请账户。
 下面的示例展示如何检索地面观测资料。
 
 ```python
-from cma.music.DataQueryClient import DataQueryClient
+from nuwe_cimiss import CimissClient
 
 client_config_path="path/to/client/config/file"
 user="user name"
@@ -49,8 +46,12 @@ params = {
     "limitCnt": "10",
 }
 
-client = DataQueryClient(config_file=client_config_path)
-result = client.callAPI_to_array2D(user, password, interface_id, params)
+client = CimissClient(
+    user=user,
+    password=password,
+    config_file=client_config_path
+)
+result = client.callAPI_to_array2D(interface_id, params)
 ```
 
 更详细的接口使用方法请访问 CIMISS 官网。
@@ -59,9 +60,14 @@ result = client.callAPI_to_array2D(user, password, interface_id, params)
 
 请访问 `example` 目录查看示例。
 
-## 移植说明
+## 移植 music-sdk-python-2.0.0
 
-本项目修改 `music-sdk-python-2.0.0` 源码，从 Python 2 移植到 Python 3，同时使用 Requests 替换 pyCURL 库。
+**music-sdk-python-2.0.0** 版权属于**国家气象信息中心**。
+因软件包中未明确列出版权协议，本项目目前包含对该源码的修改。
+如有侵权，请联系perillaroc或发issue声明。
+
+本项目的`music-sdk-python-2.0.0`目录是对该版本的不完整修改，
+从 Python 2 移植到 Python 3，使用 Requests 替换 pyCURL 库，并支持 Windows 和 Linux。
 
 ### 移植到 Python 3
 
@@ -85,9 +91,6 @@ pyCURL 比 Request 速度更快，但更多情况下，速度的快慢取决于�
 
 ## License
 
-`cimiss-python-api` 中包含 **music-sdk-python-2.0.0** 的源码，并对部分源码进行修改。
-**music-sdk-python-2.0.0** 版权属于**国家气象信息中心**，因软件包中未明确列出软件版权，
-本项目目前对该源码进行一定的修改。如有侵权，请联系perillaroc或发issue声明。
+`cimiss-python-api` 未做特殊声明部分代码由 perillaroc 开发，并采用 MIT 协议。
 
-`cimiss-python-api` 其余代码由 perillaroc 开发，并采用 MIT 协议。
-
+其中，**music-sdk-python-2.0.0** 版权属于**国家气象信息中心**。

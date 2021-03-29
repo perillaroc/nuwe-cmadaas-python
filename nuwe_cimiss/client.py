@@ -4,6 +4,10 @@ import json
 import logging
 import pathlib
 import warnings
+import hashlib
+import time
+import uuid
+from copy import deepcopy
 from typing import Callable, Any
 
 from nuwe_cimiss.connection import Connection
@@ -350,9 +354,31 @@ class CimissClient(object):
         )
 
         fetch_url = (
-            f"{basic_url}method={method}&userId={self.user}&pwd={self.password}&interfaceId={interface_id}"
+            f"{basic_url}method={method}&userId={self.user}&interfaceId={interface_id}"
             f"&language={CimissClient.clientLanguage}&clientversion={CimissClient.clientVersion}"
         )
+
+        timestamp = str((round(time.time() * 1000)))
+        nonce = str(uuid.uuid1())
+        fetch_url += '&timestamp=' + timestamp
+        fetch_url += '&nonce=' + nonce
+
+        sign_params = deepcopy(params)
+        sign_params['serviceNodeId'] = server_id
+        sign_params['method'] = method
+        sign_params['userId'] = self.user
+        sign_params['interfaceId'] = interface_id
+        sign_params['language'] = CimissClient.clientLanguage
+        sign_params['clientversion'] = CimissClient.clientVersion
+        sign_params['timestamp'] = timestamp
+        sign_params['nonce'] = nonce
+        sign_params['pwd'] = self.password
+        sign = self._get_sign(sign_params)
+
+        if sign == "":
+            print("generate sign is None")
+
+        fetch_url += '&sign=' + sign
 
         for key, value in params.items():
             fetch_url += f"&{key}={value}"
@@ -381,3 +407,20 @@ class CimissClient(object):
             exception_handler
         )
         return result
+
+    def _get_sign(self, sign_params):
+        param_string = ""
+        if "params" in sign_params:
+            paramsVal = sign_params.pop("params")
+            keyValList = paramsVal.split("&")
+            for keyVal in keyValList:
+                sign_params[keyVal.split("=")[0]] = keyVal.split("=")[1]
+
+        keys = sorted(sign_params.keys())
+        for key in keys:
+            param_string = param_string + key + "=" + sign_params.get(key) + "&"
+        if (param_string):
+            param_string = param_string[:-1]
+
+        sign = hashlib.md5(param_string.encode(encoding='UTF-8')).hexdigest().upper()
+        return sign

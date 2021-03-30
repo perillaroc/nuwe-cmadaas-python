@@ -6,7 +6,7 @@ import pathlib
 
 import requests
 
-from nuwe_cimiss.data import (
+from nuwe_cimiss.music.data import (
     ResponseData
 )
 

@@ -2,8 +2,9 @@
 from typing import List
 
 import numpy as np
+import pandas as pd
 
-from nuwe_cimiss import apiinterface_pb2 as pb
+from nuwe_cimiss.music import apiinterface_pb2 as pb
 
 
 class RequestInfo(object):
@@ -67,6 +68,12 @@ class ResponseData(object):
         data.load_from_protobuf_content(content)
         return data
 
+    def to_pandas(self):
+        pass
+
+    def to_xarray(self):
+        pass
+
 
 class Array2D(ResponseData):
     protobuf_object_type = pb.RetArray2D
@@ -103,6 +110,10 @@ class Array2D(ResponseData):
         assert(self.col_count == ret_array_2d.request.colCount)
 
         self.data = np.array(ret_array_2d.data).reshape([self.row_count, self.col_count])
+
+    def to_pandas(self) -> pd.DataFrame:
+        df = pd.DataFrame(self.data, columns=self.element_names)
+        return df
 
 
 class DataBlock(ResponseData):

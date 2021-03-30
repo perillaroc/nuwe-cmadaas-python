@@ -10,8 +10,8 @@ import uuid
 from copy import deepcopy
 from typing import Callable, Any
 
-from nuwe_cimiss.connection import Connection
-from nuwe_cimiss.data import (
+from nuwe_cimiss.music.connection import Connection
+from nuwe_cimiss.music.data import (
     Array2D,
     DataBlock,
     GridArray2D,

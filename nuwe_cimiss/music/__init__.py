@@ -1,4 +1,4 @@
-from .music import (
+from .data import (
     Array2D,
     GridArray2D,
     FilesInfo,
@@ -6,8 +6,6 @@ from .music import (
     GridScalar2D,
     GridVector2D,
     DataBlock,
-    CimissClient
 )
 
-
-__version__ = "0.2.0"
+from .client import CimissClient

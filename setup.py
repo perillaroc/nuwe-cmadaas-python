@@ -4,7 +4,7 @@ import os
 from setuptools import find_packages, setup
 from nuwe_cimiss import __version__
 
-DESCRIPTION = "A python API for CIMISS MUSIC."
+DESCRIPTION = "A python API for CMADaaS MUSIC."
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -23,7 +23,7 @@ setup(
     author="Perilla Roc",
     author_email="perillaroc@gmail.com",
     python_requires='>=3.6.0',
-    url="https://github.com/perillaroc/cimiss-python-api",
+    url="https://github.com/perillaroc/nuwe-cimiss-python",
     # package=find_packages(exclude=[
     #     "tests",
     #     "*.tests",
@@ -35,6 +35,9 @@ setup(
     install_requires=[
         "requests",
         "numpy",
+        "pandas",
+        "pyyaml",
+        "protobuf",
     ],
     extras_requires={
         "example": ["click"]

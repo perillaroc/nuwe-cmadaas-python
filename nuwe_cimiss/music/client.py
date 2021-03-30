@@ -1,4 +1,3 @@
-# coding: utf-8
 import configparser
 import json
 import logging
@@ -7,6 +6,7 @@ import warnings
 import hashlib
 import time
 import uuid
+import typing
 from copy import deepcopy
 from typing import Callable, Any
 
@@ -37,6 +37,7 @@ class CimissClient(object):
             config_file: pathlib.Path or str = None,
             user: str = None,
             password: str = None,
+            config: typing.Dict = None,
     ):
         self.server_ip = server_ip
         self.server_port = server_port
@@ -47,7 +48,7 @@ class CimissClient(object):
         self.user = user
         self.password = password
         self._connection = None
-        self.connect(self.user, self.password)
+        self.config = config
 
         # 数据读取URL
         #   http://ip:port/music-ws/api?serviceNodeId=serverId&
@@ -56,7 +57,11 @@ class CimissClient(object):
         )
 
         if self.config_file is not None:
+            self._load_config_from_file()
+        if self.config is not None:
             self._load_config()
+
+        self.connect(self.user, self.password)
 
     def connect(self, user: str, password: str):
         self.user = user
@@ -311,7 +316,7 @@ class CimissClient(object):
             exception_handler=Connection.generate_exception_handler(data),
         )
 
-    def _load_config(self) -> None:
+    def _load_config_from_file(self) -> None:
         if self.config_file is not None:
             self.config_file = pathlib.Path(self.config_file)
             if not self.config_file.exists():
@@ -338,6 +343,30 @@ class CimissClient(object):
 
         if self.read_timeout is None:
             self.read_timeout = int(cf.get("Pb", "music_readTimeout"))
+
+    def _load_config(self) -> None:
+        auth_config = self.config["auth"]
+        server_config = self.config["server"]
+
+        if self.user is None:
+            self.user = auth_config["user"]
+        if self.password is None:
+            self.password = auth_config["password"]
+
+        if self.server_ip is None:
+            self.server_ip = server_config["music_server"]
+
+        if self.server_port is None:
+            self.server_port = server_config["music_port"]
+
+        if self.server_id is None:
+            self.server_id = server_config["music_ServiceId"]
+
+        if self.connect_timeout is None:
+            self.connect_timeout = server_config["music_connTimeout"]
+
+        if self.read_timeout is None:
+            self.read_timeout = server_config["music_readTimeout"]
 
     def _get_fetch_url(
             self,

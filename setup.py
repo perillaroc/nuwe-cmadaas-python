@@ -1,8 +1,8 @@
-# coding: utf-8
 import io
 import os
 
 from setuptools import find_packages, setup
+from nuwe_cimiss import __version__
 
 DESCRIPTION = "A python API for CIMISS MUSIC."
 
@@ -16,7 +16,7 @@ except FileNotFoundError:
 
 setup(
     name="nuwe-cimiss-python",
-    version="0.1.0",
+    version=__version__,
     description=DESCRIPTION,
     long_description=long_description,
     long_description_content_type="text/markdown",

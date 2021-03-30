@@ -10,3 +10,6 @@ from nuwe_cimiss.data import (
     GridVector2D,
     DataBlock,
 )
+
+
+__version__ = "0.2.0"

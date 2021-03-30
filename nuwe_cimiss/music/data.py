@@ -3,6 +3,7 @@ from typing import List
 
 import numpy as np
 import pandas as pd
+import xarray as xr
 
 from nuwe_cimiss.music import apiinterface_pb2 as pb
 
@@ -92,6 +93,10 @@ class Array2D(ResponseData):
         self.row_count = row_count
         self.col_count = col_count
 
+    def to_pandas(self) -> pd.DataFrame:
+        df = pd.DataFrame(self.data, columns=self.element_names)
+        return df
+
     def load_from_protobuf_content(self, content: bytes):
         protobuf_object = self.protobuf_object_type()
         protobuf_object.ParseFromString(content)
@@ -110,10 +115,6 @@ class Array2D(ResponseData):
         assert(self.col_count == ret_array_2d.request.colCount)
 
         self.data = np.array(ret_array_2d.data).reshape([self.row_count, self.col_count])
-
-    def to_pandas(self) -> pd.DataFrame:
-        df = pd.DataFrame(self.data, columns=self.element_names)
-        return df
 
 
 class DataBlock(ResponseData):
@@ -174,6 +175,57 @@ class GridArray2D(ResponseData):
         self.lons = lons
         self.units = units
         self.user_element_name = user_element_name
+
+    def to_xarray(self) -> xr.DataArray:
+        coords = {}
+        if len(self.lats) > 0:
+            lats = self.lats
+        else:
+            lats = np.linspace(
+                self.start_lat, self.end_lat, self.lat_count,
+                endpoint=True
+            )
+
+        if len(self.lons) > 0:
+            lons = self.lats
+        else:
+            lons = np.linspace(
+                self.start_lon, self.end_lon, self.lon_count,
+                endpoint=True
+            )
+
+        coords["latitude"] = xr.Variable(
+            "latitude",
+            lats,
+            attrs={
+                "units": "degrees_north",
+                "standard_name": "latitude",
+                "long_name": "latitude"
+            },
+        )
+        coords["longitude"] = xr.Variable(
+            "longitude",
+            lons,
+            attrs={
+                "units": "degrees_east",
+                "standard_name": "longitude",
+                "long_name": "longitude"
+            }
+        )
+
+        dims = ("latitude", "longitude")
+
+        field = xr.DataArray(
+            self.data,
+            dims=dims,
+            coords=coords,
+            attrs={
+                "units": self.units,
+            },
+            name=self.user_element_name,
+        )
+
+        return field
 
     def load_from_protobuf_content(self, content: bytes):
         protobuf_object = self.protobuf_object_type()

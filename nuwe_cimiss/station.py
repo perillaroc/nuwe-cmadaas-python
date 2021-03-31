@@ -25,7 +25,7 @@ def retrieve_obs_station(
         time: typing.Union[pd.Interval, pd.Timedelta, typing.List, pd.Timedelta] = None,
         station: typing.Union[str, typing.List, typing.Tuple] = None,
         region=None,
-        station_level: str = None,
+        station_level: typing.Union[str, typing.List[str]] = None,
         order: str = "Station_ID_d:asc",
         count: int = None,
         config_file: typing.Union[str, Path] = None,
@@ -70,14 +70,17 @@ def retrieve_obs_station(
         params["staIds"] = station
     elif isinstance(station, typing.List):
         interface_config["station"] = "StaID"
-        params["times"] = ",".join(station)
+        params["staIds"] = ",".join(station)
     elif isinstance(station, typing.Tuple):
-        interface_config["station"] = "StaIDRange"
+        interface_config["station"] = "StaIdRange"
         params["minStaId"] = station[0]
         params["maxStaId"] = station[1]
 
     if region is not None:
         _get_region_params(region, params, interface_config)
+
+    if station_level is not None:
+        del params["orderby"]
 
     if isinstance(station_level, str):
         params["staLevels"] = station_level
@@ -132,7 +135,16 @@ def _get_interface_id(interface_config: typing.Dict):
     if len(condition_part) > 0:
         interface_id += "By" + condition_part
 
-    return interface_id
+    fixed_interface_id = _fix_interface_id(interface_id)
+
+    return fixed_interface_id
+
+
+def _fix_interface_id(interface_id):
+    mapper = {
+        "getSurfEleByTimeRangeAndStaIdRange": "getSurfEleByTimeRangeAndStaIDRange"
+    }
+    return mapper.get(interface_id, interface_id)
 
 
 def _get_region_params(region, params, interface_config):

@@ -9,5 +9,6 @@ from .music import (
     CimissClient
 )
 
+from .station import retrieve_obs_station
 
 __version__ = "0.2.0"

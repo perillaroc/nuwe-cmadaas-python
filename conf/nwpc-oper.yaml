@@ -1,0 +1,10 @@
+cmadaas:
+  auth:
+    user: user name
+    password: user password
+  server:
+    music_server: music server ip
+    music_port: music server port
+    music_connTimeout: 3  # connection time out, seconds
+    music_readTimeout: 3000  # read time out, seconds
+    music_ServiceId: music service id

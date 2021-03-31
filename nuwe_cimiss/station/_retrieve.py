@@ -1,30 +1,16 @@
 import typing
-import logging
 from pathlib import Path
 
 import pandas as pd
-import numpy as np
 
-from nuwe_cimiss.music import CimissClient
-from nuwe_cimiss._config import load_cmadaas_config
+from nuwe_cimiss._log import logger
+from nuwe_cimiss._util import (
+    _get_client,
+    _get_time_string,
+    _get_time_range_string
+)
 
-
-logger = logging
-
-STATION_CONFIG = {
-    "SURF_CHN_MUL_HOR": {
-        "long_name": "中国地面逐小时资料",
-        "elements": "Station_Id_d,Lat,Lon,Alti,Year,Mon,Day,Hour,PRS_Sea,TEM,DPT,WIN_D_INST,WIN_S_INST,PRE_1h,PRE_6h,PRE_24h,PRS"
-    },
-    "SURF_CHN_MUL_DAY": {
-        "long_name": "中国地面日值数据",
-        "elements": "Station_Id_d,Lat,Lon,Alti,Year,Mon,Day,PRS_Sea_Avg,TEM_Avg,TEM_Max,TEM_Min"
-    },
-    "SURF_CHN_MUL_MON": {
-        "long_name": "中国地面月值数据（区域站）",
-        "elements": "Station_Id_d,Lat,Lon,Alti,Year,Mon,PRS_Sea_Avg,TEM_Avg,TEM_Max_Avg,TEM_Min_Avg"
-    }
-}
+from ._dataset import STATION_DATASETS
 
 
 def retrieve_obs_station(
@@ -38,9 +24,9 @@ def retrieve_obs_station(
         count: int = None,
         config_file: typing.Union[str, Path] = None,
         **kwargs,
-):
+) -> pd.DataFrame:
     if elements is None:
-        elements = STATION_CONFIG[data_type]["elements"]
+        elements = STATION_DATASETS[data_type]["elements"]
 
     interface_config = {
         "name": "getSurfEle",
@@ -113,25 +99,7 @@ def retrieve_obs_station(
     return df
 
 
-def _get_client(config_file):
-    config = load_cmadaas_config(config_file)
-    client = CimissClient(config=config)
-    return client
-
-
-def _get_time_string(time: pd.Timestamp):
-    return time.strftime("%Y%m%d%H%M%S")
-
-
-def _get_time_range_string(time_interval: pd.Interval):
-    left = "[" if time_interval.closed_left else ")"
-    start = _get_time_string(time_interval.left)
-    right = "[" if time_interval.closed_right else ")"
-    end = _get_time_string(time_interval.right)
-    return f"{left}{start},{end}{right}"
-
-
-def _get_interface_id(interface_config: typing.Dict):
+def _get_interface_id(interface_config: typing.Dict) ->str:
     interface_id = interface_config["name"]
 
     region_part = interface_config["region"]
@@ -150,14 +118,14 @@ def _get_interface_id(interface_config: typing.Dict):
     return fixed_interface_id
 
 
-def _fix_interface_id(interface_id):
+def _fix_interface_id(interface_id: str) -> str:
     mapper = {
         "getSurfEleByTimeRangeAndStaIdRange": "getSurfEleByTimeRangeAndStaIDRange"
     }
     return mapper.get(interface_id, interface_id)
 
 
-def _get_region_params(region, params, interface_config):
+def _get_region_params(region: typing.Dict, params: typing.Dict, interface_config: typing.Dict):
     region_type = region["type"]
     if region_type == "region":
         interface_config["region"] = "Region"

@@ -8,4 +8,4 @@ from .data import (
     DataBlock,
 )
 
-from .client import CimissClient
+from .client import CMADaaSClient

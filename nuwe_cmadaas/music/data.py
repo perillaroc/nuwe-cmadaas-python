@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 
-from nuwe_cimiss.music import apiinterface_pb2 as pb
+from nuwe_cmadaas.music import apiinterface_pb2 as pb
 
 
 class RequestInfo(object):

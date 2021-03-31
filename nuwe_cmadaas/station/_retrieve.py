@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pandas as pd
 
-from nuwe_cimiss._log import logger
-from nuwe_cimiss._util import (
+from nuwe_cmadaas._log import logger
+from nuwe_cmadaas._util import (
     _get_client,
     _get_time_string,
     _get_time_range_string

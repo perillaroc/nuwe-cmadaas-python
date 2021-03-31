@@ -6,7 +6,7 @@ from .music import (
     GridScalar2D,
     GridVector2D,
     DataBlock,
-    CimissClient
+    CMADaaSClient
 )
 
 from .station import retrieve_obs_station

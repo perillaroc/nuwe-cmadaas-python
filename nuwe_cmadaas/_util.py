@@ -1,12 +1,12 @@
 import pandas as pd
 
-from nuwe_cimiss.music import CimissClient
+from nuwe_cmadaas.music import CMADaaSClient
 from ._config import load_cmadaas_config
 
 
-def _get_client(config_file) -> CimissClient:
+def _get_client(config_file) -> CMADaaSClient:
     config = load_cmadaas_config(config_file)
-    client = CimissClient(config=config)
+    client = CMADaaSClient(config=config)
     return client
 
 

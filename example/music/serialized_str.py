@@ -1,5 +1,5 @@
 # coding=UTF-8
-from nuwe_cimiss import CimissClient
+from nuwe_cmadaas import CMADaaSClient
 import click
 
 
@@ -22,7 +22,7 @@ def cli(user, password, client_config=None):
         "limitCnt": "10",
     }
 
-    client = CimissClient(
+    client = CMADaaSClient(
         user=user,
         password=password,
         config_file=client_config

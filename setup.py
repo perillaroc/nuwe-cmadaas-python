@@ -2,7 +2,7 @@ import io
 import os
 
 from setuptools import find_packages, setup
-from nuwe_cimiss import __version__
+from nuwe_cmadaas import __version__
 
 DESCRIPTION = "A python API for CMADaaS MUSIC."
 
@@ -15,7 +15,7 @@ except FileNotFoundError:
     long_description = DESCRIPTION
 
 setup(
-    name="nuwe-cimiss-python",
+    name="nuwe-cmadaas-python",
     version=__version__,
     description=DESCRIPTION,
     long_description=long_description,
@@ -23,7 +23,7 @@ setup(
     author="Perilla Roc",
     author_email="perillaroc@gmail.com",
     python_requires='>=3.6.0',
-    url="https://github.com/perillaroc/nuwe-cimiss-python",
+    url="https://github.com/perillaroc/nuwe-cmadaas-python",
     # package=find_packages(exclude=[
     #     "tests",
     #     "*.tests",
@@ -31,7 +31,7 @@ setup(
     #     "tests.*",
     #     "music-sdk-python-*",
     # ]),
-    py_modules=["nuwe_cimiss"],
+    py_modules=["nuwe_cmadaas"],
     install_requires=[
         "requests",
         "numpy",

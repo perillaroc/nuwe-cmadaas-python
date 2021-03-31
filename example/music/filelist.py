@@ -1,5 +1,5 @@
 # coding=UTF-8
-from nuwe_cimiss import CimissClient
+from nuwe_cmadaas import CMADaaSClient
 import click
 
 
@@ -18,7 +18,7 @@ def cli(user, password, client_config=None):
         "time": "20190922000000",
     }
 
-    client = CimissClient(
+    client = CMADaaSClient(
         user=user,
         password=password,
         config_file=client_config

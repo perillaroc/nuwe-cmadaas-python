@@ -10,8 +10,8 @@ import typing
 from copy import deepcopy
 from typing import Callable, Any
 
-from nuwe_cimiss.music.connection import Connection
-from nuwe_cimiss.music.data import (
+from nuwe_cmadaas.music.connection import Connection
+from nuwe_cmadaas.music.data import (
     Array2D,
     DataBlock,
     GridArray2D,
@@ -23,7 +23,7 @@ from nuwe_cimiss.music.data import (
 logger = logging.getLogger()
 
 
-class CimissClient(object):
+class CMADaaSClient(object):
     clientLanguage = "Python"
     clientVersion = "V2.0.0"
 
@@ -384,7 +384,7 @@ class CimissClient(object):
 
         fetch_url = (
             f"{basic_url}method={method}&userId={self.user}&interfaceId={interface_id}"
-            f"&language={CimissClient.clientLanguage}&clientversion={CimissClient.clientVersion}"
+            f"&language={CMADaaSClient.clientLanguage}&clientversion={CMADaaSClient.clientVersion}"
         )
 
         timestamp = str((round(time.time() * 1000)))
@@ -397,8 +397,8 @@ class CimissClient(object):
         sign_params['method'] = method
         sign_params['userId'] = self.user
         sign_params['interfaceId'] = interface_id
-        sign_params['language'] = CimissClient.clientLanguage
-        sign_params['clientversion'] = CimissClient.clientVersion
+        sign_params['language'] = CMADaaSClient.clientLanguage
+        sign_params['clientversion'] = CMADaaSClient.clientVersion
         sign_params['timestamp'] = timestamp
         sign_params['nonce'] = nonce
         sign_params['pwd'] = self.password

@@ -1,5 +1,5 @@
 # coding=UTF-8
-from nuwe_cimiss import CimissClient
+from nuwe_cmadaas import CMADaaSClient
 import click
 import pathlib
 
@@ -23,7 +23,7 @@ def cli(user, password, output_dir, client_config=None):
     output_path = pathlib.Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 
-    client = CimissClient(
+    client = CMADaaSClient(
         user=user,
         password=password,
         config_file=client_config

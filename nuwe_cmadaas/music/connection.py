@@ -1,16 +1,14 @@
 # coding: utf-8
 import json
-import logging
 from typing import Callable, Any
 import pathlib
 
 import requests
 
-from nuwe_cmadaas.music.data import (
+from .data import (
     ResponseData
 )
-
-logger = logging.getLogger()
+from nuwe_cmadaas._log import logger
 
 
 class Connection(object):

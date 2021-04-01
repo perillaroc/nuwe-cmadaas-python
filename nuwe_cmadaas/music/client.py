@@ -1,17 +1,15 @@
 import configparser
 import json
-import logging
 import pathlib
 import warnings
 import hashlib
 import time
 import uuid
-import typing
 from copy import deepcopy
-from typing import Callable, Any
+from typing import Callable, Any, Dict
 
-from nuwe_cmadaas.music.connection import Connection
-from nuwe_cmadaas.music.data import (
+from .connection import Connection
+from .data import (
     Array2D,
     DataBlock,
     GridArray2D,
@@ -19,8 +17,7 @@ from nuwe_cmadaas.music.data import (
     GridScalar2D,
     GridVector2D,
 )
-
-logger = logging.getLogger()
+from nuwe_cmadaas._log import logger
 
 
 class CMADaaSClient(object):
@@ -34,10 +31,10 @@ class CMADaaSClient(object):
             server_id: str = None,
             connection_timeout: int = None,
             read_timeout: int = None,
-            config_file: pathlib.Path or str = None,
             user: str = None,
             password: str = None,
-            config: typing.Dict = None,
+            config: Dict = None,
+            config_file: pathlib.Path or str = None,
     ):
         self.server_ip = server_ip
         self.server_port = server_port
@@ -61,9 +58,9 @@ class CMADaaSClient(object):
         if self.config is not None:
             self._load_config()
 
-        self.connect(self.user, self.password)
+        self.create_connect(self.user, self.password)
 
-    def connect(self, user: str, password: str):
+    def create_connect(self, user: str, password: str):
         self.user = user
         self.password = password
         self._connection = Connection(client=self)
@@ -71,7 +68,7 @@ class CMADaaSClient(object):
     def callAPI_to_array2D(
             self,
             interface_id: str,
-            params: dict,
+            params: Dict,
             server_id: str = None
     ) -> Array2D:
         array_2d = Array2D()
@@ -91,7 +88,7 @@ class CMADaaSClient(object):
     def callAPI_to_gridArray2D(
             self,
             interface_id: str,
-            params: dict,
+            params: Dict,
             server_id: str = None
     ) -> GridArray2D:
         data = GridArray2D()
@@ -111,7 +108,7 @@ class CMADaaSClient(object):
     def callAPI_to_fileList(
             self,
             interface_id: str,
-            params: dict,
+            params: Dict,
             server_id: str = None
     ):
         data = FilesInfo()
@@ -131,7 +128,7 @@ class CMADaaSClient(object):
     def callAPI_to_serializedStr(
             self,
             interface_id: str,
-            params: dict,
+            params: Dict,
             data_format: str,
             server_id: str = None
     ):
@@ -170,7 +167,7 @@ class CMADaaSClient(object):
     def callAPI_to_saveAsFile(
         self,
         interface_id: str,
-        params: dict,
+        params: Dict,
         data_format: str,
         file_name: str,
         server_id: str = None,
@@ -217,7 +214,7 @@ class CMADaaSClient(object):
     def callAPI_to_downFile(
         self,
         interface_id: str,
-        params: dict,
+        params: Dict,
         file_dir: str,
         server_id: str = None,
     ):
@@ -256,7 +253,7 @@ class CMADaaSClient(object):
     def callAPI_to_dataBlock(
             self,
             interface_id: str,
-            params: dict,
+            params: Dict,
             server_id: str = None
     ) -> DataBlock:
         warnings.warn("callAPI_to_dataBlock is not tested")
@@ -277,7 +274,7 @@ class CMADaaSClient(object):
     def callAPI_to_gridScalar2D(
             self,
             interface_id: str,
-            params: dict,
+            params: Dict,
             server_id: str = None
     ):
         warnings.warn("callAPI_to_gridScalar2D is not tested")
@@ -298,7 +295,7 @@ class CMADaaSClient(object):
     def callAPI_to_gridVector2D(
             self,
             interface_id: str,
-            params: dict,
+            params: Dict,
             server_id: str = None
     ):
         warnings.warn("callAPI_to_gridVector2D is not tested")
@@ -372,7 +369,7 @@ class CMADaaSClient(object):
             self,
             interface_id: str,
             method: str,
-            params: dict,
+            params: Dict,
             server_id: str = None,
     ) -> str:
         if server_id is None:
@@ -416,10 +413,10 @@ class CMADaaSClient(object):
 
     def _do_request(
             self,
-            interface_id,
-            method,
-            params,
-            server_id,
+            interface_id: str,
+            method: str,
+            params: Dict,
+            server_id: str,
             success_handler: Callable[[bytes], Any],
             failure_handler: Callable[[bytes], Any],
             exception_handler: Callable[[Exception], Any],
@@ -437,7 +434,7 @@ class CMADaaSClient(object):
         )
         return result
 
-    def _get_sign(self, sign_params):
+    def _get_sign(self, sign_params: Dict) -> str:
         param_string = ""
         if "params" in sign_params:
             paramsVal = sign_params.pop("params")

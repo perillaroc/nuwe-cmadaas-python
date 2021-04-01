@@ -70,10 +70,10 @@ class ResponseData(object):
         return data
 
     def to_pandas(self):
-        pass
+        raise NotImplementedError()
 
     def to_xarray(self):
-        pass
+        raise NotImplementedError()
 
 
 class Array2D(ResponseData):
@@ -81,7 +81,7 @@ class Array2D(ResponseData):
 
     def __init__(
             self,
-            data: np.array = None,
+            data: np.ndarray = None,
             request: RequestInfo = None,
             element_names: List[str] = None,
             row_count: int = 0,

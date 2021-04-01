@@ -1,3 +1,3 @@
 import logging
 
-logger = logging
+logger = logging.getLogger()

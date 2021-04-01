@@ -1,5 +1,6 @@
 # This is a config sample file.
 # Please create the config file in $HOME/.config/nwpc-oper.yaml
+# Or set environment variable NWPC_OPER_CONFIG for its path.
 
 cmadaas:
   auth:

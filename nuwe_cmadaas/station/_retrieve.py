@@ -16,7 +16,7 @@ from ._dataset import STATION_DATASETS
 def retrieve_obs_station(
         data_type: str = "SURF_CHN_MUL_HOR",
         elements: str = None,
-        time: typing.Union[pd.Interval, pd.Timedelta, typing.List, pd.Timedelta] = None,
+        time: typing.Union[pd.Interval, pd.Timestamp, typing.List, pd.Timedelta] = None,
         station: typing.Union[str, typing.List, typing.Tuple] = None,
         region=None,
         station_level: typing.Union[str, typing.List[str]] = None,
@@ -25,6 +25,90 @@ def retrieve_obs_station(
         config_file: typing.Union[str, Path] = None,
         **kwargs,
 ) -> pd.DataFrame:
+    """
+    检索地面站点观测数据资料。
+
+    对应 CMADaaS 中以 `getSurfElm` 开头的一系列数据接口
+
+    **区域筛选条件**
+
+    - 经纬度范围
+
+    .. code-block:: python
+
+        {
+            "type": "rect",
+            "start_longitude": 115.7,
+            "end_longitude": 117.4,
+            "start_latitude": 41.6,
+            "end_latitude": 39.4,
+        }
+
+    - 流域
+
+    .. code-block:: python
+
+        {
+            "type": "basin",
+            "basin_codes": "CJLY"
+        }
+
+    - 地区
+
+    .. code-block:: python
+
+        {
+            "type": "region",
+            "admin_codes": "110000"
+        }
+
+    Parameters
+    ----------
+    data_type:
+        数据种类，即 CMADaaS 中的资料代码
+    elements:
+        要素字段代码，以逗号分隔
+    time:
+        时间筛选条件，支持单个时间，时间列表，时间段和时间间隔
+
+        - 时间对象：``pd.Timestamp`` 类型，单个时间点，对应接口的 times 参数
+        - 时间列表：``typing.List[pd.Timestamp]`` 类型，多个时间列表，对应接口的 times 参数
+        - 时间段：``pd.Interval`` 类型，起止时间，定义区间端点是否闭合，对应接口的 timeRange 参数
+        - 时间间隔：``pd.Timedelta`` 类型，用于获取地面资料最新时次 (getSurfLatestTime)，忽略其余筛选条件
+    station:
+        站点筛选条件，支持字符串，列表和元组
+
+        - 字符串：单个站点
+        - 列表：多个站点
+        - 元组：站点范围，二元组，第一个元素是起止站号 (minStaId)，第二个元素是终止站号 (maxStaId)
+    region:
+        区域筛选条件：
+            - 经纬度范围 (rect)
+            - 流域 (basin)
+            - 地区 (region)
+
+    station_level:
+        台站级别：
+            - 011: 国家基准气候站
+            - 012: 基本气象站
+            - 013: 一般气象站
+    order:
+        排序字段
+    count:
+        最大返回记录数，对应接口的 limitCnt 参数
+    config_file:
+        配置文件路径
+    kwargs:
+        其他需要传递给 MUSIC 接口的参数，例如：
+            - eleValueRanges: 要素值范围
+            - hourSeparate: 小时取整条件
+            - minSeparate: 分钟取整条件
+
+    Returns
+    -------
+    pd.DataFrame
+        站点观测资料表格数据，列名为 elements 中的值
+    """
     if elements is None:
         elements = STATION_DATASETS[data_type]["elements"]
 

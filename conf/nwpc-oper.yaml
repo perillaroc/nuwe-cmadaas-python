@@ -1,3 +1,6 @@
+# This is a config sample file.
+# Please create the config file in $HOME/.config/nwpc-oper.yaml
+
 cmadaas:
   auth:
     user: user name

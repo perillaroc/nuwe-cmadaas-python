@@ -20,25 +20,33 @@ def retrieve_model_grid(
     interface_config = {
         "name": "getNafpEleGrid",
         "region": None,
-        "time": "Time",
-        "level": "Level",
-        "valid_time": "Validtime"
+        "time": None,
+        "level": None,
+        "valid_time": None
     }
 
     params = {
         "dataCode": data_type,
         "fcstEle": parameter,
-        "levelType": str(level_type),
-        "fcstLevel": str(level)
     }
 
-    time = _get_time_string(start_time)
-    params["time"] = time
+    if level_type is not None:
+        params["levelType"] = str(level_type)
+        interface_config["level"] = "Level"
+    if level is not None:
+        params["fcstLevel"] = str(level)
 
-    if isinstance(forecast_time, str):
-        forecast_time = pd.to_timedelta(forecast_time)
-    valid_time = int(forecast_time / pd.Timedelta(hours=1))
-    params["validTime"] = str(valid_time)
+    if start_time is not None:
+        interface_config["time"] = "Time"
+        time = _get_time_string(start_time)
+        params["time"] = time
+
+    if forecast_time is not None:
+        interface_config["valid_time"] = "Validtime"
+        if isinstance(forecast_time, str):
+            forecast_time = pd.to_timedelta(forecast_time)
+        valid_time = int(forecast_time / pd.Timedelta(hours=1))
+        params["validTime"] = str(valid_time)
 
     if region is not None:
         _get_region_params(region, params, interface_config)

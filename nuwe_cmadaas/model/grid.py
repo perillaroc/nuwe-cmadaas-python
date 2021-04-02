@@ -10,11 +10,12 @@ from nuwe_cmadaas.station._retrieve import _get_region_params
 def retrieve_model_grid(
         data_code: str,
         parameter: str,
-        start_time: pd.Timestamp,
-        forecast_time: Union[str, pd.Timedelta],
-        level_type: Union[str, int],
-        level: Union[int, float],
+        start_time: pd.Timestamp = None,
+        forecast_time: Union[str, pd.Timedelta] = None,
+        level_type: Union[str, int] = None,
+        level: Union[int, float] = None,
         region: Dict = None,
+        data_type: str = None,
         config_file: Optional[str] = None
 ) -> xr.DataArray:
     interface_config = {
@@ -24,6 +25,14 @@ def retrieve_model_grid(
         "level": None,
         "valid_time": None
     }
+
+    if data_type is None:
+        data_type = "forecast"
+    data_type_mapper = {
+        "forecast": "getNafpEleGrid",
+        "analysis": "getNafpAnaEleGrid",
+    }
+    interface_config["name"] = data_type_mapper.get(data_type)
 
     params = {
         "dataCode": data_code,

@@ -6,7 +6,7 @@ from nuwe_cmadaas._log import logger
 
 
 def retrieve_model_point(
-        data_type: str,
+        data_code: str,
         parameter: str,
         start_time: pd.Timestamp,
         forecast_time: Union[str, pd.Timedelta, Tuple],
@@ -26,7 +26,7 @@ def retrieve_model_point(
     }
 
     params = {
-        "dataCode": data_type,
+        "dataCode": data_code,
         "fcstEle": parameter,
         "levelType": str(level_type),
         "fcstLevel": str(level)

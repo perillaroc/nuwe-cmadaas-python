@@ -14,7 +14,7 @@ from ._dataset import STATION_DATASETS
 
 
 def retrieve_obs_station(
-        data_type: str = "SURF_CHN_MUL_HOR",
+        data_code: str = "SURF_CHN_MUL_HOR",
         elements: str = None,
         time: typing.Union[pd.Interval, pd.Timestamp, typing.List, pd.Timedelta] = None,
         station: typing.Union[str, typing.List, typing.Tuple] = None,
@@ -64,7 +64,7 @@ def retrieve_obs_station(
 
     Parameters
     ----------
-    data_type:
+    data_code:
         数据种类，即 CMADaaS 中的资料代码
     elements:
         要素字段代码，以逗号分隔
@@ -110,7 +110,7 @@ def retrieve_obs_station(
         站点观测资料表格数据，列名为 elements 中的值
     """
     if elements is None:
-        elements = STATION_DATASETS[data_type]["elements"]
+        elements = STATION_DATASETS[data_code]["elements"]
 
     interface_config = {
         "name": "getSurfEle",
@@ -120,7 +120,7 @@ def retrieve_obs_station(
     }
 
     params = {
-        "dataCode": data_type,
+        "dataCode": data_code,
         "elements": elements,
         "orderby": order,
     }

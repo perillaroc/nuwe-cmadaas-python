@@ -8,7 +8,7 @@ from nuwe_cmadaas.station._retrieve import _get_region_params
 
 
 def retrieve_model_grid(
-        data_type: str,
+        data_code: str,
         parameter: str,
         start_time: pd.Timestamp,
         forecast_time: Union[str, pd.Timedelta],
@@ -26,7 +26,7 @@ def retrieve_model_grid(
     }
 
     params = {
-        "dataCode": data_type,
+        "dataCode": data_code,
         "fcstEle": parameter,
     }
 

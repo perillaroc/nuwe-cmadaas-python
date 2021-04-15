@@ -12,7 +12,7 @@ from nuwe_cmadaas._util import (
 )
 
 from ._dataset import STATION_DATASETS
-from ._retrieve import (
+from ._station import (
     _get_interface_id,
     _get_region_params,
 )

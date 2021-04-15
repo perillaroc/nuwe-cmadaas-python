@@ -9,7 +9,7 @@ from .music import (
     CMADaaSClient
 )
 
-from .station import retrieve_obs_station
+from .obs import retrieve_obs_station
 from .model import (
     retrieve_model_point,
     retrieve_model_grid

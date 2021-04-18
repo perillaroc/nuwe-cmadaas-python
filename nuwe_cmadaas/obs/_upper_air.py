@@ -10,7 +10,7 @@ from nuwe_cmadaas._util import (
     _get_time_range_string
 )
 from ._dataset import UPPER_AIR_DATASETS
-from ._util import _get_interface_id, _get_region_params
+from ._util import _get_interface_id, _get_region_params, _fix_params
 
 
 def retrieve_obs_upper_air(
@@ -24,6 +24,7 @@ def retrieve_obs_upper_air(
         station_level: typing.Union[str, typing.List[str]] = None,
         order: str = None,
         count: int = None,
+        interface_data_name: str = None,
         config_file: typing.Union[str, Path] = None,
         **kwargs,
 ) -> pd.DataFrame:
@@ -107,6 +108,8 @@ def retrieve_obs_upper_air(
         排序字段
     count:
         最大返回记录数，对应接口的 limitCnt 参数
+    interface_data_name:
+        接口前缀，默认自动生成，或使用 _dataset.py 文件数据集配置的 interface_data_name 字段
     config_file:
         配置文件路径
     kwargs:
@@ -130,6 +133,15 @@ def retrieve_obs_upper_air(
         "station": None,
         "level": None,
     }
+
+    if (
+            interface_data_name is None
+            and data_code in UPPER_AIR_DATASETS
+            and "interface_data_name" in UPPER_AIR_DATASETS[data_code]
+    ):
+        interface_data_name = UPPER_AIR_DATASETS[data_code]["interface_data_name"]
+    if interface_data_name is not None:
+        interface_config["name"] = f"get{interface_data_name}Ele"
 
     params = {
         "dataCode": data_code,
@@ -196,6 +208,8 @@ def retrieve_obs_upper_air(
 
     interface_id = _get_interface_id(interface_config)
     logger.info(f"interface_id: {interface_id}")
+
+    params = _fix_params(interface_id, params)
 
     client = _get_client(config_file)
     result = client.callAPI_to_array2D(interface_id, params)

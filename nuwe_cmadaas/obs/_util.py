@@ -1,4 +1,5 @@
 import typing
+from nuwe_cmadaas._log import logger
 
 
 def _get_interface_id(interface_config: typing.Dict) ->str:
@@ -62,3 +63,14 @@ def _get_region_params(region: typing.Dict, params: typing.Dict, interface_confi
         params["basinCodes"] = v
     else:
         raise ValueError(f"region type is not supported: {region_type}")
+
+
+def _fix_params(interface_id, params):
+    if interface_id in (
+        "getUparGpsEleByTimeAndStaID",
+        "getUparGpsEleInRectByTime",
+        "not_getUparGpsEleInRegionByTime"
+    ):
+        logger.warning("UparGps don't use dataCode!")
+        del params["dataCode"]
+    return params

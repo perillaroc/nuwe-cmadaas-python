@@ -10,10 +10,7 @@ from nuwe_cmadaas._util import (
     _get_time_range_string
 )
 from ._dataset import UPPER_AIR_DATASETS
-from ._station import (
-    _get_region_params,
-    _get_interface_id,
-)
+from ._util import _get_interface_id, _get_region_params
 
 
 def retrieve_obs_upper_air(

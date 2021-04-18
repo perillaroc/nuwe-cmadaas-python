@@ -6,7 +6,7 @@ import xarray as xr
 
 from nuwe_cmadaas._util import _get_time_string, _get_client, _get_time_range_string
 from nuwe_cmadaas._log import logger
-from nuwe_cmadaas.obs._station import _get_region_params
+from nuwe_cmadaas.obs._util import _get_region_params
 
 
 def download_model_file(

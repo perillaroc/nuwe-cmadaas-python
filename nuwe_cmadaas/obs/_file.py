@@ -10,10 +10,7 @@ from nuwe_cmadaas._util import (
     _get_time_range_string
 )
 
-from ._station import (
-    _get_interface_id,
-    _get_region_params,
-)
+from ._util import _get_interface_id, _get_region_params
 
 
 def download_obs_file(

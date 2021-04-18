@@ -14,3 +14,15 @@ STATION_DATASETS = {
         "elements": "Station_Id_d,Lat,Lon,Alti,Year,Mon,PRS_Sea_Avg,TEM_Avg,TEM_Max_Avg,TEM_Min_Avg"
     }
 }
+
+
+UPPER_AIR_DATASETS = {
+    "UPAR_GLB_MUL_FTM": {
+        "long_name": "全球高空定时值资料",
+        "elements": "Station_Id_d,Lat,Lon,Alti,Day,Hour,Min,PRS_HWC,EVSS,GPH,TEM,DPT,WIN_D,WIN_S,Time_Dev_WQ,Lat_Dev,Lon_Dev,Q_PRS_HWC,Q_GPH,Q_TEM,Q_DPT,Q_WIN_D,Q_WIN_S"
+    },
+    "UPAR_CHN_MUL_FTM": {
+        "long_name": "中国高空定时值资料",
+        "elements": "Station_Id_d,Lat,Lon,Alti,Day,Hour,Min,PRS_HWC,EVSS,GPH,TEM,DPT,WIN_D,WIN_S,Time_Dev_WQ,Lat_Dev,Lon_Dev,Q_PRS_HWC,Q_GPH,Q_TEM,Q_DPT,Q_WIN_D,Q_WIN_S"
+    }
+}

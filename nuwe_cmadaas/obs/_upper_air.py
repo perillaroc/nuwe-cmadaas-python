@@ -9,26 +9,31 @@ from nuwe_cmadaas._util import (
     _get_time_string,
     _get_time_range_string
 )
+from ._dataset import UPPER_AIR_DATASETS
+from ._station import (
+    _get_region_params,
+    _get_interface_id,
+)
 
-from ._dataset import STATION_DATASETS
 
-
-def retrieve_obs_station(
-        data_code: str = "SURF_CHN_MUL_HOR",
+def retrieve_obs_upper_air(
+        data_code: str = "UPAR_GLB_MUL_FTM",
         elements: str = None,
         time: typing.Union[pd.Interval, pd.Timestamp, typing.List, pd.Timedelta] = None,
-        station: typing.Union[str, typing.List, typing.Tuple] = None,
+        level: typing.Union[float, int, typing.List[typing.Union[float, int]]] = None,
+        level_type: str = "pl",
+        station: typing.Union[str, int, typing.List, typing.Tuple] = None,
         region=None,
         station_level: typing.Union[str, typing.List[str]] = None,
-        order: str = "Station_ID_d:asc",
+        order: str = "Station_Id_d:asc",
         count: int = None,
         config_file: typing.Union[str, Path] = None,
         **kwargs,
 ) -> pd.DataFrame:
     """
-    检索地面站点观测数据资料。
+    检索高空观测数据资料。
 
-    对应 CMADaaS 中以 `getSurfEle` 开头的一系列数据接口
+    对应 CMADaaS 中以 `getUparEle` 开头的一系列数据接口
 
     **区域筛选条件**
 
@@ -75,6 +80,14 @@ def retrieve_obs_station(
         - 时间列表：``typing.List[pd.Timestamp]`` 类型，多个时间列表，对应接口的 times 参数
         - 时间段：``pd.Interval`` 类型，起止时间，定义区间端点是否闭合，对应接口的 timeRange 参数
         - 时间间隔：``pd.Timedelta`` 类型，用于获取地面资料最新时次 (getSurfLatestTime)，忽略其余筛选条件
+    level_type:
+        层次类型
+
+        - pl: 气压层
+        - gh/hgt: 位势高度
+        - vertical: 垂直探测仪一，例如 4096 表示湿度特征层
+    level:
+        层次
     station:
         站点筛选条件，支持字符串，列表和元组
 
@@ -107,16 +120,17 @@ def retrieve_obs_station(
     Returns
     -------
     pd.DataFrame
-        站点观测资料表格数据，列名为 elements 中的值
+        高空观测资料表格数据，列名为 elements 中的值
     """
     if elements is None:
-        elements = STATION_DATASETS[data_code]["elements"]
+        elements = UPPER_AIR_DATASETS[data_code]["elements"]
 
     interface_config = {
-        "name": "getSurfEle",
+        "name": "getUparEle",
         "region": None,
         "time": None,
         "station": None,
+        "level": None,
     }
 
     params = {
@@ -143,9 +157,27 @@ def retrieve_obs_station(
         del params["orderby"]
         del params["elements"]
 
-    if isinstance(station, str or int):
+    if level is not None:
+        if level_type == "pl":
+            interface_config["level"] = "Press"
+            level_params_name = "pLayers"
+        elif level_type in ["hgt", "gh"]:
+            interface_config["level"] = "Height"
+            level_params_name = "hLayers"
+        elif level_type == "vertical":
+            interface_config["level"] = "Vertical"
+            level_params_name = "verticals"
+        else:
+            raise ValueError(f"level_type is not supported: {level_type}")
+
+        if isinstance(level, typing.List):
+            params[level_params_name] = ",".join(level)
+        else:
+            params[level_params_name] = str(level)
+
+    if isinstance(station, str) or isinstance(station, int):
         interface_config["station"] = "StaID"
-        params["staIds"] = station
+        params["staIds"] = str(station)
     elif isinstance(station, typing.List):
         interface_config["station"] = "StaID"
         params["staIds"] = ",".join(station)
@@ -182,65 +214,3 @@ def retrieve_obs_station(
     df = result.to_pandas()
     return df
 
-
-def _get_interface_id(interface_config: typing.Dict) ->str:
-    interface_id = interface_config["name"]
-
-    region_part = interface_config["region"]
-    if region_part is not None:
-        interface_id += "In" + region_part
-
-    condition_part = "And".join(filter(None, [
-        interface_config["time"],
-        interface_config["station"]
-    ]))
-    if "level" in interface_config and interface_config["level"] is not None:
-        condition_part = "And".join([condition_part, interface_config["level"]])
-
-    if len(condition_part) > 0:
-        interface_id += "By" + condition_part
-
-    fixed_interface_id = _fix_interface_id(interface_id)
-
-    return fixed_interface_id
-
-
-def _fix_interface_id(interface_id: str) -> str:
-    mapper = {
-        "getSurfEleByTimeRangeAndStaIdRange": "getSurfEleByTimeRangeAndStaIDRange"
-    }
-    return mapper.get(interface_id, interface_id)
-
-
-def _get_region_params(region: typing.Dict, params: typing.Dict, interface_config: typing.Dict):
-    region_type = region["type"]
-    if region_type == "region":
-        interface_config["region"] = "Region"
-        v = region["admin_codes"]
-        if isinstance(v, typing.List):
-            v = ",".join(v)
-        elif isinstance(v, int):
-            v = str(v)
-        params["adminCodes"] = v
-    elif region_type == "rect":
-        interface_config["region"] = "Rect"
-        start_lat = region["start_latitude"]
-        end_lat = region["end_latitude"]
-        start_lon = region["start_longitude"]
-        end_lon = region["end_longitude"]
-        min_lat, max_lat = sorted([start_lat, end_lat])
-        min_lon, max_lon = sorted([start_lon, end_lon])
-        params.update({
-            "minLat": f"{min_lat}",
-            "minLon": f"{min_lon}",
-            "maxLat": f"{max_lat}",
-            "maxLon": f"{max_lon}",
-        })
-    elif region_type == "basin":
-        interface_config["region"] = "Basin"
-        v = region["basin_codes"]
-        if isinstance(v, typing.List):
-            v = ",".join(v)
-        params["basinCodes"] = v
-    else:
-        raise ValueError(f"region type is not supported: {region_type}")

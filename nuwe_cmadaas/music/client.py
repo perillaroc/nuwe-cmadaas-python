@@ -444,7 +444,7 @@ class CMADaaSClient(object):
 
         keys = sorted(sign_params.keys())
         for key in keys:
-            param_string = param_string + key + "=" + sign_params.get(key) + "&"
+            param_string =  f"{param_string}{key}={sign_params.get(key)}&"
         if (param_string):
             param_string = param_string[:-1]
 

@@ -17,12 +17,12 @@ def retrieve_obs_upper_air(
         data_code: str = "UPAR_GLB_MUL_FTM",
         elements: str = None,
         time: typing.Union[pd.Interval, pd.Timestamp, typing.List, pd.Timedelta] = None,
-        level: typing.Union[float, int, typing.List[typing.Union[float, int]]] = None,
-        level_type: str = "pl",
+        level_type: typing.Union[str, typing.Tuple[str]] = None,
+        level: typing.Union[float, int, typing.List[typing.Union[float, int]], typing.Tuple] = None,
         station: typing.Union[str, int, typing.List, typing.Tuple] = None,
         region=None,
         station_level: typing.Union[str, typing.List[str]] = None,
-        order: str = "Station_Id_d:asc",
+        order: str = None,
         count: int = None,
         config_file: typing.Union[str, Path] = None,
         **kwargs,
@@ -83,6 +83,7 @@ def retrieve_obs_upper_air(
         - pl: 气压层
         - gh/hgt: 位势高度
         - vertical: 垂直探测仪一，例如 4096 表示湿度特征层
+        - fl/flight_level: 飞行高度
     level:
         层次
     station:
@@ -133,8 +134,12 @@ def retrieve_obs_upper_air(
     params = {
         "dataCode": data_code,
         "elements": elements,
-        "orderby": order,
     }
+
+    if order is not None:
+        params["orderby"] = order
+    if data_code in UPPER_AIR_DATASETS and "order_by" in UPPER_AIR_DATASETS[data_code]:
+        params["orderby"] = UPPER_AIR_DATASETS[data_code]["order_by"]
 
     if count is not None:
         params["limitCnt"] = count
@@ -154,23 +159,12 @@ def retrieve_obs_upper_air(
         del params["orderby"]
         del params["elements"]
 
-    if level is not None:
-        if level_type == "pl":
-            interface_config["level"] = "Press"
-            level_params_name = "pLayers"
-        elif level_type in ["hgt", "gh"]:
-            interface_config["level"] = "Height"
-            level_params_name = "hLayers"
-        elif level_type == "vertical":
-            interface_config["level"] = "Vertical"
-            level_params_name = "verticals"
-        else:
-            raise ValueError(f"level_type is not supported: {level_type}")
-
-        if isinstance(level, typing.List):
-            params[level_params_name] = ",".join(level)
-        else:
-            params[level_params_name] = str(level)
+    _get_level_params(
+        level=level,
+        level_type=level_type,
+        interface_config=interface_config,
+        params=params
+    )
 
     if isinstance(station, str) or isinstance(station, int):
         interface_config["station"] = "StaID"
@@ -211,3 +205,56 @@ def retrieve_obs_upper_air(
     df = result.to_pandas()
     return df
 
+
+def _get_level_params(
+        level_type,
+        level,
+        interface_config: typing.Dict,
+        params: typing.Dict
+):
+    if level is None:
+        return
+
+    def get_level(level_type, level):
+        if level_type == "pl":
+            interface_level_config = "Press"
+            level_params_name = "pLayers"
+        elif level_type in ("hgt", "gh"):
+            interface_level_config = "Height"
+            level_params_name = "hLayers"
+        elif level_type == "vertical":
+            interface_level_config = "Vertical"
+            level_params_name = "verticals"
+        elif level_type in ("fl", "flight_height"):
+            interface_level_config = "Height"
+            interface_config["name"] = "getUparArdEle"
+            level_params_name = "fLayer"
+        else:
+            raise ValueError(f"level_type is not supported: {level_type}")
+
+        level_params = dict()
+        if isinstance(level, typing.List):
+            level_params[level_params_name] = ",".join(level)
+        if isinstance(level, pd.Interval):
+            level_params[f"min{level_params_name.upper()}"] = level.left
+            level_params[f"max{level_params_name.upper()}"] = level.right
+            interface_level_config += "Range"
+        else:
+            params[level_params_name] = str(level)
+        return interface_level_config, level_params
+
+    if isinstance(level_type, str):
+        interface_level_config, level_params = get_level(level_type, level)
+    elif isinstance(level_type, typing.Tuple):
+        interface_level_config = []
+        level_params = dict()
+        for lt, l in zip(level_type, level):
+            level_config, ps = get_level(lt, l)
+            level_params.update(ps)
+            interface_level_config.append(level_config)
+        interface_level_config = "And".join(interface_level_config)
+    else:
+        raise TypeError(f"level_type is not supported: {level_type}")
+
+    interface_config["level"] = interface_level_config
+    params.update(level_params)

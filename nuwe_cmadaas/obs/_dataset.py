@@ -54,5 +54,10 @@ UPPER_AIR_DATASETS = {
         "long_name": "国家雷电探测系统闪电定位数据",
         "elements": "D_SOURCE_ID,DATA_ID,IYMDHM,RYMDHM,UPDATE_TIME,Datetime,Lat,Lon,Year,Mon,Day,Hour,Min,Second,MSecond,Layer_Num,Pois_Err,Lit_Current,MARS_3,Pois_Type,Lit_Prov,Lit_City,Lit_Cnty,REP_CORR_ID,V33257,Equp_Model,V25300,Alti,V25301,V73001,",
         "interface_data_name": "UparLight"
+    },
+    "UPAR_WPR_HOR": {
+        "long_name": "风廓线雷达小时平均产品文件",
+        "elements": "Station_Id_C,Lat,Lon,Alti,D_FILE_ID,DATA_ID,IYMDHM,D_SOURCE_ID,RYMDHM,Datetime,File_URL,FILE_SIZE,D_FILE_SAVE_HIERARCHY,V_FNTIME,RADA_MODEL,PROD_CATE,PROD_CONT,FORMAT,V_COMPRESS_METHOD,FILE_NAME,V_RETAIN1_C,V_RETAIN2_C,V_RETAIN3_C,",
+        "interface_data_name": "Upar",
     }
 }

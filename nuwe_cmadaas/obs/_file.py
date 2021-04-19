@@ -23,6 +23,7 @@ def download_obs_file(
         order: str = None,
         count: int = None,
         output_dir: str = "./",
+        interface_data_name = "Surf",
         config_file: typing.Union[str, Path] = None,
         **kwargs,
 ):
@@ -114,7 +115,7 @@ def download_obs_file(
     #     elements = STATION_DATASETS[data_code]["elements"]
 
     interface_config = {
-        "name": "getSurfFile",
+        "name": f"get{interface_data_name}File",
         "region": None,
         "time": None,
         "station": None,

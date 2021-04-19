@@ -11,6 +11,7 @@ from nuwe_cmadaas._util import (
 )
 from ._dataset import UPPER_AIR_DATASETS
 from ._util import _get_interface_id, _get_region_params, _fix_params
+from ._file import download_obs_file
 
 
 def retrieve_obs_upper_air(
@@ -218,6 +219,33 @@ def retrieve_obs_upper_air(
 
     df = result.to_pandas()
     return df
+
+
+def download_obs_upper_air_file(
+        data_code: str,
+        elements: str = None,
+        time: typing.Union[pd.Interval, pd.Timestamp, typing.List, pd.Timedelta] = None,
+        station: typing.Union[str, typing.List, typing.Tuple] = None,
+        order: str = None,
+        count: int = None,
+        output_dir: str = "./",
+        config_file: typing.Union[str, Path] = None,
+        **kwargs,
+)->typing.List:
+    interface_data_name = "Upar"
+    file_list = download_obs_file(
+        data_code=data_code,
+        elements=elements,
+        time=time,
+        station=station,
+        order=order,
+        count=count,
+        output_dir=output_dir,
+        config_file=config_file,
+        interface_data_name=interface_data_name,
+        **kwargs
+    )
+    return file_list
 
 
 def _get_level_params(

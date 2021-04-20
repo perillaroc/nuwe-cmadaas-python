@@ -25,7 +25,7 @@ def retrieve_obs_upper_air(
         station_level: typing.Union[str, typing.List[str]] = None,
         order: str = None,
         count: int = None,
-        interface_data_name: str = None,
+        interface_data_type: str = None,
         config_file: typing.Union[str, Path] = None,
         **kwargs,
 ) -> pd.DataFrame:
@@ -109,8 +109,8 @@ def retrieve_obs_upper_air(
         排序字段
     count:
         最大返回记录数，对应接口的 limitCnt 参数
-    interface_data_name:
-        接口前缀，默认自动生成，或使用 _dataset.py 文件数据集配置的 interface_data_name 字段
+    interface_data_type:
+        资料类型，默认自动生成，或使用 _dataset.py 文件数据集配置的 interface_data_type 字段
     config_file:
         配置文件路径
     kwargs:
@@ -136,13 +136,13 @@ def retrieve_obs_upper_air(
     }
 
     if (
-            interface_data_name is None
+            interface_data_type is None
             and data_code in UPPER_AIR_DATASETS
-            and "interface_data_name" in UPPER_AIR_DATASETS[data_code]
+            and "interface_data_type" in UPPER_AIR_DATASETS[data_code]
     ):
-        interface_data_name = UPPER_AIR_DATASETS[data_code]["interface_data_name"]
-    if interface_data_name is not None:
-        interface_config["name"] = f"get{interface_data_name}Ele"
+        interface_data_type = UPPER_AIR_DATASETS[data_code]["interface_data_type"]
+    if interface_data_type is not None:
+        interface_config["name"] = f"get{interface_data_type}Ele"
 
     params = {
         "dataCode": data_code,
@@ -232,7 +232,7 @@ def download_obs_upper_air_file(
         config_file: typing.Union[str, Path] = None,
         **kwargs,
 )->typing.List:
-    interface_data_name = "Upar"
+    interface_data_type = "Upar"
     file_list = download_obs_file(
         data_code=data_code,
         elements=elements,
@@ -242,7 +242,7 @@ def download_obs_upper_air_file(
         count=count,
         output_dir=output_dir,
         config_file=config_file,
-        interface_data_name=interface_data_name,
+        interface_data_type=interface_data_type,
         **kwargs
     )
     return file_list

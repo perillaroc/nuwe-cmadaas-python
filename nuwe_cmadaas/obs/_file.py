@@ -23,14 +23,14 @@ def download_obs_file(
         order: str = None,
         count: int = None,
         output_dir: str = "./",
-        interface_data_name = "Surf",
+        interface_data_type ="Surf",
         config_file: typing.Union[str, Path] = None,
         **kwargs,
 ):
     """
    下载地面观测数据文件
 
-    对应 CMADaaS 中以 `getSurfFile` 开头的一系列数据接口
+    默认对应 CMADaaS 中以 `getSurfFile` 开头的一系列数据接口
 
     **区域筛选条件**
 
@@ -100,6 +100,8 @@ def download_obs_file(
         最大返回记录数，对应接口的 limitCnt 参数
     output_dir:
         保存文件的目录
+    interface_data_type:
+        资料类型
     config_file:
         配置文件路径
     kwargs:
@@ -115,7 +117,7 @@ def download_obs_file(
     #     elements = STATION_DATASETS[data_code]["elements"]
 
     interface_config = {
-        "name": f"get{interface_data_name}File",
+        "name": f"get{interface_data_type}File",
         "region": None,
         "time": None,
         "station": None,

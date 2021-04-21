@@ -16,7 +16,7 @@ def _get_cmadaas_config_path(file_path: typing.Optional[str] = None):
     if file_path is None:
         if "NWPC_OPER_CONFIG" in os.environ:
             return os.environ["NWPC_OPER_CONFIG"]
-        path = pathlib.Path(pathlib.Path.home(), ".config/nwpc-oper.yaml")
+        path = pathlib.Path(pathlib.Path.home(), ".config/nwpc-oper/config.yaml")
         return path
     else:
         return file_path

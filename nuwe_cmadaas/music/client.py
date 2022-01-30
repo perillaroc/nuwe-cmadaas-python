@@ -437,15 +437,15 @@ class CMADaaSClient(object):
     def _get_sign(self, sign_params: Dict) -> str:
         param_string = ""
         if "params" in sign_params:
-            paramsVal = sign_params.pop("params")
-            keyValList = paramsVal.split("&")
-            for keyVal in keyValList:
+            params_val = sign_params.pop("params")
+            key_val_list = params_val.split("&")
+            for keyVal in key_val_list:
                 sign_params[keyVal.split("=")[0]] = keyVal.split("=")[1]
 
         keys = sorted(sign_params.keys())
         for key in keys:
-            param_string =  f"{param_string}{key}={sign_params.get(key)}&"
-        if (param_string):
+            param_string = f"{param_string}{key}={sign_params.get(key)}&"
+        if param_string:
             param_string = param_string[:-1]
 
         sign = hashlib.md5(param_string.encode(encoding='UTF-8')).hexdigest().upper()

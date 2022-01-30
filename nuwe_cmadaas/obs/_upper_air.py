@@ -9,7 +9,7 @@ from nuwe_cmadaas._util import (
     _get_time_string,
     _get_time_range_string
 )
-from ._dataset import UPPER_AIR_DATASETS
+from nuwe_cmadaas.dataset import load_dataset_config
 from ._util import _get_interface_id, _get_region_params, _fix_params
 from ._file import download_obs_file
 
@@ -110,7 +110,7 @@ def retrieve_obs_upper_air(
     count:
         最大返回记录数，对应接口的 limitCnt 参数
     interface_data_type:
-        资料类型，默认自动生成，或使用 _dataset.py 文件数据集配置的 interface_data_type 字段
+        资料类型，默认自动生成，或使用 datasets 配置文件中配置的 interface_data_type 字段
     config_file:
         配置文件路径
     kwargs:
@@ -124,8 +124,9 @@ def retrieve_obs_upper_air(
     pd.DataFrame
         高空观测资料表格数据，列名为 elements 中的值
     """
+    upper_dataset_config = load_dataset_config("upper_air")
     if elements is None:
-        elements = UPPER_AIR_DATASETS[data_code]["elements"]
+        elements = upper_dataset_config[data_code]["elements"]
 
     interface_config = {
         "name": "getUparEle",
@@ -137,10 +138,10 @@ def retrieve_obs_upper_air(
 
     if (
             interface_data_type is None
-            and data_code in UPPER_AIR_DATASETS
-            and "interface_data_type" in UPPER_AIR_DATASETS[data_code]
+            and data_code in upper_dataset_config
+            and "interface_data_type" in upper_dataset_config[data_code]
     ):
-        interface_data_type = UPPER_AIR_DATASETS[data_code]["interface_data_type"]
+        interface_data_type = upper_dataset_config[data_code]["interface_data_type"]
     if interface_data_type is not None:
         interface_config["name"] = f"get{interface_data_type}Ele"
 
@@ -151,8 +152,8 @@ def retrieve_obs_upper_air(
 
     if order is not None:
         params["orderby"] = order
-    if data_code in UPPER_AIR_DATASETS and "order_by" in UPPER_AIR_DATASETS[data_code]:
-        params["orderby"] = UPPER_AIR_DATASETS[data_code]["order_by"]
+    if data_code in upper_dataset_config and "order_by" in upper_dataset_config[data_code]:
+        params["orderby"] = upper_dataset_config[data_code]["order_by"]
 
     if count is not None:
         params["limitCnt"] = count

@@ -10,7 +10,7 @@ from nuwe_cmadaas._util import (
     _get_time_range_string
 )
 
-from ._dataset import STATION_DATASETS
+from nuwe_cmadaas.dataset import load_dataset_config
 from ._util import _get_interface_id, _get_region_params
 
 
@@ -110,8 +110,9 @@ def retrieve_obs_station(
     pd.DataFrame
         站点观测资料表格数据，列名为 elements 中的值
     """
+    station_dataset_config = load_dataset_config("station")
     if elements is None:
-        elements = STATION_DATASETS[data_code]["elements"]
+        elements = station_dataset_config[data_code]["elements"]
 
     interface_config = {
         "name": "getSurfEle",

@@ -2,6 +2,8 @@
 站点数据
 **********
 
+``retrieve_obs_station`` 函数用于获取地面站点观测数据。
+
 
 .. code-block:: python
 

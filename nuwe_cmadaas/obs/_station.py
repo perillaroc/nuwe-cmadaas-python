@@ -1,4 +1,4 @@
-import typing
+from typing import Union, List, Dict, Tuple
 from pathlib import Path
 
 import pandas as pd
@@ -17,13 +17,13 @@ from ._util import _get_interface_id, _get_region_params
 def retrieve_obs_station(
         data_code: str = "SURF_CHN_MUL_HOR",
         elements: str = None,
-        time: typing.Union[pd.Interval, pd.Timestamp, typing.List, pd.Timedelta] = None,
-        station: typing.Union[str, typing.List, typing.Tuple] = None,
+        time: Union[pd.Interval, pd.Timestamp, List, pd.Timedelta] = None,
+        station: Union[str, List, Tuple] = None,
         region=None,
-        station_level: typing.Union[str, typing.List[str]] = None,
+        station_level: Union[str, List[str]] = None,
         order: str = "Station_ID_d:asc",
         count: int = None,
-        config_file: typing.Union[str, Path] = None,
+        config_file: Union[str, Path] = None,
         **kwargs,
 ) -> pd.DataFrame:
     """
@@ -65,41 +65,41 @@ def retrieve_obs_station(
 
     Parameters
     ----------
-    data_code:
+    data_code
         数据种类，即 CMADaaS 中的资料代码
-    elements:
+    elements
         要素字段代码，以逗号分隔
-    time:
+    time
         时间筛选条件，支持单个时间，时间列表，时间段和时间间隔
 
         - 时间对象：``pd.Timestamp`` 类型，单个时间点，对应接口的 times 参数
         - 时间列表：``typing.List[pd.Timestamp]`` 类型，多个时间列表，对应接口的 times 参数
         - 时间段：``pd.Interval`` 类型，起止时间，定义区间端点是否闭合，对应接口的 timeRange 参数
         - 时间间隔：``pd.Timedelta`` 类型，用于获取地面资料最新时次 (getSurfLatestTime)，忽略其余筛选条件
-    station:
+    station
         站点筛选条件，支持字符串，列表和元组
 
         - 字符串：单个站点
         - 列表：多个站点
         - 元组：站点范围，二元组，第一个元素是起止站号 (minStaId)，第二个元素是终止站号 (maxStaId)
-    region:
+    region
         区域筛选条件：
             - 经纬度范围 (rect)
             - 流域 (basin)
             - 地区 (region)
 
-    station_level:
+    station_level
         台站级别：
             - 011: 国家基准气候站
             - 012: 基本气象站
             - 013: 一般气象站
-    order:
+    order
         排序字段
-    count:
+    count
         最大返回记录数，对应接口的 limitCnt 参数
-    config_file:
+    config_file
         配置文件路径
-    kwargs:
+    kwargs
         其他需要传递给 MUSIC 接口的参数，例如：
             - eleValueRanges: 要素值范围
             - hourSeparate: 小时取整条件
@@ -136,7 +136,7 @@ def retrieve_obs_station(
     elif isinstance(time, pd.Timestamp):
         interface_config["time"] = "Time"
         params["times"] = _get_time_string(time)
-    elif isinstance(time, typing.List):
+    elif isinstance(time, List):
         interface_config["time"] = "Time"
         params["times"] = ",".join([_get_time_string(t) for t in time])
     elif isinstance(time, pd.Timedelta):
@@ -148,10 +148,10 @@ def retrieve_obs_station(
     if isinstance(station, str or int):
         interface_config["station"] = "StaID"
         params["staIds"] = station
-    elif isinstance(station, typing.List):
+    elif isinstance(station, List):
         interface_config["station"] = "StaID"
         params["staIds"] = ",".join(station)
-    elif isinstance(station, typing.Tuple):
+    elif isinstance(station, Tuple):
         interface_config["station"] = "StaIdRange"
         params["minStaId"] = station[0]
         params["maxStaId"] = station[1]
@@ -166,7 +166,7 @@ def retrieve_obs_station(
         params["staLevels"] = station_level
         if interface_config["station"] is None:
             interface_config["station"] = "StaLevels"
-    elif isinstance(station_level, typing.List):
+    elif isinstance(station_level, List):
         params["staLevels"] = ",".join(station_level)
         if interface_config["station"] is None:
             interface_config["station"] = "StaLevels"

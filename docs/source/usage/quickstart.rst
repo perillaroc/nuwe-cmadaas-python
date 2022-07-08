@@ -4,10 +4,10 @@
 
 MUSIC 接口仅适用于气象局内网用户，使用前请先申请账户。
 
-使用 :py:class:`nuwe_cimiss.CimissClient` 类从 CIMISS 中检索数据。
+使用 :py:class:`nuwe_cmadaas.CMADaaSClient` 类从 CMADaaS 中检索数据。
 
-需要提供 CIMISS 服务的相关参数，可以保存在当前目录 ``client.conf`` 文件中，
-或者在创建 ``nuwe_cimiss.CimissClient`` 对象显式指定。参数包括：
+需要提供 CMADaaS 服务的相关参数，可以保存在当前目录 ``client.conf`` 文件中，
+或者在创建 :py:class:`nuwe_cmadaas.CMADaasClient` 对象显式指定。参数包括：
 
 - ``music_server``: MUSIC接口ip地址，必须指定
 - ``music_port``：MUSIC接口端口号，必须指定
@@ -19,7 +19,7 @@ MUSIC 接口仅适用于气象局内网用户，使用前请先申请账户。
 
 .. code-block:: python
 
-    from nuwe_cimiss import CimissClient
+    from nuwe_cmadaas import CMADaaSClient
 
     client_config_path="path/to/client/config/file"
     user="user name"
@@ -36,11 +36,11 @@ MUSIC 接口仅适用于气象局内网用户，使用前请先申请账户。
         "limitCnt": "10",
     }
 
-    client = CimissClient(
+    client = CMADaaSClient(
         user=user,
         password=password,
         config_file=client_config_path
     )
     result = client.callAPI_to_array2D(interface_id, params)
 
-更详细的接口使用方法请访问 CIMISS 官网。
+更详细的接口使用方法请访问 CMADaaS 官网。

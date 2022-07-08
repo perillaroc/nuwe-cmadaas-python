@@ -2,7 +2,9 @@
 站点数据
 **********
 
-``retrieve_obs_station`` 函数用于获取地面站点观测数据。
+.. currentmodule:: nuwe_cmadaas.obs
+
+:py:class:`retrieve_obs_station` 函数用于获取地面站点观测数据。
 
 
 .. code-block:: python
@@ -38,4 +40,4 @@
 API
 ===========
 
-.. autofunction:: nuwe_cmadaas.obs.retrieve_obs_station
+.. autofunction:: retrieve_obs_station

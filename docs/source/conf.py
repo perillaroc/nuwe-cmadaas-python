@@ -18,7 +18,7 @@ import os
 # -- Project information -----------------------------------------------------
 
 project = 'nuwe-cmadaas-python'
-copyright = '2021, perillaroc'
+copyright = '2021-2022, cemc-oper'
 author = 'perillaroc'
 
 
@@ -28,10 +28,12 @@ author = 'perillaroc'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.napoleon',
     'IPython.sphinxext.ipython_console_highlighting',
-    'IPython.sphinxext.ipython_directive'
+    'IPython.sphinxext.ipython_directive',
+
+    'sphinx.ext.napoleon',
+    'sphinx.ext.autodoc',
+    'sphinx_autodoc_typehints',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -55,7 +57,15 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+# html_theme = 'alabaster'
+html_theme = 'sphinx_book_theme'
+
+html_theme_options = {
+    "repository_url": "https://github.com/perillaroc/nuwe-cmadaas-python",
+    "use_repository_button": True,
+    "home_page_in_toc": False,
+}
+html_title = "nuwe-cmadaas"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

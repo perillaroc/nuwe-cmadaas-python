@@ -1,4 +1,4 @@
-from typing import Union, List, Dict, Tuple
+from typing import Union, List, Dict, Tuple, Optional
 from pathlib import Path
 
 import pandas as pd
@@ -16,20 +16,19 @@ from ._util import _get_interface_id, _get_region_params
 
 def retrieve_obs_station(
         data_code: str = "SURF_CHN_MUL_HOR",
-        elements: str = None,
-        time: Union[pd.Interval, pd.Timestamp, List, pd.Timedelta] = None,
-        station: Union[str, List, Tuple] = None,
-        region=None,
-        station_level: Union[str, List[str]] = None,
+        elements: Optional[str] = None,
+        time: Optional[Union[pd.Interval, pd.Timestamp, List, pd.Timedelta]] = None,
+        station: Optional[Union[str, List, Tuple]] = None,
+        region: Optional[Dict] = None,
+        station_level: Optional[Union[str, List[str]]] = None,
         order: str = "Station_ID_d:asc",
-        count: int = None,
-        config_file: Union[str, Path] = None,
+        count: Optional[int] = None,
+        config_file: Optional[Union[str, Path]] = None,
         **kwargs,
 ) -> pd.DataFrame:
     """
     检索地面站点观测数据资料。
-
-    对应 CMADaaS 中以 `getSurfEle` 开头的一系列数据接口
+    对应 CMADaaS 中以 ``getSurfEle`` 开头的一系列地面资料接口。
 
     **区域筛选条件**
 
@@ -68,7 +67,7 @@ def retrieve_obs_station(
     data_code
         数据种类，即 CMADaaS 中的资料代码
     elements
-        要素字段代码，以逗号分隔
+        要素字段代码，以逗号分隔。如果为 ``None``，会自动从数据集配置文件 (默认为 ``nuwe_cmadaas/datasets/station.yaml``) 中查找对应资料的 ``elements`` 配置项。
     time
         时间筛选条件，支持单个时间，时间列表，时间段和时间间隔
 
@@ -108,7 +107,7 @@ def retrieve_obs_station(
     Returns
     -------
     pd.DataFrame
-        站点观测资料表格数据，列名为 elements 中的值
+        站点观测资料表格数据，列名为 ``elements`` 中的值
     """
     station_dataset_config = load_dataset_config("station")
     if elements is None:

@@ -28,7 +28,7 @@ def download_obs_file(
         **kwargs,
 ):
     """
-   下载地面观测数据文件
+    下载地面观测数据文件
 
     默认对应 CMADaaS 中以 `getSurfFile` 开头的一系列数据接口
 

@@ -1,8 +1,8 @@
 import io
 import os
+import re
 
 from setuptools import find_packages, setup
-from nuwe_cmadaas import __version__
 
 DESCRIPTION = "A python API for CMADaaS MUSIC."
 
@@ -14,9 +14,12 @@ try:
 except FileNotFoundError:
     long_description = DESCRIPTION
 
+with io.open("nuwe_cmadaas/__init__.py", "rt", encoding="utf8") as f:
+    version = re.search(r'__version__ = "(.*?)"', f.read()).group(1)
+
 setup(
     name="nuwe-cmadaas-python",
-    version=__version__,
+    version=version,
     description=DESCRIPTION,
     long_description=long_description,
     long_description_content_type="text/markdown",

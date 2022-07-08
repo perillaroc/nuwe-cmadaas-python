@@ -27,7 +27,7 @@ setup(
     author_email="perillaroc@gmail.com",
     python_requires='>=3.6.0',
     url="https://github.com/perillaroc/nuwe-cmadaas-python",
-    package=find_packages(exclude=[
+    packages=find_packages(exclude=[
         "tests",
         "*.tests",
         "*.tests.*",

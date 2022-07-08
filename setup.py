@@ -27,14 +27,15 @@ setup(
     author_email="perillaroc@gmail.com",
     python_requires='>=3.6.0',
     url="https://github.com/perillaroc/nuwe-cmadaas-python",
-    # package=find_packages(exclude=[
-    #     "tests",
-    #     "*.tests",
-    #     "*.tests.*",
-    #     "tests.*",
-    #     "music-sdk-python-*",
-    # ]),
-    py_modules=["nuwe_cmadaas"],
+    package=find_packages(exclude=[
+        "tests",
+        "*.tests",
+        "*.tests.*",
+        "tests.*",
+        "docs",
+        "conf",
+        "example"
+    ]),
     install_requires=[
         "requests",
         "numpy",

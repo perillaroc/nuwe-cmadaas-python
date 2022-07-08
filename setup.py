@@ -42,6 +42,7 @@ setup(
         "pandas",
         "pyyaml",
         "protobuf",
+        "xarray",
     ],
     extras_requires={
         "example": ["click"]

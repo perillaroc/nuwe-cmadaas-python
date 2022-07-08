@@ -9,4 +9,4 @@ dependencies:
   - sphinx-book-theme
   - sphinx-autodoc-typehints
   - pip:
-      - .
+      - ..

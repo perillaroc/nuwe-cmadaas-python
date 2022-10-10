@@ -6,7 +6,7 @@
 nuwe-cmadaas-python 文档
 ==================================================
 
-为中国气象局气象大数据云平台 (CMADaaS) 的 MUSIC 接口封装 Python API，支持 Python 3 和 Windows。
+为 CMADaaS 的 MUSIC 接口封装 Python API，支持 Python 3 和 Windows。
 
 
 .. toctree::

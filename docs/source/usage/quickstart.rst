@@ -2,7 +2,7 @@
 开始使用
 ********
 
-MUSIC 接口仅适用于气象局内网用户，使用前请先申请账户。
+MUSIC 接口仅适用于 CMA 内网用户，使用前请先申请账户。
 
 使用 :py:class:`nuwe_cmadaas.CMADaaSClient` 类从 CMADaaS 中检索数据。
 

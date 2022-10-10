@@ -2,7 +2,7 @@
 
 [![Documentation Status](https://readthedocs.org/projects/nuwe-cmadaas-python/badge/?version=latest)](https://nuwe-cmadaas-python.readthedocs.io/zh_CN/latest/?badge=latest)
 
-为中国气象局气象大数据云平台 MUSIC 接口封装 python API，支持 Python 3 和 Windows。
+为 CMADaaS MUSIC 接口封装 Python API，支持 Python 3 和 Windows。
 
 文档：https://nuwe-cmadaas-python.readthedocs.io
 
@@ -16,7 +16,7 @@ pip install .
 
 ## 开始使用
 
-MUSIC 接口仅适用于气象局内网用户，使用前请先申请账户。
+MUSIC 接口仅适用于 CMA 内网用户，使用前请先申请账户。
 
 使用 `nuwe_cmadaas.CMADaaSClient` 类从 CMADaaS 中检索数据。
 

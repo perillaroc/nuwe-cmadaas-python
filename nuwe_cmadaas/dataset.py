@@ -4,7 +4,7 @@ from typing import Dict
 import yaml
 
 
-DEFAULT_DATASETS_CONFIG_PATH = Path(Path(__file__).parent, "datasets")
+DEFAULT_DATASETS_CONFIG_PATH = Path(Path(__file__).parent, "data/datasets")
 
 
 def load_dataset_config(dataset_type: str) -> Dict:

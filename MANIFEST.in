@@ -1,1 +1,1 @@
-recursive-include nuwe_cmadaas/datasets *
+recursive-include nuwe_cmadaas/data *

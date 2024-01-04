@@ -18,7 +18,7 @@ import os
 # -- Project information -----------------------------------------------------
 
 project = 'nuwe-cmadaas-python'
-copyright = '2021-2022, cemc-oper'
+copyright = '2019-2024, Wang Dapeng at cemc-oper'
 author = 'perillaroc'
 
 
@@ -33,7 +33,7 @@ extensions = [
 
     'sphinx.ext.napoleon',
     'sphinx.ext.autodoc',
-    'sphinx_autodoc_typehints',
+    # 'sphinx_autodoc_typehints',
 ]
 
 # Add any paths that contain templates here, relative to this directory.

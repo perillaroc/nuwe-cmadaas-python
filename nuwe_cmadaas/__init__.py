@@ -15,4 +15,10 @@ from .model import (
     retrieve_model_grid
 )
 
-__version__ = "0.2.0"
+from importlib.metadata import version, PackageNotFoundError
+
+try:
+    __version__ = version("nuwe-cmadaas")
+except PackageNotFoundError:
+    # package is not installed
+    pass

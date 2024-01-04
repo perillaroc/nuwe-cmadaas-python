@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools_scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nuwe-cmadaas"
+authors = [
+    {name="Wang Dapeng", email="perillaroc@gmail.com"}
+]
+description = "A python API for CMADaaS MUSIC."
+readme = "README.md"
+keywords = ["music", "cmadaas"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+
+    "Intended Audience :: Developers",
+
+    'License :: OSI Approved :: Apache Software License',
+
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "requests",
+    "numpy",
+    "pandas",
+    "pyyaml",
+    "protobuf",
+    "xarray",
+    'importlib-metadata; python_version<"3.8"',
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/perillaroc/nuwe-cmadaas-python"
+Repository = "https://github.com/perillaroc/nuwe-cmadaas-python.git"
+
+[project.optional-dependencies]
+test = ["pytest"]
+cov = ["pytest-cov", "codecov"]
+example = ["click"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+exclude = [
+    "tests",
+    "*.tests",
+    "*.tests.*",
+    "tests.*",
+    "docs",
+    "conf",
+]
+namespaces = false
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools_scm]
+version_file = "nuwe_cmadaas/_version.py"

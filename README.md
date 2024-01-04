@@ -65,4 +65,4 @@ result = client.callAPI_to_array2D(interface_id, params)
 
 ## License
 
-`nuwe-cmadaas-python` 未做特殊声明部分代码由 perillaroc 开发，并采用 MIT 协议。
+`nuwe-cmadaas-python` 未做特殊声明部分代码由 Wang Dapeng (CEMC/CMA) 开发，并采用 Apache License 2.0 协议。

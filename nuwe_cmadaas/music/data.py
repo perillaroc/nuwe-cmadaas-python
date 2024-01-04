@@ -104,7 +104,7 @@ class Array2D(ResponseData):
 
     def load_from_protobuf_object(self, ret_array_2d: pb.RetArray2D):
         self.request = RequestInfo.create_from_protobuf(ret_array_2d.request)
-        self.element_names = ret_array_2d.elementNames
+        self.element_names = [i for i in ret_array_2d.elementNames]
         if self.request.error_code != 0:
             return
 

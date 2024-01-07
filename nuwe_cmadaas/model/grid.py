@@ -2,7 +2,7 @@ from typing import Union, Optional, Dict
 import pandas as pd
 import xarray as xr
 
-from nuwe_cmadaas._util import _get_time_string, _get_client
+from nuwe_cmadaas.util import get_time_string, get_client
 from nuwe_cmadaas._log import logger
 from nuwe_cmadaas.obs._util import _get_region_params
 
@@ -47,7 +47,7 @@ def retrieve_model_grid(
 
     if start_time is not None:
         interface_config["time"] = "Time"
-        time = _get_time_string(start_time)
+        time = get_time_string(start_time)
         params["time"] = time
 
     if forecast_time is not None:
@@ -63,7 +63,7 @@ def retrieve_model_grid(
     interface_id = _get_interface_id(interface_config)
     logger.info(f"interface_id: {interface_id}")
 
-    client = _get_client(config_file)
+    client = get_client(config_file)
     result = client.callAPI_to_gridArray2D(interface_id, params)
     if result.request.error_code != 0:
         logger.warning(f"request error {result.request.error_code}: {result.request.error_message}")

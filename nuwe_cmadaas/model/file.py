@@ -4,7 +4,7 @@ import pathlib
 import pandas as pd
 import xarray as xr
 
-from nuwe_cmadaas._util import _get_time_string, _get_client, _get_time_range_string
+from nuwe_cmadaas.util import get_time_string, get_client, get_time_range_string
 from nuwe_cmadaas._log import logger
 from nuwe_cmadaas.obs._util import _get_region_params
 
@@ -59,13 +59,13 @@ def download_model_file(
 
     if isinstance(start_time, pd.Interval):
         interface_config["time"] = "TimeRange"
-        params["timeRange"] = _get_time_range_string(start_time)
+        params["timeRange"] = get_time_range_string(start_time)
     elif isinstance(start_time, pd.Timestamp):
         interface_config["time"] = "Time"
-        params["time"] = _get_time_string(start_time)
+        params["time"] = get_time_string(start_time)
     elif isinstance(start_time, List):
         interface_config["time"] = "Time"
-        params["times"] = ",".join([_get_time_string(t) for t in start_time])
+        params["times"] = ",".join([get_time_string(t) for t in start_time])
     elif isinstance(start_time, pd.Timedelta):
         interface_config["name"] = "getNafpLatestTime"
         params["latestTime"] = str(int(start_time / pd.to_timedelta("1h")))
@@ -85,7 +85,7 @@ def download_model_file(
     interface_id = _get_interface_id(interface_config)
     logger.info(f"interface_id: {interface_id}")
 
-    client = _get_client(config_file)
+    client = get_client(config_file)
     result = client.callAPI_to_downFile(interface_id, params, file_dir=output_dir)
     if result.request.error_code != 0:
         logger.warning(f"request error {result.request.error_code}: {result.request.error_message}")

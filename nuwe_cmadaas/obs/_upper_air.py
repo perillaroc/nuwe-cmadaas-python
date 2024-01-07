@@ -4,10 +4,10 @@ from pathlib import Path
 import pandas as pd
 
 from nuwe_cmadaas._log import logger
-from nuwe_cmadaas._util import (
-    _get_client,
-    _get_time_string,
-    _get_time_range_string
+from nuwe_cmadaas.util import (
+    get_client,
+    get_time_string,
+    get_time_range_string
 )
 from nuwe_cmadaas.dataset import load_dataset_config
 from ._util import _get_interface_id, _get_region_params, _fix_params
@@ -160,13 +160,13 @@ def retrieve_obs_upper_air(
 
     if isinstance(time, pd.Interval):
         interface_config["time"] = "TimeRange"
-        params["timeRange"] = _get_time_range_string(time)
+        params["timeRange"] = get_time_range_string(time)
     elif isinstance(time, pd.Timestamp):
         interface_config["time"] = "Time"
-        params["times"] = _get_time_string(time)
+        params["times"] = get_time_string(time)
     elif isinstance(time, typing.List):
         interface_config["time"] = "Time"
-        params["times"] = ",".join([_get_time_string(t) for t in time])
+        params["times"] = ",".join([get_time_string(t) for t in time])
     elif isinstance(time, pd.Timedelta):
         interface_config["name"] = "getSurfLatestTime"
         params["latestTime"] = str(int(time / pd.to_timedelta("1h")))
@@ -213,7 +213,7 @@ def retrieve_obs_upper_air(
 
     params = _fix_params(interface_id, params)
 
-    client = _get_client(config_file)
+    client = get_client(config_file)
     result = client.callAPI_to_array2D(interface_id, params)
     if result.request.error_code != 0:
         logger.warning(f"request error {result.request.error_code}: {result.request.error_message}")

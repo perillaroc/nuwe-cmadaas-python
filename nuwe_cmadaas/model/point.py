@@ -1,7 +1,7 @@
 from typing import Union, Optional, Dict, List, Tuple
 import pandas as pd
 
-from nuwe_cmadaas._util import _get_time_string, _get_client
+from nuwe_cmadaas.util import get_time_string, get_client
 from nuwe_cmadaas._log import logger
 
 
@@ -32,7 +32,7 @@ def retrieve_model_point(
         "fcstLevel": str(level)
     }
 
-    time = _get_time_string(start_time)
+    time = get_time_string(start_time)
     params["time"] = time
 
     def _get_valid_time(f):
@@ -57,7 +57,7 @@ def retrieve_model_point(
     interface_id = _get_interface_id(interface_config)
     logger.info(f"interface_id: {interface_id}")
 
-    client = _get_client(config_file)
+    client = get_client(config_file)
     result = client.callAPI_to_array2D(interface_id, params)
     if result.request.error_code != 0:
         logger.warning(f"request error {result.request.error_code}: {result.request.error_message}")

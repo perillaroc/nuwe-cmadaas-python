@@ -2,7 +2,7 @@
 
 [![Documentation Status](https://readthedocs.org/projects/nuwe-cmadaas-python/badge/?version=latest)](https://nuwe-cmadaas-python.readthedocs.io/zh_CN/latest/?badge=latest)
 
-为 CMADaaS MUSIC 接口封装 Python API，支持 Python 3 和 Windows。
+为 CMADaaS MUSIC 接口封装 Python API，提供仿 MUSIC 原生接口及高层 API 接口，支持 Python 3 和 Windows。
 
 文档：https://nuwe-cmadaas-python.readthedocs.io
 

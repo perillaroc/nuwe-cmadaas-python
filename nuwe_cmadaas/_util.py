@@ -1,6 +1,6 @@
 import pandas as pd
 
-from nuwe_cmadaas.music import CMADaaSClient
+from .music import CMADaaSClient
 from ._config import load_cmadaas_config
 
 

@@ -6,7 +6,7 @@ import hashlib
 import time
 import uuid
 from copy import deepcopy
-from typing import Callable, Any, Dict
+from typing import Callable, Any, Dict, Optional, Union
 
 from .connection import Connection
 from .data import (
@@ -20,32 +20,95 @@ from .data import (
 from nuwe_cmadaas._log import logger
 
 
-class CMADaaSClient(object):
+CONFIG_FILE_NAME = "client.config"
+
+
+class CMADaaSClient:
+    """
+    CMADaaS 客户端
+
+    Attributes
+    ----------
+    user : str
+        CMADaaS用户名
+    password : str
+        CMADaaS用户密码
+    server_ip : str
+        CMADaaS服务器IP地址
+    server_port : int
+        CMADaaS服务器端口
+    connect_timeout : float
+        连接超时，单位秒
+    read_timeout : float
+        连接超时，单位秒
+    """
     clientLanguage = "Python"
     clientVersion = "V2.0.0"
 
     def __init__(
             self,
-            server_ip: str = None,
-            server_port: int = None,
-            server_id: str = None,
-            connection_timeout: int = None,
-            read_timeout: int = None,
-            user: str = None,
-            password: str = None,
-            config: Dict = None,
-            config_file: pathlib.Path or str = None,
+            server_ip: Optional[str] = None,
+            server_port: Optional[int] = None,
+            server_id: Optional[str] = None,
+            connection_timeout: Optional[float] = None,
+            read_timeout: Optional[float] = None,
+            user: Optional[str] = None,
+            password: Optional[str] = None,
+            config: Optional[Dict] = None,
+            config_file: Optional[Union[pathlib.Path, str]] = None,
     ):
+        """
+        Notes
+        -----
+        配置参数优先级从高到低，如果高优先级的某个参数没有设置，会从低优先级读取相应参数
+
+        1. __init__函数参数，例如``server_ip``, ``server_port``等
+        2. 配置对象``config``
+        3. MUSIC原生接口配置文件``config_file``
+
+        Parameters
+        ----------
+        server_ip
+        server_port
+        server_id
+        connection_timeout
+        read_timeout
+        user
+        password
+        config : Dict
+            参数配置，字典格式。
+            通常从YAML格式配置文件中加载而来。
+
+            .. code-block:: python
+
+                {
+                    "auth": {
+                        "user": "username",
+                        "password": "<PASSWORD>",
+                    },
+                    "server": {
+                        "music_server": "MUSIC server address, IP or URL",
+                        "music_port": 80, # MUSIC server port
+                        "music_connTimeout": 3, # connection timeout
+                        "music_readTimeout": 3000, # read timeout
+                        "music_ServiceId": "MUSIC Server ID"
+                    }
+                }
+
+        config_file : pathlib.Path or str
+            MUSIC原生接口配置文件路径，INI格式，通常名为 ``client.config``
+        """
         self.server_ip = server_ip
         self.server_port = server_port
         self.server_id = server_id
+
         self.connect_timeout = connection_timeout
         self.read_timeout = read_timeout
-        self.config_file = config_file
+
         self.user = user
         self.password = password
+
         self._connection = None
-        self.config = config
 
         # 数据读取URL
         #   http://ip:port/music-ws/api?serviceNodeId=serverId&
@@ -53,17 +116,18 @@ class CMADaaSClient(object):
             "http://{server_ip}:{server_port}/music-ws/api?serviceNodeId={server_id}&"
         )
 
-        if self.config_file is not None:
-            self._load_config_from_file()
-        if self.config is not None:
-            self._load_config()
+        if config is not None:
+            self._load_config(config)
+
+        if config_file is not None:
+            self._load_config_from_file(config_file)
 
         self.create_connect(self.user, self.password)
 
     def create_connect(self, user: str, password: str):
         self.user = user
         self.password = password
-        self._connection = Connection(client=self)
+        self._connection = Connection(connect_timeout=self.connect_timeout, read_timeout=self.read_timeout)
 
     def callAPI_to_array2D(
             self,
@@ -313,18 +377,18 @@ class CMADaaSClient(object):
             exception_handler=Connection.generate_exception_handler(data),
         )
 
-    def _load_config_from_file(self) -> None:
-        if self.config_file is not None:
-            self.config_file = pathlib.Path(self.config_file)
-            if not self.config_file.exists():
-                raise RuntimeError(f"config file is not exist: {self.config_file.absolute()}")
+    def _load_config_from_file(self, config_file: Optional[Union[pathlib.Path, str]] = None):
+        if config_file is not None:
+            config_file = pathlib.Path(config_file)
+            if not config_file.exists():
+                raise RuntimeError(f"config file is not exist: {config_file.absolute()}")
         else:
-            self.config_file = pathlib.Path("client.config")
-            if not self.config_file.exists():
-                raise RuntimeError(f"default config file is not exist: {self.config_file.absolute()}")
+            config_file = pathlib.Path(CONFIG_FILE_NAME)
+            if not config_file.exists():
+                raise RuntimeError(f"default config file is not exist: {config_file.absolute()}")
 
         cf = configparser.ConfigParser()
-        cf.read(self.config_file)
+        cf.read(config_file)
 
         if self.server_ip is None:
             self.server_ip = cf.get("Pb", "music_server")
@@ -341,9 +405,9 @@ class CMADaaSClient(object):
         if self.read_timeout is None:
             self.read_timeout = int(cf.get("Pb", "music_readTimeout"))
 
-    def _load_config(self) -> None:
-        auth_config = self.config["auth"]
-        server_config = self.config["server"]
+    def _load_config(self, config: Dict):
+        auth_config = config["auth"]
+        server_config = config["server"]
 
         if self.user is None:
             self.user = auth_config["user"]
@@ -384,6 +448,9 @@ class CMADaaSClient(object):
             f"&language={CMADaaSClient.clientLanguage}&clientversion={CMADaaSClient.clientVersion}"
         )
 
+        for key, value in params.items():
+            fetch_url += f"&{key}={value}"
+
         timestamp = str((round(time.time() * 1000)))
         nonce = str(uuid.uuid1())
         fetch_url += '&timestamp=' + timestamp
@@ -399,15 +466,12 @@ class CMADaaSClient(object):
         sign_params['timestamp'] = timestamp
         sign_params['nonce'] = nonce
         sign_params['pwd'] = self.password
-        sign = self._get_sign(sign_params)
+        sign = CMADaaSClient._get_sign(sign_params)
 
         if sign == "":
             print("generate sign is None")
 
         fetch_url += '&sign=' + sign
-
-        for key, value in params.items():
-            fetch_url += f"&{key}={value}"
 
         return fetch_url
 
@@ -434,7 +498,19 @@ class CMADaaSClient(object):
         )
         return result
 
-    def _get_sign(self, sign_params: Dict) -> str:
+    @staticmethod
+    def _get_sign(sign_params: Dict) -> str:
+        """
+        计算一次性签名值
+
+        Parameters
+        ----------
+        sign_params
+
+        Returns
+        -------
+        str
+        """
         param_string = ""
         if "params" in sign_params:
             params_val = sign_params.pop("params")

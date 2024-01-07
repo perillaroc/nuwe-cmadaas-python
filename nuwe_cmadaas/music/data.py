@@ -1,4 +1,3 @@
-# coding: utf-8
 from typing import List
 
 import numpy as np
@@ -8,7 +7,7 @@ import xarray as xr
 from nuwe_cmadaas.music import apiinterface_pb2 as pb
 
 
-class RequestInfo(object):
+class RequestInfo:
     def __init__(
             self,
             error_code: int = 0,
@@ -53,26 +52,28 @@ class RequestInfo(object):
         return r
 
 
-class ResponseData(object):
+class ResponseData:
     def __init__(
             self,
             request: RequestInfo = None
     ):
+        if request is None:
+            request = RequestInfo()
         self.request = request
 
     def load_from_protobuf_content(self, content: bytes):
-        pass
+        raise NotImplementedError()
 
     @classmethod
-    def create_from_protobuf(cls, content: bytes):
+    def create_from_protobuf(cls, content: bytes) -> "ResponseData":
         data = cls()
         data.load_from_protobuf_content(content)
         return data
 
-    def to_pandas(self):
+    def to_pandas(self) -> pd.DataFrame:
         raise NotImplementedError()
 
-    def to_xarray(self):
+    def to_xarray(self) -> xr.DataArray:
         raise NotImplementedError()
 
 
@@ -112,7 +113,7 @@ class Array2D(ResponseData):
         # self.col_count = ret_array_2d.request.colCount
         total_count = len(ret_array_2d.data)
         self.col_count = int(total_count/self.row_count)
-        assert(self.col_count == ret_array_2d.request.colCount)
+        assert self.col_count == ret_array_2d.request.colCount
 
         self.data = np.array(ret_array_2d.data).reshape([self.row_count, self.col_count])
 
@@ -266,7 +267,7 @@ class GridArray2D(ResponseData):
         self.data = np.array(ret_grid_array_2d.data).reshape([row_count, col_count])
 
 
-class FileInfo(object):
+class FileInfo:
     def __init__(
             self,
             file_name: str = "",

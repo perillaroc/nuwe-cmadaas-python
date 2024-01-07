@@ -1,0 +1,10 @@
+# This is a sample config file for low level API.
+# Please see CMADaaS MUSIC API document for detail.
+
+[Pb]
+music_server=music host
+music_port=music port
+
+music_connTimeout=3   # connection timeout, seconds
+music_readTimeout=3000  # read timeout, seconds
+music_ServiceId=service id  # service id

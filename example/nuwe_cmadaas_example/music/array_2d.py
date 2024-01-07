@@ -1,6 +1,7 @@
 # coding=UTF-8
-from nuwe_cmadaas import CMADaaSClient
 import click
+
+from nuwe_cmadaas import CMADaaSClient
 
 
 @click.command()

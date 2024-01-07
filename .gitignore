@@ -160,3 +160,7 @@ cython_debug/
 .idea/
 
 nuwe_cmadaas/_version.py
+
+# example
+/example/output
+/example/config/client.config

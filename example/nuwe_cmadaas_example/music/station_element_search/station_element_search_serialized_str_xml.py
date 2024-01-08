@@ -14,7 +14,7 @@ from nuwe_cmadaas_example.util import get_client_config_path, get_output_directo
 def query(username: str, password: str, server_id: str, client_config: str):
     interface_id = "getSurfEleByTime"
 
-    yesterday = pd.Timestamp.now().round(freq="D") - pd.Timedelta(days=1)
+    yesterday = pd.Timestamp.now().floor(freq="D") - pd.Timedelta(days=1)
     times = get_time_string(yesterday)
 
     params = {

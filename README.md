@@ -8,7 +8,7 @@
 
 ## 安装
 
-下载源码，并使用如下命令安装 `nuwe_cmadaas` 包。
+克隆源码，并使用如下命令安装 `nuwe_cmadaas` 包。
 
 ```
 pip install .

@@ -43,6 +43,7 @@ example = ["click"]
 [tool.setuptools.packages.find]
 where = ["."]
 exclude = [
+    "example",
     "tests",
     "*.tests",
     "*.tests.*",

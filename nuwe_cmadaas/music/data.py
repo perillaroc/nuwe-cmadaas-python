@@ -326,8 +326,8 @@ class GridVector2D(ResponseData):
 
     def __init__(
             self,
-            u_data: List[float] = None,
-            v_data: List[float] = None,
+            u_datas: List[float] = None,
+            v_datas: List[float] = None,
             request: RequestInfo = None,
             start_lat: float = 0,
             start_lon: float = 0,
@@ -343,8 +343,8 @@ class GridVector2D(ResponseData):
             v_element_name: str = "",
     ):
         super().__init__(request)
-        self.u_data = u_data
-        self.v_data = v_data
+        self.u_datas = u_datas
+        self.v_datas = v_datas
         self.start_lat = start_lat
         self.start_lon = start_lon
         self.end_lat = end_lat
@@ -386,8 +386,8 @@ class GridVector2D(ResponseData):
 
         row_count = self.lat_count
         col_count = self.lon_count
-        self.u_data = np.array(ret_grid_vector_2d.u_datas).reshape([row_count, col_count])
-        self.v_data = np.array(ret_grid_vector_2d.v_data2).reshape([row_count, col_count])
+        self.u_datas = np.array(ret_grid_vector_2d.u_datas).reshape([row_count, col_count])
+        self.v_datas = np.array(ret_grid_vector_2d.v_datas).reshape([row_count, col_count])
 
 
 class GridScalar2D(ResponseData):

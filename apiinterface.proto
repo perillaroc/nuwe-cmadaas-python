@@ -71,7 +71,7 @@ message RetDataBlock{
 
 message RetGridVector2D{
     repeated float u_datas = 1;
-    repeated float v_data2 = 2;
+    repeated float v_datas = 2;
     RequestInfo request = 3;
     float startLat = 4;
     float startLon = 5;

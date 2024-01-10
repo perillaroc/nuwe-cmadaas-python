@@ -362,7 +362,7 @@ class CMADaaSClient:
             params: Dict,
             server_id: str = None
     ):
-        warnings.warn("callAPI_to_gridVector2D is not tested")
+        # warnings.warn("callAPI_to_gridVector2D is not tested")
         data = GridVector2D()
 
         method = self.callAPI_to_gridVector2D.__name__

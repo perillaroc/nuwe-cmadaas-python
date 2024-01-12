@@ -174,7 +174,7 @@ class CMADaaSClient:
             interface_id: str,
             params: Dict,
             server_id: str = None
-    ):
+    ) -> FilesInfo:
         data = FilesInfo()
 
         method = self.callAPI_to_fileList.__name__
@@ -195,7 +195,7 @@ class CMADaaSClient:
             params: Dict,
             data_format: str,
             server_id: str = None
-    ):
+    ) -> str:
         if "dataFormat" not in params:
             params["dataFormat"] = data_format
 
@@ -235,7 +235,7 @@ class CMADaaSClient:
         data_format: str,
         file_name: str,
         server_id: str = None,
-    ):
+    ) -> FilesInfo:
         data = FilesInfo()
 
         if "dataFormat" not in params:
@@ -279,10 +279,12 @@ class CMADaaSClient:
         self,
         interface_id: str,
         params: Dict,
-        file_dir: str,
+        file_dir: Union[str, pathlib.Path],
         server_id: str = None,
-    ):
-        file_dir_path = pathlib.Path(file_dir)
+    ) -> FilesInfo:
+        file_dir_path = file_dir
+        if isinstance(file_dir_path, str):
+            file_dir_path = pathlib.Path(file_dir)
 
         data = FilesInfo()
 
@@ -340,7 +342,7 @@ class CMADaaSClient:
             interface_id: str,
             params: Dict,
             server_id: str = None
-    ):
+    ) -> GridScalar2D:
         warnings.warn("callAPI_to_gridScalar2D is not tested")
         data = GridScalar2D()
 
@@ -361,7 +363,7 @@ class CMADaaSClient:
             interface_id: str,
             params: Dict,
             server_id: str = None
-    ):
+    ) -> GridVector2D:
         # warnings.warn("callAPI_to_gridVector2D is not tested")
         data = GridVector2D()
 

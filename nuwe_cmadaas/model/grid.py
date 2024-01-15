@@ -10,12 +10,13 @@ from nuwe_cmadaas.obs._util import _get_region_params
 def retrieve_model_grid(
         data_code: str,
         parameter: str,
-        start_time: pd.Timestamp = None,
-        forecast_time: Union[str, pd.Timedelta] = None,
-        level_type: Union[str, int] = None,
-        level: Union[int, float] = None,
-        region: Dict = None,
-        data_type: str = None,
+        start_time: Optional[pd.Timestamp] = None,
+        forecast_time: Optional[Union[str, pd.Timedelta]] = None,
+        level_type: Optional[Union[str, int]] = None,
+        level: Optional[Union[int, float]] = None,
+        region: Optional[Dict] = None,
+        number: Optional[int] = None,
+        data_type: Optional[str] = None,
         config_file: Optional[str] = None
 ) -> xr.DataArray:
     interface_config = {
@@ -23,7 +24,8 @@ def retrieve_model_grid(
         "region": None,
         "time": None,
         "level": None,
-        "valid_time": None
+        "valid_time": None,
+        "number": None,
     }
 
     if data_type is None:
@@ -60,6 +62,10 @@ def retrieve_model_grid(
     if region is not None:
         _get_region_params(region, params, interface_config)
 
+    if number is not None:
+        interface_config["number"] = "FcstMember"
+        params["fcstMember"] = number
+
     interface_id = _get_interface_id(interface_config)
     logger.info(f"interface_id: {interface_id}")
 
@@ -82,7 +88,8 @@ def _get_interface_id(interface_config: Dict) ->str:
     condition_part = "And".join(filter(None, [
         interface_config["time"],
         interface_config["level"],
-        interface_config["valid_time"]
+        interface_config["valid_time"],
+        interface_config["number"],
     ]))
     if len(condition_part) > 0:
         interface_id += "By" + condition_part

@@ -1,4 +1,4 @@
-from typing import Union, List, Optional
+from typing import Union, List, Optional, Dict
 from pathlib import Path
 
 import pandas as pd
@@ -16,11 +16,10 @@ from ._util import _get_interface_id, _get_region_params
 
 def retrieve_obs_grid(
         data_code: str,
-        parameter: str = None,
-        time: Union[pd.Interval, pd.Timestamp, List, pd.Timedelta] = None,
-        region=None,
-        order: str = None,
-        config_file: Union[str, Path] = None,
+        parameter: Optional[str] = None,
+        time: Optional[Union[pd.Interval, pd.Timestamp, List]] = None,
+        region: Optional[Dict] = None,
+        config_file: Optional[Union[str, Path]] = None,
         **kwargs,
 ) -> xr.DataArray:
     """
@@ -59,8 +58,6 @@ def retrieve_obs_grid(
     region
         区域筛选条件：
             - 经纬度范围 (rect)
-    order
-        排序字段
     config_file
         配置文件路径
     kwargs
@@ -83,9 +80,6 @@ def retrieve_obs_grid(
     if isinstance(parameter, str):
         params["fcstEle"] = parameter
 
-    if order is not None:
-        params["orderby"] = order
-
     if isinstance(time, pd.Interval):
         interface_config["time"] = "TimeRange"
         params["timeRange"] = get_time_range_string(time)
@@ -95,11 +89,6 @@ def retrieve_obs_grid(
     elif isinstance(time, List):
         interface_config["time"] = "Time"
         params["times"] = ",".join([get_time_string(t) for t in time])
-    elif isinstance(time, pd.Timedelta):
-        interface_config["name"] = "getSurfLatestTime"
-        params["latestTime"] = str(int(time / pd.to_timedelta("1h")))
-        del params["orderby"]
-        del params["elements"]
 
     if region is not None:
         _get_region_params(region, params, interface_config)

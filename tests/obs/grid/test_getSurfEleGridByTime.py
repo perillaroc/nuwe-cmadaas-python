@@ -1,7 +1,12 @@
+"""
+按时间、要素获取实况格点场要素
+
+getSurfEleGridByTime
+"""
 from nuwe_cmadaas.obs import retrieve_obs_grid
 
 
-def test_getSurfEleGridByTime(start_date):
+def test_cmpas_chn_1km_rt(start_date):
     parameter = "PRE"
 
     data_code = "SURF_CMPAS_CHN_1KM_RT"

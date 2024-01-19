@@ -10,14 +10,14 @@
 .. code-block:: python
 
     >>> import pandas as pd
-    >>> from nuwe_cimiss.obs import retrieve_obs_station
+    >>> from nuwe_cmadaas.obs import retrieve_obs_station
     >>> table = retrieve_obs_station(
     ...     "SURF_CHN_MUL_HOR",
     ...     time=[
     ...         pd.to_datetime("2021-01-01 00:00:00"),
     ...         pd.to_datetime("2021-01-02 00:00:00")
     ...     ],
-    ...     config_file="nwpc-oper.yaml"
+    ...     config_file="cedarkit.yaml"
     ... )
     >>> table
            Station_Id_d      Lat       Lon    Alti  ... PRE_1h  PRE_6h PRE_24h     PRS

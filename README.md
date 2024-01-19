@@ -8,9 +8,11 @@
 
 ## 安装
 
-克隆源码，并使用如下命令安装 `nuwe_cmadaas` 包。
+克隆源码，使用 `pip` 命令安装 nuwe-cmadaas 包。
 
 ```
+git clone https://github.com/perillaroc/nuwe-cmadaas-python.git
+cd nuwe-cmadaas-python
 pip install .
 ```
 
@@ -34,7 +36,7 @@ MUSIC 接口仅适用于 CMA 内网用户，使用前请先申请账户。
 ```python
 from nuwe_cmadaas import CMADaaSClient
 
-client_config_path = "path/to/client/config/file"
+client_config_path = "path/to/client.config"
 user = "user name"
 password = "user password"
 server_id = "server id"

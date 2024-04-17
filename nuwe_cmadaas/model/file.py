@@ -1,12 +1,25 @@
-from typing import Union, Optional, Dict, List
-import pathlib
+from typing import Union, Optional, Dict, List, TypedDict
+from pathlib import Path
 
 import pandas as pd
-import xarray as xr
 
-from nuwe_cmadaas.util import get_time_string, get_client, get_time_range_string
+from nuwe_cmadaas.util import (
+    get_time_string,
+    get_time_range_string,
+    get_region_params,
+)
+from nuwe_cmadaas.music import MusicError, FileInfo, get_or_create_client, CMADaaSClient
+from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas._log import logger
-from nuwe_cmadaas.obs._util import _get_region_params
+
+
+class InterfaceConfig(TypedDict):
+    name: str
+    element: Optional[str]
+    region: Optional[str]
+    time: Optional[str]
+    level: Optional[str]
+    valid_time: Optional[str]
 
 
 def download_model_file(
@@ -18,17 +31,18 @@ def download_model_file(
         level: Union[int, float] = None,
         region: Dict = None,
         data_type: str = None,
-        output_dir: Union[pathlib.Path, str] = None,
-        config_file: Optional[str] = None
-):
-    interface_config = {
-        "name": "getNafpFile",
-        "element": None,
-        "region": None,
-        "time": None,
-        "level": None,
-        "valid_time": None
-    }
+        output_dir: Union[Path, str] = None,
+        config: Optional[Union[CMADaasConfig, str, Path]] = None,
+        client: Optional[CMADaaSClient] = None,
+) -> Union[List[Path], MusicError]:
+    interface_config = InterfaceConfig(
+        name="getNafpFile",
+        element=None,
+        region=None,
+        time=None,
+        level=None,
+        valid_time=None,
+    )
 
     if output_dir is None:
         output_dir = "./"
@@ -80,24 +94,28 @@ def download_model_file(
         params["validTime"] = str(valid_time)
 
     if region is not None:
-        _get_region_params(region, params, interface_config)
+        get_region_params(region, params, interface_config)
 
     interface_id = _get_interface_id(interface_config)
     logger.info(f"interface_id: {interface_id}")
 
-    client = get_client(config_file)
-    result = client.callAPI_to_downFile(interface_id, params, file_dir=output_dir)
+    cmadaas_client = get_or_create_client(config, client)
+    result = cmadaas_client.callAPI_to_downFile(interface_id, params, file_dir=output_dir)
+
     if result.request.error_code != 0:
         logger.warning(f"request error {result.request.error_code}: {result.request.error_message}")
+        music_error = MusicError(code=result.request.error_code, message=result.request.error_message)
+        return music_error
 
     files_info = result.files_info
-    for file_info in files_info:
-        logger.info(file_info.file_name)
+    file_list = []
+    for f in files_info:
+        file_list.append(Path(output_dir, f.file_name))
 
-    return
+    return file_list
 
 
-def _get_interface_id(interface_config: Dict) ->str:
+def _get_interface_id(interface_config: InterfaceConfig) -> str:
     interface_id = interface_config["name"]
 
     region_part = interface_config["region"]

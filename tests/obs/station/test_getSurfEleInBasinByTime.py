@@ -3,6 +3,7 @@
 
 getSurfEleInBasinByTime
 """
+import pandas as pd
 
 from nuwe_cmadaas.obs import retrieve_obs_station
 
@@ -16,4 +17,5 @@ def test_hourly(start_date, end_date):
             "basin_codes": "CJLY"
         },
     )
-    print(table)
+    assert isinstance(table, pd.DataFrame)
+    assert table.shape[0] > 0

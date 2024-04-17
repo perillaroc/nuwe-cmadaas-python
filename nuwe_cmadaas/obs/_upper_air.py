@@ -1,34 +1,38 @@
-import typing
+from typing import List, Tuple, Dict, Optional, Union
 from pathlib import Path
 
 import pandas as pd
 
 from nuwe_cmadaas._log import logger
 from nuwe_cmadaas.util import (
-    get_client,
     get_time_string,
-    get_time_range_string
+    get_time_range_string,
+    get_region_params,
 )
+from nuwe_cmadaas.config import CMADaasConfig
+from nuwe_cmadaas.music import get_or_create_client, CMADaaSClient, MusicError
 from nuwe_cmadaas.dataset import load_dataset_config
-from ._util import _get_interface_id, _get_region_params, _fix_params
+
+from ._util import _get_interface_id, _fix_params, InterfaceConfig
 from ._file import download_obs_file
 
 
 def retrieve_obs_upper_air(
         data_code: str = "UPAR_GLB_MUL_FTM",
-        elements: str = None,
-        time: typing.Union[pd.Interval, pd.Timestamp, typing.List, pd.Timedelta] = None,
-        level_type: typing.Union[str, typing.Tuple[str]] = None,
-        level: typing.Union[float, int, typing.List[typing.Union[float, int]], typing.Tuple] = None,
-        station: typing.Union[str, int, typing.List, typing.Tuple] = None,
-        region=None,
-        station_level: typing.Union[str, typing.List[str]] = None,
-        order: str = None,
-        count: int = None,
-        interface_data_type: str = None,
-        config_file: typing.Union[str, Path] = None,
+        elements: Optional[str] = None,
+        time: Optional[Union[pd.Interval, pd.Timestamp, List, pd.Timedelta]] = None,
+        level_type: Optional[Union[str, Tuple[str]]] = None,
+        level: Optional[Union[float, int, List[Union[float, int]], Tuple]] = None,
+        station: Optional[Union[str, int, List, Tuple]] = None,
+        region: Optional[Dict] = None,
+        station_level: Optional[Union[str, List[str]]] = None,
+        order: Optional[str] = None,
+        count: Optional[int] = None,
+        interface_data_type: Optional[str] = None,
+        config: Optional[Union[CMADaasConfig, str, Path]] = None,
+        client: Optional[CMADaaSClient] = None,
         **kwargs,
-) -> pd.DataFrame:
+) -> Union[pd.DataFrame, MusicError]:
     """
     检索高空观测数据资料。
 
@@ -111,8 +115,10 @@ def retrieve_obs_upper_air(
         最大返回记录数，对应接口的 limitCnt 参数
     interface_data_type:
         资料类型，默认自动生成，或使用 datasets 配置文件中配置的 interface_data_type 字段
-    config_file:
-        配置文件路径
+    config:
+        配置。配置文件路径或配置对象
+    client:
+        客户端对象，默认新建。如果设置则直接使用，忽略 config 参数
     kwargs:
         其他需要传递给 MUSIC 接口的参数，例如：
             - eleValueRanges: 要素值范围
@@ -121,20 +127,21 @@ def retrieve_obs_upper_air(
 
     Returns
     -------
-    pd.DataFrame
-        高空观测资料表格数据，列名为 elements 中的值
+    pd.DataFrame or MusicError
+        检索成功返回高空观测资料表格数据，列名为 elements 中的值。
+        检索失败返回错误对象 ``MusicError``
     """
     upper_dataset_config = load_dataset_config("upper_air")
     if elements is None:
         elements = upper_dataset_config[data_code]["elements"]
 
-    interface_config = {
-        "name": "getUparEle",
-        "region": None,
-        "time": None,
-        "station": None,
-        "level": None,
-    }
+    interface_config = InterfaceConfig(
+        name="getUparEle",
+        region=None,
+        time=None,
+        station=None,
+        level=None,
+    )
 
     if (
             interface_data_type is None
@@ -164,7 +171,7 @@ def retrieve_obs_upper_air(
     elif isinstance(time, pd.Timestamp):
         interface_config["time"] = "Time"
         params["times"] = get_time_string(time)
-    elif isinstance(time, typing.List):
+    elif isinstance(time, List):
         interface_config["time"] = "Time"
         params["times"] = ",".join([get_time_string(t) for t in time])
     elif isinstance(time, pd.Timedelta):
@@ -183,16 +190,16 @@ def retrieve_obs_upper_air(
     if isinstance(station, str) or isinstance(station, int):
         interface_config["station"] = "StaID"
         params["staIds"] = str(station)
-    elif isinstance(station, typing.List):
+    elif isinstance(station, List):
         interface_config["station"] = "StaID"
         params["staIds"] = ",".join(station)
-    elif isinstance(station, typing.Tuple):
+    elif isinstance(station, Tuple):
         interface_config["station"] = "StaIdRange"
         params["minStaId"] = station[0]
         params["maxStaId"] = station[1]
 
     if region is not None:
-        _get_region_params(region, params, interface_config)
+        get_region_params(region, params, interface_config)
 
     if station_level is not None:
         del params["orderby"]
@@ -201,7 +208,7 @@ def retrieve_obs_upper_air(
         params["staLevels"] = station_level
         if interface_config["station"] is None:
             interface_config["station"] = "StaLevels"
-    elif isinstance(station_level, typing.List):
+    elif isinstance(station_level, List):
         params["staLevels"] = ",".join(station_level)
         if interface_config["station"] is None:
             interface_config["station"] = "StaLevels"
@@ -213,10 +220,12 @@ def retrieve_obs_upper_air(
 
     params = _fix_params(interface_id, params)
 
-    client = get_client(config_file)
-    result = client.callAPI_to_array2D(interface_id, params)
+    cmadaas_client = get_or_create_client(config, client)
+    result = cmadaas_client.callAPI_to_array2D(interface_id, params)
     if result.request.error_code != 0:
         logger.warning(f"request error {result.request.error_code}: {result.request.error_message}")
+        music_error = MusicError(code=result.request.error_code, message=result.request.error_message)
+        return music_error
 
     df = result.to_pandas()
     return df
@@ -225,16 +234,17 @@ def retrieve_obs_upper_air(
 def download_obs_upper_air_file(
         data_code: str,
         elements: str = None,
-        time: typing.Union[pd.Interval, pd.Timestamp, typing.List, pd.Timedelta] = None,
-        station: typing.Union[str, typing.List, typing.Tuple] = None,
+        time: Union[pd.Interval, pd.Timestamp, List, pd.Timedelta] = None,
+        station: Union[str, List, Tuple] = None,
         order: str = None,
         count: int = None,
         output_dir: str = "./",
-        config_file: typing.Union[str, Path] = None,
+        config: Optional[Union[CMADaasConfig, str, Path]] = None,
+        client: Optional[CMADaaSClient] = None,
         **kwargs,
-)->typing.List:
+) -> Union[List, MusicError]:
     interface_data_type = "Upar"
-    file_list = download_obs_file(
+    result = download_obs_file(
         data_code=data_code,
         elements=elements,
         time=time,
@@ -242,23 +252,24 @@ def download_obs_upper_air_file(
         order=order,
         count=count,
         output_dir=output_dir,
-        config_file=config_file,
         interface_data_type=interface_data_type,
+        config=config,
+        client=client,
         **kwargs
     )
-    return file_list
+    return result
 
 
 def _get_level_params(
         level_type,
         level,
-        interface_config: typing.Dict,
-        params: typing.Dict
-):
+        interface_config: InterfaceConfig,
+        params: Dict
+) -> Tuple[InterfaceConfig, Dict]:
     if level is None:
-        return
+        return interface_config, params
 
-    def get_level(level_type, level):
+    def get_level(level_type: str, level):
         if level_type == "pl":
             interface_level_config = "Press"
             level_params_name = "pLayers"
@@ -276,7 +287,7 @@ def _get_level_params(
             raise ValueError(f"level_type is not supported: {level_type}")
 
         level_params = dict()
-        if isinstance(level, typing.List):
+        if isinstance(level, List):
             level_params[level_params_name] = ",".join(level)
         if isinstance(level, pd.Interval):
             level_params[f"min{level_params_name.upper()}"] = level.left
@@ -288,7 +299,7 @@ def _get_level_params(
 
     if isinstance(level_type, str):
         interface_level_config, level_params = get_level(level_type, level)
-    elif isinstance(level_type, typing.Tuple):
+    elif isinstance(level_type, Tuple):
         interface_level_config = []
         level_params = dict()
         for lt, l in zip(level_type, level):
@@ -301,3 +312,4 @@ def _get_level_params(
 
     interface_config["level"] = interface_level_config
     params.update(level_params)
+    return interface_config, params

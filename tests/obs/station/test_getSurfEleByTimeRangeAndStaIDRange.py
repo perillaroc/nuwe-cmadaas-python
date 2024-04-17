@@ -18,4 +18,5 @@ def test_hourly(start_date, end_date, start_station_id, end_station_id):
         ),
         station=(start_station_id, end_station_id),
     )
-    print(table)
+    assert isinstance(table, pd.DataFrame)
+    assert table.shape[0] > 0

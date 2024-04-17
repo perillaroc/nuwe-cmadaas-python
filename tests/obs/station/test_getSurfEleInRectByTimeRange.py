@@ -3,8 +3,6 @@
 
 getSurfEleInRectByTimeRange
 """
-
-
 import pandas as pd
 
 from nuwe_cmadaas.obs import retrieve_obs_station
@@ -26,4 +24,5 @@ def test_hourly(start_date):
             "end_latitude": 39.4,
         },
     )
-    print(table)
+    assert isinstance(table, pd.DataFrame)
+    assert table.shape[0] > 0

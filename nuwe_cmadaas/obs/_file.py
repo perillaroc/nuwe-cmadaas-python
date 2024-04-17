@@ -1,32 +1,35 @@
-import typing
+from typing import Union, List, Tuple, Optional, TypedDict
 from pathlib import Path
 
 import pandas as pd
 
 from nuwe_cmadaas._log import logger
 from nuwe_cmadaas.util import (
-    get_client,
     get_time_string,
-    get_time_range_string
+    get_time_range_string,
+    get_region_params,
 )
+from nuwe_cmadaas.config import CMADaasConfig
+from nuwe_cmadaas.music import get_or_create_client, CMADaaSClient, MusicError
 
-from ._util import _get_interface_id, _get_region_params
+from ._util import _get_interface_id, InterfaceConfig
 
 
 def download_obs_file(
         data_code: str,
         elements: str = None,
-        time: typing.Union[pd.Interval, pd.Timestamp, typing.List, pd.Timedelta] = None,
-        station: typing.Union[str, typing.List, typing.Tuple] = None,
+        time: Union[pd.Interval, pd.Timestamp, List, pd.Timedelta] = None,
+        station: Union[str, List, Tuple] = None,
         region=None,
-        station_level: typing.Union[str, typing.List[str]] = None,
+        station_level: Union[str, List[str]] = None,
         order: str = None,
         count: int = None,
         output_dir: str = "./",
-        interface_data_type ="Surf",
-        config_file: typing.Union[str, Path] = None,
+        interface_data_type: str = "Surf",
+        config: Optional[Union[CMADaasConfig, str, Path]] = None,
+        client: Optional[CMADaaSClient] = None,
         **kwargs,
-):
+) -> Union[List[Path], MusicError]:
     """
     下载地面观测数据文件
 
@@ -102,8 +105,10 @@ def download_obs_file(
         保存文件的目录
     interface_data_type:
         资料类型
-    config_file:
-        配置文件路径
+    config:
+        配置。配置文件路径或配置对象
+    client:
+        客户端对象，默认新建。如果设置，忽略 config 参数
     kwargs:
         其他需要传递给 MUSIC 接口的参数，例如：
             - eleValueRanges: 要素值范围
@@ -116,12 +121,13 @@ def download_obs_file(
     # if elements is None:
     #     elements = STATION_DATASETS[data_code]["elements"]
 
-    interface_config = {
-        "name": f"get{interface_data_type}File",
-        "region": None,
-        "time": None,
-        "station": None,
-    }
+    interface_config = InterfaceConfig(
+        name=f"get{interface_data_type}File",
+        region=None,
+        time=None,
+        station=None,
+        level=None,
+    )
 
     params = {
         "dataCode": data_code,
@@ -142,7 +148,7 @@ def download_obs_file(
     elif isinstance(time, pd.Timestamp):
         interface_config["time"] = "Time"
         params["times"] = get_time_string(time)
-    elif isinstance(time, typing.List):
+    elif isinstance(time, List):
         interface_config["time"] = "Time"
         params["times"] = ",".join([get_time_string(t) for t in time])
     elif isinstance(time, pd.Timedelta):
@@ -154,16 +160,16 @@ def download_obs_file(
     if isinstance(station, str or int):
         interface_config["station"] = "StaID"
         params["staIds"] = station
-    elif isinstance(station, typing.List):
+    elif isinstance(station, List):
         interface_config["station"] = "StaID"
         params["staIds"] = ",".join(station)
-    elif isinstance(station, typing.Tuple):
+    elif isinstance(station, Tuple):
         interface_config["station"] = "StaIdRange"
         params["minStaId"] = station[0]
         params["maxStaId"] = station[1]
 
     if region is not None:
-        _get_region_params(region, params, interface_config)
+        get_region_params(region, params, interface_config)
 
     if station_level is not None:
         del params["orderby"]
@@ -172,7 +178,7 @@ def download_obs_file(
         params["staLevels"] = station_level
         if interface_config["station"] is None:
             interface_config["station"] = "StaLevels"
-    elif isinstance(station_level, typing.List):
+    elif isinstance(station_level, List):
         params["staLevels"] = ",".join(station_level)
         if interface_config["station"] is None:
             interface_config["station"] = "StaLevels"
@@ -182,10 +188,14 @@ def download_obs_file(
     interface_id = _get_interface_id(interface_config)
     logger.info(f"interface_id: {interface_id}")
 
-    client = get_client(config_file)
-    result = client.callAPI_to_downFile(interface_id, params, file_dir=output_dir)
+    cmadaas_client = get_or_create_client(config, client)
+    result = cmadaas_client.callAPI_to_downFile(interface_id, params, file_dir=output_dir)
+
     if result.request.error_code != 0:
         logger.warning(f"request error {result.request.error_code}: {result.request.error_message}")
+        music_error = MusicError(code=result.request.error_code, message=result.request.error_message)
+        return music_error
+
     files_info = result.files_info
     file_list = []
     for f in files_info:

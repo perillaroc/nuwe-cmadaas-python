@@ -1,10 +1,17 @@
 from typing import List
+from dataclasses import dataclass
 
 import numpy as np
 import pandas as pd
 import xarray as xr
 
 from nuwe_cmadaas.music import apiinterface_pb2 as pb
+
+
+@dataclass
+class MusicError:
+    code: int
+    message: str
 
 
 class RequestInfo:

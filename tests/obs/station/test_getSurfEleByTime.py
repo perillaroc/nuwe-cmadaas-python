@@ -3,9 +3,8 @@
 
 getSurfEleByTime
 """
-import pytest
-
 import pandas as pd
+
 from nuwe_cmadaas.obs import retrieve_obs_station
 
 
@@ -14,5 +13,6 @@ def test_hourly(start_date, end_date):
         "SURF_CHN_MUL_HOR",
         time=[start_date, end_date]
     )
+    assert isinstance(table, pd.DataFrame)
     assert table.shape[0] > 0
     return

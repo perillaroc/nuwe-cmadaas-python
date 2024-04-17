@@ -3,6 +3,8 @@
 
 getSurfEleGridByTime
 """
+import xarray as xr
+
 from nuwe_cmadaas.obs import retrieve_obs_grid
 
 
@@ -17,4 +19,4 @@ def test_cmpas_chn_1km_rt(start_date):
         time=start_date,
     )
 
-    assert field is not None
+    assert isinstance(field, xr.DataArray)

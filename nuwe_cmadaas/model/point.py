@@ -1,8 +1,21 @@
-from typing import Union, Optional, Dict, List, Tuple
+from typing import Union, Optional, Dict, List, Tuple, TypedDict
+from pathlib import Path
+
 import pandas as pd
 
-from nuwe_cmadaas.util import get_time_string, get_client
+from nuwe_cmadaas.util import get_time_string
+from nuwe_cmadaas.music import MusicError, get_or_create_client, CMADaaSClient
+from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas._log import logger
+
+
+class InterfaceConfig(TypedDict):
+    name: str
+    point: Optional[str]
+    time: str
+    level: str
+    valid_time: str
+    station: Optional[str]
 
 
 def retrieve_model_point(
@@ -14,16 +27,17 @@ def retrieve_model_point(
         level: Union[int, float],
         point: Union[Tuple[float, float], List[Tuple[float, float]]] = None,
         station: Union[List[str], str] = None,
-        config_file: Optional[str] = None
-) -> pd.DataFrame:
-    interface_config = {
-        "name": "getNafpEle",
-        "point": None,
-        "time": "Time",
-        "level": "Level",
-        "valid_time": "Validtime",
-        "station": None,
-    }
+        config: Optional[Union[CMADaasConfig, str, Path]] = None,
+        client: Optional[CMADaaSClient] = None,
+) -> Union[pd.DataFrame, MusicError]:
+    interface_config = InterfaceConfig(
+        name="getNafpEle",
+        point=None,
+        time="Time",
+        level="Level",
+        valid_time="Validtime",
+        station=None,
+    )
 
     params = {
         "dataCode": data_code,
@@ -57,16 +71,19 @@ def retrieve_model_point(
     interface_id = _get_interface_id(interface_config)
     logger.info(f"interface_id: {interface_id}")
 
-    client = get_client(config_file)
-    result = client.callAPI_to_array2D(interface_id, params)
+    cmadaas_client = get_or_create_client(config, client)
+    result = cmadaas_client.callAPI_to_array2D(interface_id, params)
+
     if result.request.error_code != 0:
         logger.warning(f"request error {result.request.error_code}: {result.request.error_message}")
+        music_error = MusicError(code=result.request.error_code, message=result.request.error_message)
+        return music_error
 
     df = result.to_pandas()
     return df
 
 
-def _get_interface_id(interface_config: Dict) ->str:
+def _get_interface_id(interface_config: InterfaceConfig) -> str:
     interface_id = interface_config["name"]
 
     point_part = interface_config["point"]

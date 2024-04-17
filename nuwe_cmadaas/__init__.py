@@ -9,10 +9,14 @@ from .music import (
     CMADaaSClient
 )
 
-from .obs import retrieve_obs_station
+from .config import CMADaasConfig
+
+from .obs import (
+    retrieve_obs_station
+)
 from .model import (
     retrieve_model_point,
-    retrieve_model_grid
+    retrieve_model_grid,
 )
 
 from importlib.metadata import version, PackageNotFoundError

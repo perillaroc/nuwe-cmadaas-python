@@ -1,17 +1,19 @@
-from typing import Union, List, Dict, Tuple, Optional
+from typing import Union, List, Dict, Tuple, Optional, TypedDict
 from pathlib import Path
 
 import pandas as pd
 
 from nuwe_cmadaas._log import logger
 from nuwe_cmadaas.util import (
-    get_client,
     get_time_string,
-    get_time_range_string
+    get_time_range_string,
+    get_region_params,
 )
-
+from nuwe_cmadaas.config import CMADaasConfig
+from nuwe_cmadaas.music import MusicError, CMADaaSClient, get_or_create_client
 from nuwe_cmadaas.dataset import load_dataset_config
-from ._util import _get_interface_id, _get_region_params
+
+from ._util import _get_interface_id, InterfaceConfig
 
 
 def retrieve_obs_station(
@@ -23,9 +25,10 @@ def retrieve_obs_station(
         station_level: Optional[Union[str, List[str]]] = None,
         order: str = "Station_ID_d:asc",
         count: Optional[int] = None,
-        config_file: Optional[Union[str, Path]] = None,
+        config: Optional[Union[CMADaasConfig, str, Path]] = None,
+        client: Optional[CMADaaSClient] = None,
         **kwargs,
-) -> pd.DataFrame:
+) -> Union[pd.DataFrame, MusicError]:
     """
     检索地面站点观测数据资料。
     对应 CMADaaS 中以 ``getSurfEle`` 开头的一系列地面资料接口。
@@ -96,8 +99,10 @@ def retrieve_obs_station(
         排序字段
     count
         最大返回记录数，对应接口的 limitCnt 参数
-    config_file
-        配置文件路径
+    config
+        配置。配置文件路径或配置对象
+    client
+        客户端对象。默认新建，如果设置则直接使用，忽略 config 参数
     kwargs
         其他需要传递给 MUSIC 接口的参数，例如：
             - eleValueRanges: 要素值范围
@@ -113,12 +118,13 @@ def retrieve_obs_station(
     if elements is None:
         elements = station_dataset_config[data_code]["elements"]
 
-    interface_config = {
-        "name": "getSurfEle",
-        "region": None,
-        "time": None,
-        "station": None,
-    }
+    interface_config = InterfaceConfig(
+        name="getSurfEle",
+        region=None,
+        time=None,
+        station=None,
+        level=None,
+    )
 
     params = {
         "dataCode": data_code,
@@ -156,7 +162,7 @@ def retrieve_obs_station(
         params["maxStaId"] = station[1]
 
     if region is not None:
-        _get_region_params(region, params, interface_config)
+        params, interface_config = get_region_params(region, params, interface_config)
 
     if station_level is not None:
         del params["orderby"]
@@ -175,10 +181,13 @@ def retrieve_obs_station(
     interface_id = _get_interface_id(interface_config)
     logger.info(f"interface_id: {interface_id}")
 
-    client = get_client(config_file)
-    result = client.callAPI_to_array2D(interface_id, params)
+    cmadaas_client = get_or_create_client(config, client)
+    result = cmadaas_client.callAPI_to_array2D(interface_id, params)
+
     if result.request.error_code != 0:
         logger.warning(f"request error {result.request.error_code}: {result.request.error_message}")
+        music_error = MusicError(code=result.request.error_code, message=result.request.error_message)
+        return music_error
 
     df = result.to_pandas()
     return df

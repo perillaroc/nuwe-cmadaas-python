@@ -3,6 +3,8 @@
 
 getSurfEleByTimeRangeAndStaIDRange
 """
+import pandas as pd
+
 from nuwe_cmadaas.obs import retrieve_obs_station
 
 
@@ -12,5 +14,6 @@ def test_hourly(start_date, end_date, start_station_id, end_station_id):
         time=[start_date, end_date],
         station=(start_station_id, end_station_id),
     )
+    assert isinstance(table, pd.DataFrame)
     assert table.shape[0] > 0
     return

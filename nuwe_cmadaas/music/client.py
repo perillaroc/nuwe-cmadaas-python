@@ -18,6 +18,7 @@ from .data import (
     GridVector2D,
 )
 from nuwe_cmadaas._log import logger
+from nuwe_cmadaas.config import CMADaasConfig
 
 
 CONFIG_FILE_NAME = "client.config"
@@ -54,7 +55,7 @@ class CMADaaSClient:
             read_timeout: Optional[float] = None,
             user: Optional[str] = None,
             password: Optional[str] = None,
-            config: Optional[Dict] = None,
+            config: Optional[CMADaasConfig] = None,
             config_file: Optional[Union[pathlib.Path, str]] = None,
     ):
         """
@@ -62,7 +63,7 @@ class CMADaaSClient:
         -----
         配置参数优先级从高到低，如果高优先级的某个参数没有设置，会从低优先级读取相应参数
 
-        1. __init__函数参数，例如``server_ip``, ``server_port``等
+        1. ``__init__``函数参数，例如``server_ip``, ``server_port``等
         2. 配置对象``config``
         3. MUSIC原生接口配置文件``config_file``
 
@@ -75,28 +76,11 @@ class CMADaaSClient:
         read_timeout
         user
         password
-        config : Dict
-            参数配置，字典格式。
-            通常从YAML格式配置文件中加载而来。
-
-            .. code-block:: python
-
-                {
-                    "auth": {
-                        "user": "username",
-                        "password": "<PASSWORD>",
-                    },
-                    "server": {
-                        "music_server": "MUSIC server address, IP or URL",
-                        "music_port": 80, # MUSIC server port
-                        "music_connTimeout": 3, # connection timeout
-                        "music_readTimeout": 3000, # read timeout
-                        "music_ServiceId": "MUSIC Server ID"
-                    }
-                }
+        config : CMADaasConfig
+            参数配置，字典格式。通常从YAML格式配置文件中加载而来。
 
         config_file : pathlib.Path or str
-            MUSIC原生接口配置文件路径，INI格式，通常名为 ``client.config``
+            MUSIC原生接口配置文件路径，INI格式，通常名为 ``client.config``。
         """
         self.server_ip = server_ip
         self.server_port = server_port
@@ -116,11 +100,11 @@ class CMADaaSClient:
             "http://{server_ip}:{server_port}/music-ws/api?serviceNodeId={server_id}&"
         )
 
-        if config is not None:
-            self._load_config(config)
-
         if config_file is not None:
             self._load_config_from_file(config_file)
+
+        if config is not None:
+            self._load_config(config)
 
         self.create_connect(self.user, self.password)
 

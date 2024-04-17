@@ -13,8 +13,8 @@ from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas.music import get_or_create_client, CMADaaSClient, MusicError
 from nuwe_cmadaas.dataset import load_dataset_config
 
-from ._util import _get_interface_id, _fix_params, InterfaceConfig
-from ._file import download_obs_file
+from .util import _get_interface_id, _fix_params, InterfaceConfig
+from .file import download_obs_file
 
 
 def retrieve_obs_upper_air(

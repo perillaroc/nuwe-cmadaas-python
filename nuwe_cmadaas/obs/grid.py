@@ -13,7 +13,7 @@ from nuwe_cmadaas.util import (
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas.music import get_or_create_client, CMADaaSClient, MusicError
 
-from ._util import _get_interface_id, InterfaceConfig
+from .util import _get_interface_id, InterfaceConfig
 
 
 def retrieve_obs_grid(

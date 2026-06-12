@@ -15,4 +15,3 @@ def test_hourly(start_date, end_date):
     )
     assert isinstance(table, pd.DataFrame)
     assert table.shape[0] > 0
-    return

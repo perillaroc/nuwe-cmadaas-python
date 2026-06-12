@@ -9,6 +9,10 @@ def start_date():
 
 
 @pytest.fixture
+def start_time_for_reps(start_date):
+    return start_date + pd.Timedelta(hours=6)
+
+@pytest.fixture
 def future_start_date():
     s = (pd.Timestamp.now() - pd.offsets.Day()).normalize() + pd.Timedelta(days=365)
     return s

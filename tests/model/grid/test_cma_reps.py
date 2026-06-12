@@ -11,10 +11,10 @@ REPS_MEMBER_NAME = "NAFP_GRAPESREPS_FOR_FTM_DIS_CHN"
 TEMPERATURE_NAME_FOR_CMADAAS = "TEM"
 
 
-def test_control_field(start_date):
+def test_control_field(start_time_for_reps):
     field = retrieve_model_grid(
         REPS_CONTROL_NAME,
-        start_time=start_date,
+        start_time=start_time_for_reps,
         forecast_time=pd.Timedelta(hours=24),
         parameter=TEMPERATURE_NAME_FOR_CMADAAS,
         level_type=100,
@@ -25,10 +25,10 @@ def test_control_field(start_date):
     assert isinstance(field, xr.DataArray)
 
 
-def test_member_field(start_date):
+def test_member_field(start_time_for_reps):
     field = retrieve_model_grid(
         REPS_MEMBER_NAME,
-        start_time=start_date,
+        start_time=start_time_for_reps,
         forecast_time=pd.Timedelta(hours=24),
         parameter=TEMPERATURE_NAME_FOR_CMADAAS,
         level_type=100,
@@ -55,10 +55,10 @@ def test_control_field_future_date(future_start_date):
     assert field.message == "query success , but no record in database. detail: Query Success,but no record is in database"
 
 
-def test_control_field_non_exist_forecast_time(start_date, invalid_forecast_time):
+def test_control_field_non_exist_forecast_time(start_time_for_reps, invalid_forecast_time):
     field = retrieve_model_grid(
         REPS_CONTROL_NAME,
-        start_time=start_date,
+        start_time=start_time_for_reps,
         forecast_time=invalid_forecast_time,
         parameter=TEMPERATURE_NAME_FOR_CMADAAS,
         level_type=100,
@@ -71,10 +71,10 @@ def test_control_field_non_exist_forecast_time(start_date, invalid_forecast_time
     assert field.message == ". detail: The input parameters are not within the range of datasets"
 
 
-def test_member_field_non_exist_member(start_date, non_exist_ens_member_number):
+def test_member_field_non_exist_member(start_time_for_reps, non_exist_ens_member_number):
     field = retrieve_model_grid(
         REPS_MEMBER_NAME,
-        start_time=start_date,
+        start_time=start_time_for_reps,
         forecast_time=pd.Timedelta(hours=24),
         parameter=TEMPERATURE_NAME_FOR_CMADAAS,
         level_type=100,
@@ -87,12 +87,12 @@ def test_member_field_non_exist_member(start_date, non_exist_ens_member_number):
     assert field.message == ". detail: The input parameters are not within the range of datasets"
 
 
-def test_member_field_non_exist_parameter(start_date, non_exist_ens_member_number):
+def test_member_field_non_exist_parameter(start_time_for_reps, non_exist_ens_member_number):
     parameter = "NON_EXIST"
     level = 100
     field = retrieve_model_grid(
         REPS_MEMBER_NAME,
-        start_time=start_date,
+        start_time=start_time_for_reps,
         forecast_time=pd.Timedelta(hours=24),
         parameter=parameter,
         level_type=level,
@@ -105,10 +105,10 @@ def test_member_field_non_exist_parameter(start_date, non_exist_ens_member_numbe
     assert field.message == f". detail: The fsctele:'{parameter}_{level}' is not config in {REPS_MEMBER_NAME}"
 
 
-def test_member_field_non_exist_field(start_date, non_exist_ens_member_number):
+def test_member_field_non_exist_field(start_time_for_reps, non_exist_ens_member_number):
     field = retrieve_model_grid(
         REPS_MEMBER_NAME,
-        start_time=start_date,
+        start_time=start_time_for_reps,
         forecast_time=pd.Timedelta(hours=24),
         parameter=TEMPERATURE_NAME_FOR_CMADAAS,
         level_type=103,
@@ -121,10 +121,10 @@ def test_member_field_non_exist_field(start_date, non_exist_ens_member_number):
     assert field.message == ". detail: The input parameters are not within the range of datasets"
 
 
-def test_member_field_non_exist_level(start_date, non_exist_ens_member_number):
+def test_member_field_non_exist_level(start_time_for_reps, non_exist_ens_member_number):
     field = retrieve_model_grid(
         REPS_MEMBER_NAME,
-        start_time=start_date,
+        start_time=start_time_for_reps,
         forecast_time=pd.Timedelta(hours=24),
         parameter=TEMPERATURE_NAME_FOR_CMADAAS,
         level_type=100,

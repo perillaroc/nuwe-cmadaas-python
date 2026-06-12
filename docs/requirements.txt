@@ -1,0 +1,4 @@
+sphinx>=7
+sphinx-book-theme>=1
+ipython
+-e ..

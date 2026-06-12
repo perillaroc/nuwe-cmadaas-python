@@ -1,16 +1,16 @@
 version: 2
 
-formats:
-  - epub
-  - pdf
-
 build:
   os: ubuntu-22.04
   tools:
-    python: "3.12"
+    python: "3.11"
 
 sphinx:
   configuration: docs/source/conf.py
 
-conda:
-  environment: docs/environment.yml
+python:
+  install:
+    - requirements: docs/requirements.txt
+
+formats:
+  - pdf

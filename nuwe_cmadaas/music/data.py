@@ -195,7 +195,7 @@ class GridArray2D(ResponseData):
             )
 
         if len(self.lons) > 0:
-            lons = self.lats
+            lons = self.lons
         else:
             lons = np.linspace(
                 self.start_lon, self.end_lon, self.lon_count,

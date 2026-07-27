@@ -1,6 +1,11 @@
 # nuwe-cmadaas-python
 
+![Maturity-Sandbox](https://img.shields.io/badge/Maturity-Sandbox-F9D71C)
+![GitHub Release](https://img.shields.io/github/v/release/perillaroc/nuwe-cmadaas-python)
+![PyPI - Version](https://img.shields.io/pypi/v/nuwe-cmadaas)
 [![Documentation Status](https://readthedocs.org/projects/nuwe-cmadaas-python/badge/?version=latest)](https://nuwe-cmadaas-python.readthedocs.io/zh_CN/latest/?badge=latest)
+![GitHub License](https://img.shields.io/github/license/perillaroc/nuwe-cmadaas-python)
+![GitHub Action Workflow Status](https://github.com/perillaroc/nuwe-cmadaas-python/actions/workflows/ci.yml/badge.svg)
 
 为 CMADaaS MUSIC 接口封装 Python API，提供仿 MUSIC 原生接口及高层 API 接口，支持 Python 3 和 Windows。
 

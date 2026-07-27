@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main, develop]
+  pull_request:
+
+jobs:
+  build:
+    name: Build package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # setuptools_scm derives the version from git tags
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build sdist and wheel
+        run: |
+          pip install build
+          python -m build
+
+      - name: Install wheel and smoke test import
+        run: |
+          pip install dist/*.whl
+          python -c "import nuwe_cmadaas; print(nuwe_cmadaas.__version__)"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
+
+  test:
+    name: Test (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install package
+        run: pip install -e ".[test]"
+
+      # tests/ 下的现有用例需要直连天擎(CMADaaS)服务，GitHub Actions 无法访问，
+      # 这里只做收集检查（验证测试与包可正常导入）。
+      - name: Collect tests (import check)
+        run: pytest tests --collect-only -q
+
+      # 未来的 mock 测试放在 tests/mock/ 下，该目录存在时自动启用。
+      - name: Run mock tests
+        if: ${{ hashFiles('tests/mock') != '' }}
+        run: pytest tests/mock -v

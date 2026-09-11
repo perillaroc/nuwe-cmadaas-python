@@ -1,1 +1,1 @@
-recursive-include nuwe_cmadaas/data *
+recursive-include src/nuwe_cmadaas/data *

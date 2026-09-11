@@ -159,7 +159,7 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 
-nuwe_cmadaas/_version.py
+src/nuwe_cmadaas/_version.py
 
 # example
 /example/output

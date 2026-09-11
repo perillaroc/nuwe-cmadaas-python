@@ -41,7 +41,7 @@ cov = ["pytest-cov", "codecov"]
 example = ["click"]
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
 exclude = [
     "example",
     "tests",
@@ -56,5 +56,8 @@ namespaces = false
 [tool.setuptools]
 include-package-data = true
 
+[tool.setuptools.package-data]
+nuwe_cmadaas = ["data/datasets/*.yaml"]
+
 [tool.setuptools_scm]
-version_file = "nuwe_cmadaas/_version.py"
+version_file = "src/nuwe_cmadaas/_version.py"

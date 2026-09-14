@@ -69,6 +69,26 @@ result = client.callAPI_to_array2D(interface_id, params)
 
 请访问 `example` 目录查看示例。
 
+## 测试
+
+安装测试依赖并运行离线测试：
+
+```bash
+pip install -e ".[test]"
+pytest tests -m "not integration" --disable-socket --strict-markers
+```
+
+离线测试只使用仓库中的人工合成数据，不需要 CMADaaS 账号、配置或网络。
+
+需要访问真实 CMADaaS 服务的端到端测试单独标记为 `integration`，可在具备服务访问条件时手动运行：
+
+```bash
+pytest tests -m integration
+```
+
+在线测试从 `CEDARKIT_CONFIG` 指定的配置文件，或默认的
+`~/.config/cedarkit.yaml` 读取配置；缺少配置时会自动跳过。CI 仅运行离线测试。
+
 ## License
 
 `nuwe-cmadaas-python` 未做特殊声明部分代码由 Wang Dapeng (CEMC/CMA) 开发，并采用 [Apache License 2.0 协议](LICENSE)。

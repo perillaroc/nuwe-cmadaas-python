@@ -60,6 +60,7 @@ include-package-data = true
 nuwe_cmadaas = ["data/datasets/*.yaml"]
 
 [tool.pytest.ini_options]
+addopts = "-m 'not integration'"
 markers = [
     "unit: offline unit and component tests",
     "integration: requires a real CMADaaS service and credentials",

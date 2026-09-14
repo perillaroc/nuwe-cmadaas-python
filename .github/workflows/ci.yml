@@ -54,12 +54,5 @@ jobs:
       - name: Install package
         run: pip install -e ".[test]"
 
-      # tests/ 下的现有用例需要直连天擎(CMADaaS)服务，GitHub Actions 无法访问，
-      # 这里只做收集检查（验证测试与包可正常导入）。
-      - name: Collect tests (import check)
-        run: pytest tests --collect-only -q
-
-      # 未来的 mock 测试放在 tests/mock/ 下，该目录存在时自动启用。
-      - name: Run mock tests
-        if: ${{ hashFiles('tests/mock') != '' }}
-        run: pytest tests/mock -v
+      - name: Run offline tests
+        run: pytest tests -m "not integration" --disable-socket --strict-markers

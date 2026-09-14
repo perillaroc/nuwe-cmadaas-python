@@ -10,7 +10,7 @@ def get_time_string(time: pd.Timestamp) -> str:
 def get_time_range_string(time_interval: pd.Interval) -> str:
     left = "[" if time_interval.closed_left else ")"
     start = get_time_string(time_interval.left)
-    right = "[" if time_interval.closed_right else ")"
+    right = "]" if time_interval.closed_right else ")"
     end = get_time_string(time_interval.right)
     return f"{left}{start},{end}{right}"
 

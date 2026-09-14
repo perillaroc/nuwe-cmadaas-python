@@ -38,10 +38,7 @@ def _get_interface_id(interface_config: InterfaceConfig) -> str:
 
 
 def _fix_interface_id(interface_id: str) -> str:
-    mapper = {
-        "getSurfEleByTimeRangeAndStaIdRange": "getSurfEleByTimeRangeAndStaIDRange"
-    }
-    return mapper.get(interface_id, interface_id)
+    return interface_id.replace("StaId", "StaID")
 
 
 def _fix_params(interface_id, params):

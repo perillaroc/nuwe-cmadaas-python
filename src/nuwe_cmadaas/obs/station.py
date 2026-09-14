@@ -150,7 +150,7 @@ def retrieve_obs_station(
         del params["orderby"]
         del params["elements"]
 
-    if isinstance(station, str or int):
+    if isinstance(station, (str, int)):
         interface_config["station"] = "StaID"
         params["staIds"] = station
     elif isinstance(station, List):

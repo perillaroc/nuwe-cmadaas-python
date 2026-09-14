@@ -117,10 +117,14 @@ class Array2D(ResponseData):
             return
 
         self.row_count = ret_array_2d.request.rowCount
-        # self.col_count = ret_array_2d.request.colCount
+        self.col_count = ret_array_2d.request.colCount
         total_count = len(ret_array_2d.data)
-        self.col_count = int(total_count/self.row_count)
-        assert self.col_count == ret_array_2d.request.colCount
+        expected_count = self.row_count * self.col_count
+        if total_count != expected_count:
+            raise ValueError(
+                "Array2D data length does not match request dimensions: "
+                f"{total_count} != {self.row_count} * {self.col_count}"
+            )
 
         self.data = np.array(ret_array_2d.data).reshape([self.row_count, self.col_count])
 
@@ -255,23 +259,29 @@ class GridArray2D(ResponseData):
         self.lon_step = ret_grid_array_2d.lonStep
         self.lat_step = ret_grid_array_2d.latStep
 
-        if ret_grid_array_2d.lats is not None:
-            self.lats = ret_grid_array_2d.lats
+        if len(ret_grid_array_2d.lats) > 0:
+            self.lats = list(ret_grid_array_2d.lats)
         else:
             self.lats = [self.start_lat + i * self.lat_step for i in range(self.lat_count)]
 
-        if ret_grid_array_2d.lons is not None:
-            self.lons = ret_grid_array_2d.lons
+        if len(ret_grid_array_2d.lons) > 0:
+            self.lons = list(ret_grid_array_2d.lons)
         else:
             self.lons = [self.start_lon + i * self.lon_step for i in range(self.lon_count)]
 
         self.units = ret_grid_array_2d.units
         self.user_element_name = ret_grid_array_2d.userEleName
 
-        row_count = self.request.row_count
         data_count = len(ret_grid_array_2d.data)
-        col_count = int(data_count/row_count)
-        self.data = np.array(ret_grid_array_2d.data).reshape([row_count, col_count])
+        expected_count = self.lat_count * self.lon_count
+        if data_count != expected_count:
+            raise ValueError(
+                "GridArray2D data length does not match grid dimensions: "
+                f"{data_count} != {self.lat_count} * {self.lon_count}"
+            )
+        self.data = np.array(ret_grid_array_2d.data).reshape(
+            [self.lat_count, self.lon_count]
+        )
 
 
 class FileInfo:
@@ -385,8 +395,8 @@ class GridVector2D(ResponseData):
         self.lon_step = ret_grid_vector_2d.lonStep
         self.lat_step = ret_grid_vector_2d.latStep
 
-        self.lats = ret_grid_vector_2d.lats
-        self.lons = ret_grid_vector_2d.lons
+        self.lats = list(ret_grid_vector_2d.lats)
+        self.lons = list(ret_grid_vector_2d.lons)
 
         self.u_element_name = ret_grid_vector_2d.u_EleName
         self.v_element_name = ret_grid_vector_2d.v_EleName
@@ -455,8 +465,9 @@ class GridScalar2D(ResponseData):
         self.lats = ret_grid_scalar_2d.lats
         self.lons = ret_grid_scalar_2d.lons
 
+        self.units = ret_grid_scalar_2d.units
         self.user_element_name = ret_grid_scalar_2d.userEleName
 
         row_count = self.lat_count
         col_count = self.lon_count
-        self.data = np.array(ret_grid_scalar_2d.data).reshape([row_count, col_count])
+        self.data = np.array(ret_grid_scalar_2d.datas).reshape([row_count, col_count])

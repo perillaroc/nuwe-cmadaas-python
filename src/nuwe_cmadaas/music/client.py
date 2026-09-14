@@ -228,8 +228,8 @@ class CMADaaSClient:
         method = self.callAPI_to_saveAsFile.__name__
 
         if file_name is None:
-            data.request.errorCode = Connection.otherError
-            data.request.errorMessage = (
+            data.request.error_code = Connection.otherError
+            data.request.error_message = (
                 "error:savePath can't null, the format is dir/file.formart. "
                 "For example /data/saveas.xml)")
             return data
@@ -245,8 +245,8 @@ class CMADaaSClient:
                 loaded_data.files_info[0].file_url, file_name
             )
             if result[0] != 0:
-                loaded_data.request.errorCode = result[0]
-                loaded_data.request.errorMessage = result[1]
+                loaded_data.request.error_code = result[0]
+                loaded_data.request.error_message = result[1]
             return loaded_data
 
         return self._do_request(
@@ -286,8 +286,8 @@ class CMADaaSClient:
                     file_info.file_url, file_dir_path.joinpath(file_info.file_name)
                 )
                 if result[0] != 0:
-                    files_info.request.errorCode = result[0]
-                    files_info.request.errorMessage = result[1]
+                    files_info.request.error_code = result[0]
+                    files_info.request.error_message = result[1]
                     return files_info
                 logger.info(f"downloading file {index + 1}/{total_count}...done")
 

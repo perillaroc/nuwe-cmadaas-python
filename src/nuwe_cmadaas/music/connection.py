@@ -110,13 +110,13 @@ class Connection:
         def failure_handler(response_content: bytes) -> ResponseData:
             getway_info = json.loads(response_content)
             if getway_info is None:
-                response_data.request.errorCode = Connection.otherError
-                response_data.request.errorMessage = (
+                response_data.request.error_code = Connection.otherError
+                response_data.request.error_message = (
                         "parse getway return string error:" + response_content.decode('utf-8')
                 )
             else:
-                response_data.request.errorCode = getway_info["returnCode"]
-                response_data.request.errorMessage = getway_info["returnMessage"]
+                response_data.request.error_code = getway_info["returnCode"]
+                response_data.request.error_message = getway_info["returnMessage"]
             return response_data
 
         return failure_handler
@@ -128,8 +128,8 @@ class Connection:
     ) -> Callable[[Exception], ResponseData]:
         def handle_exception(e: Exception) -> ResponseData:
             logger.warning(f"Error retrieving data: {e}")
-            response_data.request.errorCode = Connection.otherError
-            response_data.request.errorMessage = "Error retrieving data"
+            response_data.request.error_code = Connection.otherError
+            response_data.request.error_message = "Error retrieving data"
             return response_data
 
         return handle_exception
@@ -160,4 +160,8 @@ class Connection:
 
     @classmethod
     def _check_getway_flag(cls, response_data: bytes) -> bool:
-        return Connection.getwayFlag in response_data
+        try:
+            response_json = json.loads(response_data)
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            return Connection.getwayFlag in response_data
+        return isinstance(response_json, dict) and response_json.get("flag") == "slb"

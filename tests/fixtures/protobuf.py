@@ -9,7 +9,14 @@ from typing import Iterable, Optional, Sequence
 import numpy as np
 
 from nuwe_cmadaas.music import apiinterface_pb2 as pb
-from nuwe_cmadaas.music.data import Array2D, GridArray2D
+from nuwe_cmadaas.music.data import (
+    Array2D,
+    DataBlock,
+    FilesInfo,
+    GridArray2D,
+    GridScalar2D,
+    GridVector2D,
+)
 
 
 SYNTHETIC_STATION_ROWS = (
@@ -25,6 +32,8 @@ SYNTHETIC_GRID_VALUES = (
 )
 SYNTHETIC_ELEMENT_NAME = "synthetic_temperature"
 SYNTHETIC_UNITS = "K"
+SYNTHETIC_U_VALUES = (1.0, 2.0, 3.0, 4.0, 5.0, 6.0)
+SYNTHETIC_V_VALUES = (-1.0, -2.0, -3.0, -4.0, -5.0, -6.0)
 
 
 def make_request_info(
@@ -154,3 +163,194 @@ def make_grid_array2d_response(**kwargs) -> GridArray2D:
     """Build a :class:`GridArray2D` from a synthetic serialized response."""
 
     return GridArray2D.create_from_protobuf(make_grid_array2d_content(**kwargs))
+
+
+def make_grid_scalar2d_content(
+    *,
+    data: Optional[Iterable[float]] = None,
+    lats: Optional[Sequence[float]] = None,
+    lons: Optional[Sequence[float]] = None,
+    lat_count: int = 2,
+    lon_count: int = 3,
+    start_lat: float = 30.0,
+    start_lon: float = 110.0,
+    end_lat: float = 31.0,
+    end_lon: float = 112.0,
+    lat_step: float = 1.0,
+    lon_step: float = 1.0,
+    units: str = SYNTHETIC_UNITS,
+    element_name: str = SYNTHETIC_ELEMENT_NAME,
+    error_code: int = 0,
+    error_message: str = "",
+) -> bytes:
+    """Serialize a synthetic ``RetGridScalar2D`` response."""
+
+    if data is None:
+        data = np.asarray(SYNTHETIC_GRID_VALUES).reshape(-1)
+    message = pb.RetGridScalar2D(
+        startLat=start_lat,
+        startLon=start_lon,
+        endLat=end_lat,
+        endLon=end_lon,
+        latCount=lat_count,
+        lonCount=lon_count,
+        latStep=lat_step,
+        lonStep=lon_step,
+        units=units,
+        userEleName=element_name,
+    )
+    message.request.CopyFrom(
+        make_request_info(
+            error_code=error_code,
+            error_message=error_message,
+            row_count=lat_count,
+            col_count=lon_count,
+        )
+    )
+    if lats is not None:
+        message.lats.extend(lats)
+    if lons is not None:
+        message.lons.extend(lons)
+    message.datas.extend(float(value) for value in data)
+    return message.SerializeToString()
+
+
+def make_grid_scalar2d_response(**kwargs) -> GridScalar2D:
+    """Build a :class:`GridScalar2D` from a synthetic serialized response."""
+
+    return GridScalar2D.create_from_protobuf(make_grid_scalar2d_content(**kwargs))
+
+
+def make_grid_vector2d_content(
+    *,
+    u_data: Optional[Iterable[float]] = None,
+    v_data: Optional[Iterable[float]] = None,
+    lats: Optional[Sequence[float]] = None,
+    lons: Optional[Sequence[float]] = None,
+    lat_count: int = 2,
+    lon_count: int = 3,
+    start_lat: float = 30.0,
+    start_lon: float = 110.0,
+    end_lat: float = 31.0,
+    end_lon: float = 112.0,
+    lat_step: float = 1.0,
+    lon_step: float = 1.0,
+    u_element_name: str = "synthetic_u_wind",
+    v_element_name: str = "synthetic_v_wind",
+    error_code: int = 0,
+    error_message: str = "",
+) -> bytes:
+    """Serialize a synthetic ``RetGridVector2D`` response."""
+
+    u_data = SYNTHETIC_U_VALUES if u_data is None else u_data
+    v_data = SYNTHETIC_V_VALUES if v_data is None else v_data
+    message = pb.RetGridVector2D(
+        startLat=start_lat,
+        startLon=start_lon,
+        endLat=end_lat,
+        endLon=end_lon,
+        latCount=lat_count,
+        lonCount=lon_count,
+        latStep=lat_step,
+        lonStep=lon_step,
+        u_EleName=u_element_name,
+        v_EleName=v_element_name,
+    )
+    message.request.CopyFrom(
+        make_request_info(
+            error_code=error_code,
+            error_message=error_message,
+            row_count=lat_count,
+            col_count=lon_count,
+        )
+    )
+    if lats is not None:
+        message.lats.extend(lats)
+    if lons is not None:
+        message.lons.extend(lons)
+    message.u_datas.extend(float(value) for value in u_data)
+    message.v_datas.extend(float(value) for value in v_data)
+    return message.SerializeToString()
+
+
+def make_grid_vector2d_response(**kwargs) -> GridVector2D:
+    """Build a :class:`GridVector2D` from a synthetic serialized response."""
+
+    return GridVector2D.create_from_protobuf(make_grid_vector2d_content(**kwargs))
+
+
+def make_files_info_content(
+    *,
+    file_infos: Optional[Sequence[dict]] = None,
+    error_code: int = 0,
+    error_message: str = "",
+) -> bytes:
+    """Serialize a synthetic ``RetFilesInfo`` response."""
+
+    file_infos = file_infos if file_infos is not None else [
+        {
+            "file_name": "synthetic.bin",
+            "save_path": "/synthetic/output",
+            "suffix": ".bin",
+            "size": "4",
+            "file_url": "https://synthetic.invalid/data.bin",
+            "image_base64": "",
+            "attributes": ["synthetic", "offline"],
+        }
+    ]
+    message = pb.RetFilesInfo()
+    message.request.CopyFrom(
+        make_request_info(
+            error_code=error_code,
+            error_message=error_message,
+            row_count=len(file_infos),
+            col_count=1,
+        )
+    )
+    for info in file_infos:
+        message.fileInfos.add(
+            fileName=info.get("file_name", ""),
+            savePath=info.get("save_path", ""),
+            suffix=info.get("suffix", ""),
+            size=info.get("size", ""),
+            fileUrl=info.get("file_url", ""),
+            imgBase64=info.get("image_base64", ""),
+            attributes=info.get("attributes", []),
+        )
+    return message.SerializeToString()
+
+
+def make_files_info_response(**kwargs) -> FilesInfo:
+    """Build a :class:`FilesInfo` from a synthetic serialized response."""
+
+    return FilesInfo.create_from_protobuf(make_files_info_content(**kwargs))
+
+
+def make_data_block_content(
+    *,
+    data_name: str = "synthetic_block",
+    data: bytes = b"synthetic payload",
+    error_code: int = 0,
+    error_message: str = "",
+) -> bytes:
+    """Serialize a synthetic ``RetDataBlock`` response."""
+
+    message = pb.RetDataBlock(
+        dataName=data_name,
+        byteArray=data,
+    )
+    message.request.CopyFrom(
+        make_request_info(
+            error_code=error_code,
+            error_message=error_message,
+            row_count=1,
+            col_count=1,
+        )
+    )
+    return message.SerializeToString()
+
+
+def make_data_block_response(**kwargs) -> DataBlock:
+    """Build a :class:`DataBlock` from a synthetic serialized response."""
+
+    return DataBlock.create_from_protobuf(make_data_block_content(**kwargs))

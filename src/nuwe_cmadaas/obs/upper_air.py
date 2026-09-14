@@ -5,9 +5,11 @@ import pandas as pd
 
 from nuwe_cmadaas._log import logger
 from nuwe_cmadaas.util import (
+    forecast_hours,
     get_time_string,
     get_time_range_string,
     get_region_params,
+    validate_count,
 )
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas.music import get_or_create_client, CMADaaSClient, MusicError
@@ -131,6 +133,10 @@ def retrieve_obs_upper_air(
         检索成功返回高空观测资料表格数据，列名为 elements 中的值。
         检索失败返回错误对象 ``MusicError``
     """
+    validate_count(count)
+    if (level_type is None) != (level is None):
+        raise ValueError("level_type and level must be provided together")
+
     upper_dataset_config = load_dataset_config("upper_air")
     if elements is None:
         elements = upper_dataset_config[data_code]["elements"]
@@ -171,14 +177,20 @@ def retrieve_obs_upper_air(
     elif isinstance(time, pd.Timestamp):
         interface_config["time"] = "Time"
         params["times"] = get_time_string(time)
-    elif isinstance(time, List):
+    elif isinstance(time, list):
+        if not time:
+            raise ValueError("time must not be an empty list")
+        if not all(isinstance(item, pd.Timestamp) for item in time):
+            raise TypeError("time list must contain pandas.Timestamp values")
         interface_config["time"] = "Time"
         params["times"] = ",".join([get_time_string(t) for t in time])
     elif isinstance(time, pd.Timedelta):
         interface_config["name"] = "getSurfLatestTime"
-        params["latestTime"] = str(int(time / pd.to_timedelta("1h")))
-        del params["orderby"]
-        del params["elements"]
+        params["latestTime"] = str(forecast_hours(time, "time"))
+        params.pop("orderby", None)
+        params.pop("elements", None)
+    elif time is not None:
+        raise TypeError(f"unsupported time type: {type(time).__name__}")
 
     _get_level_params(
         level=level,
@@ -187,31 +199,55 @@ def retrieve_obs_upper_air(
         params=params
     )
 
-    if isinstance(station, str) or isinstance(station, int):
+    if isinstance(station, (str, int)) and not isinstance(station, bool):
+        if isinstance(station, str) and not station:
+            raise ValueError("station must not be empty")
         interface_config["station"] = "StaID"
         params["staIds"] = str(station)
-    elif isinstance(station, List):
+    elif isinstance(station, list):
+        if not station:
+            raise ValueError("station must not be an empty list")
+        if not all(
+            isinstance(item, (str, int)) and not isinstance(item, bool)
+            for item in station
+        ):
+            raise TypeError("station list must contain strings or integers")
         interface_config["station"] = "StaID"
-        params["staIds"] = ",".join(station)
-    elif isinstance(station, Tuple):
+        params["staIds"] = ",".join(str(item) for item in station)
+    elif isinstance(station, tuple):
+        if len(station) != 2:
+            raise ValueError("station range must contain exactly two station IDs")
+        if not all(
+            isinstance(item, (str, int)) and not isinstance(item, bool)
+            for item in station
+        ):
+            raise TypeError("station range must contain strings or integers")
         interface_config["station"] = "StaIdRange"
         params["minStaId"] = station[0]
         params["maxStaId"] = station[1]
+    elif station is not None:
+        raise TypeError(f"unsupported station type: {type(station).__name__}")
 
     if region is not None:
         get_region_params(region, params, interface_config)
 
     if station_level is not None:
-        del params["orderby"]
+        params.pop("orderby", None)
 
     if isinstance(station_level, str):
+        if not station_level:
+            raise ValueError("station_level must not be empty")
         params["staLevels"] = station_level
         if interface_config["station"] is None:
             interface_config["station"] = "StaLevels"
-    elif isinstance(station_level, List):
+    elif isinstance(station_level, list):
+        if not station_level or not all(isinstance(item, str) and item for item in station_level):
+            raise ValueError("station_level must be a non-empty list of strings")
         params["staLevels"] = ",".join(station_level)
         if interface_config["station"] is None:
             interface_config["station"] = "StaLevels"
+    elif station_level is not None:
+        raise TypeError(f"unsupported station_level type: {type(station_level).__name__}")
 
     params.update(**kwargs)
 
@@ -287,19 +323,30 @@ def _get_level_params(
             raise ValueError(f"level_type is not supported: {level_type}")
 
         level_params = dict()
-        if isinstance(level, List):
-            level_params[level_params_name] = ",".join(level)
-        if isinstance(level, pd.Interval):
+        if isinstance(level, list):
+            if not level:
+                raise ValueError("level must not be an empty list")
+            if not all(isinstance(item, (int, float, str)) and not isinstance(item, bool)
+                       for item in level):
+                raise TypeError("level list must contain numbers or strings")
+            level_params[level_params_name] = ",".join(str(item) for item in level)
+        elif isinstance(level, pd.Interval):
             level_params[f"min{level_params_name.upper()}"] = level.left
             level_params[f"max{level_params_name.upper()}"] = level.right
             interface_level_config += "Range"
         else:
-            params[level_params_name] = str(level)
+            if not isinstance(level, (int, float, str)) or isinstance(level, bool):
+                raise TypeError("level must be a number, string, interval, or list")
+            level_params[level_params_name] = str(level)
         return interface_level_config, level_params
 
     if isinstance(level_type, str):
         interface_level_config, level_params = get_level(level_type, level)
-    elif isinstance(level_type, Tuple):
+    elif isinstance(level_type, tuple):
+        if not isinstance(level, (list, tuple)):
+            raise TypeError("level must be a sequence when level_type is a tuple")
+        if len(level_type) == 0 or len(level_type) != len(level):
+            raise ValueError("level_type and level must contain the same non-zero number of items")
         interface_level_config = []
         level_params = dict()
         for lt, l in zip(level_type, level):

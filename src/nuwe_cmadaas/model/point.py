@@ -3,7 +3,12 @@ from pathlib import Path
 
 import pandas as pd
 
-from nuwe_cmadaas.util import get_time_string
+from nuwe_cmadaas.util import (
+    forecast_hour_range,
+    forecast_hours,
+    get_time_string,
+    validate_lat_lon_pair,
+)
 from nuwe_cmadaas.music import MusicError, get_or_create_client, CMADaaSClient
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas._log import logger
@@ -30,6 +35,11 @@ def retrieve_model_point(
         config: Optional[Union[CMADaasConfig, str, Path]] = None,
         client: Optional[CMADaaSClient] = None,
 ) -> Union[pd.DataFrame, MusicError]:
+    if level_type is None or level is None:
+        raise ValueError("level_type and level must be provided together")
+    if point is not None and station is not None:
+        raise ValueError("point and station are mutually exclusive")
+
     interface_config = InterfaceConfig(
         name="getNafpEle",
         point=None,
@@ -49,19 +59,20 @@ def retrieve_model_point(
     time = get_time_string(start_time)
     params["time"] = time
 
-    def _get_valid_time(f):
-        if isinstance(f, str):
-            f = pd.to_timedelta(f)
-        return int(f / pd.Timedelta(hours=1))
-
-    if isinstance(forecast_time, str or pd.Timedelta):
-        valid_time = _get_valid_time(forecast_time)
+    if isinstance(forecast_time, (str, pd.Timedelta)):
+        valid_time = forecast_hours(forecast_time)
         params["validTime"] = str(valid_time)
         interface_config["valid_time"] = "Validtime"
-    elif isinstance(forecast_time, Tuple):
+    elif isinstance(forecast_time, tuple):
+        min_vt, max_vt = forecast_hour_range(forecast_time)
         interface_config["valid_time"] = "ValidtimeRange"
-        params["minVT"] = str(_get_valid_time(forecast_time[0]))
-        params["maxVT"] = str(_get_valid_time(forecast_time[1]))
+        params["minVT"] = str(min_vt)
+        params["maxVT"] = str(max_vt)
+    else:
+        raise TypeError(
+            "forecast_time must be a duration or a two-item duration tuple; "
+            f"got {type(forecast_time).__name__}"
+        )
 
     if point is not None:
         _get_point_params(point, params, interface_config)
@@ -108,13 +119,19 @@ def _get_point_params(
         interface_config: Dict
 ):
     interface_config["point"] = "Point"
-    if isinstance(point, Tuple):
+    if isinstance(point, tuple):
+        validate_lat_lon_pair(point)
         params["latLons"] = f"{point[0]}/{point[1]}"
-    elif isinstance(point, List):
+    elif isinstance(point, list):
+        if not point:
+            raise ValueError("point must not be an empty list")
         lat_lons = []
         for p in point:
+            validate_lat_lon_pair(p, "point item")
             lat_lons.append(f"{p[0]}/{p[1]}")
         params["latLons"] = ",".join(lat_lons)
+    else:
+        raise TypeError("point must be a coordinate tuple or a non-empty list")
 
 
 def _get_station_params(
@@ -123,9 +140,15 @@ def _get_station_params(
         interface_config: Dict
 ):
     interface_config["station"] = "StaID"
-    if isinstance(station, List):
+    if isinstance(station, list):
+        if not station:
+            raise ValueError("station must not be an empty list")
+        if not all(isinstance(item, str) and item for item in station):
+            raise TypeError("station must contain non-empty strings")
         params["staIds"] = ",".join(station)
     elif isinstance(station, str):
+        if not station:
+            raise ValueError("station must not be empty")
         params["staIds"] = station
     else:
         raise TypeError(f"station type is not support: {type(station)}")

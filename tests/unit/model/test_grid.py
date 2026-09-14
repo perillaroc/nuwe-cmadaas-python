@@ -119,6 +119,34 @@ def test_retrieve_model_grid_returns_synthetic_music_error():
     assert result == MusicError(-3234, "Synthetic model query failure")
 
 
+def test_retrieve_model_grid_rejects_unknown_data_type_without_request():
+    client = FakeCMADaaSClient(make_grid_array2d_response())
+
+    with pytest.raises(ValueError, match="data_type.*bogus"):
+        retrieve_model_grid(DATA_CODE, parameter=PARAMETER, data_type="bogus", client=client)
+
+    assert client.calls == []
+
+
+@pytest.mark.parametrize(
+    ("kwargs", "message"),
+    [
+        ({"level_type": 100}, "level_type and level"),
+        ({"level": 850}, "level_type and level"),
+        ({"region": {"type": "rect", "start_longitude": 200,
+                      "end_longitude": 110, "start_latitude": 30,
+                      "end_latitude": 31}}, "region.start_longitude"),
+    ],
+)
+def test_retrieve_model_grid_rejects_invalid_query_without_request(kwargs, message):
+    client = FakeCMADaaSClient(make_grid_array2d_response())
+
+    with pytest.raises((TypeError, ValueError), match=message):
+        retrieve_model_grid(DATA_CODE, parameter=PARAMETER, client=client, **kwargs)
+
+    assert client.calls == []
+
+
 @pytest.mark.parametrize(
     ("config", "expected"),
     [

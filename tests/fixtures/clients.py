@@ -27,3 +27,13 @@ class FakeCMADaaSClient:
     ) -> Any:
         self.calls.append((interface_id, params.copy()))
         return self.result
+
+    def callAPI_to_downFile(
+        self,
+        interface_id: str,
+        params: Dict[str, Any],
+        file_dir: str = "./",
+        server_id: Optional[str] = None,
+    ) -> Any:
+        self.calls.append((interface_id, params.copy()))
+        return self.result

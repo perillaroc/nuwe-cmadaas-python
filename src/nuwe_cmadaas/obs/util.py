@@ -48,5 +48,5 @@ def _fix_params(interface_id, params):
         "not_getUparGpsEleInRegionByTime"
     ):
         logger.warning("UparGps don't use dataCode!")
-        del params["dataCode"]
+        params.pop("dataCode", None)
     return params

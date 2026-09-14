@@ -4,7 +4,7 @@ from pathlib import Path
 import pandas as pd
 import xarray as xr
 
-from nuwe_cmadaas.util import get_time_string, get_region_params
+from nuwe_cmadaas.util import forecast_hours, get_time_string, get_region_params
 from nuwe_cmadaas.music import MusicError, get_or_create_client, CMADaaSClient
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas._log import logger
@@ -65,6 +65,18 @@ def retrieve_model_grid(
     Union[xr.DataArray, MusicError]
         检索成功返回 ``xarray.DataArray`` 格式的要素场，检索失败返回包含错误信息的 ``MusicError`` 对象。
     """
+    if data_type is None:
+        data_type = "forecast"
+    data_type_mapper = {
+        "forecast": "getNafpEleGrid",
+        "analysis": "getNafpAnaEleGrid",
+    }
+    if data_type not in data_type_mapper:
+        allowed = ", ".join(sorted(data_type_mapper))
+        raise ValueError(f"data_type must be one of {allowed}; got {data_type!r}")
+    if (level_type is None) != (level is None):
+        raise ValueError("level_type and level must be provided together")
+
     interface_config = InterfaceConfig(
         name="getNafpEleGrid",
         region=None,
@@ -74,13 +86,7 @@ def retrieve_model_grid(
         number=None,
     )
 
-    if data_type is None:
-        data_type = "forecast"
-    data_type_mapper = {
-        "forecast": "getNafpEleGrid",
-        "analysis": "getNafpAnaEleGrid",
-    }
-    interface_config["name"] = data_type_mapper.get(data_type)
+    interface_config["name"] = data_type_mapper[data_type]
 
     params = {
         "dataCode": data_code,
@@ -101,9 +107,7 @@ def retrieve_model_grid(
 
     if forecast_time is not None:
         interface_config["valid_time"] = "Validtime"
-        if isinstance(forecast_time, str):
-            forecast_time = pd.to_timedelta(forecast_time)
-        valid_time = int(forecast_time / pd.Timedelta(hours=1))
+        valid_time = forecast_hours(forecast_time)
         params["validTime"] = str(valid_time)
 
     if region is not None:

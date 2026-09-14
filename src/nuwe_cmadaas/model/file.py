@@ -4,6 +4,7 @@ from pathlib import Path
 import pandas as pd
 
 from nuwe_cmadaas.util import (
+    forecast_hours,
     get_time_string,
     get_time_range_string,
     get_region_params,
@@ -35,6 +36,9 @@ def download_model_file(
         config: Optional[Union[CMADaasConfig, str, Path]] = None,
         client: Optional[CMADaaSClient] = None,
 ) -> Union[List[Path], MusicError]:
+    if (level_type is None) != (level is None):
+        raise ValueError("level_type and level must be provided together")
+
     interface_config = InterfaceConfig(
         name="getNafpFile",
         element=None,
@@ -62,8 +66,12 @@ def download_model_file(
     if isinstance(parameter, str):
         params["fcstEle"] = parameter
         interface_config["element"] = "Element"
-    elif isinstance(parameter, List):
+    elif isinstance(parameter, list):
+        if not parameter or not all(isinstance(item, str) and item for item in parameter):
+            raise ValueError("parameter must be a non-empty list of strings")
         params["elements"] = ".".join(parameter)
+    elif parameter is not None:
+        raise TypeError(f"unsupported parameter type: {type(parameter).__name__}")
 
     if level_type is not None:
         params["levelType"] = str(level_type)
@@ -77,19 +85,22 @@ def download_model_file(
     elif isinstance(start_time, pd.Timestamp):
         interface_config["time"] = "Time"
         params["time"] = get_time_string(start_time)
-    elif isinstance(start_time, List):
+    elif isinstance(start_time, list):
+        if not start_time:
+            raise ValueError("start_time must not be an empty list")
+        if not all(isinstance(item, pd.Timestamp) for item in start_time):
+            raise TypeError("start_time list must contain pandas.Timestamp values")
         interface_config["time"] = "Time"
         params["times"] = ",".join([get_time_string(t) for t in start_time])
     elif isinstance(start_time, pd.Timedelta):
         interface_config["name"] = "getNafpLatestTime"
-        params["latestTime"] = str(int(start_time / pd.to_timedelta("1h")))
-        # del params["orderby"]
-        del params["elements"]
+        params["latestTime"] = str(forecast_hours(start_time, "start_time"))
+        params.pop("elements", None)
+    elif start_time is not None:
+        raise TypeError(f"unsupported start_time type: {type(start_time).__name__}")
 
     if forecast_time is not None:
-        if isinstance(forecast_time, str):
-            forecast_time = pd.to_timedelta(forecast_time)
-        valid_time = int(forecast_time / pd.Timedelta(hours=1))
+        valid_time = forecast_hours(forecast_time)
         if parameter is None and level_type is None and level is None:
             # Typically for NWP files which all fields of one time step are stored together.
             # There is no getNafpFileByTimeAndValidtime interface.

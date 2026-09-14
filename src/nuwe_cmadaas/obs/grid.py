@@ -69,8 +69,8 @@ def retrieve_obs_grid(
 
     Returns
     -------
-    xr.DataArray or None
-        检索成功则返回 ``xarray.DataArray`` 对象，否则返回 None
+    xr.DataArray or MusicError
+        检索成功返回 ``xarray.DataArray`` 对象，服务错误返回 ``MusicError``
     """
     interface_config = InterfaceConfig(
         name="getSurfEleGrid",
@@ -93,9 +93,15 @@ def retrieve_obs_grid(
     elif isinstance(time, pd.Timestamp):
         interface_config["time"] = "Time"
         params["time"] = get_time_string(time)
-    elif isinstance(time, List):
+    elif isinstance(time, list):
+        if not time:
+            raise ValueError("time must not be an empty list")
+        if not all(isinstance(item, pd.Timestamp) for item in time):
+            raise TypeError("time list must contain pandas.Timestamp values")
         interface_config["time"] = "Time"
         params["times"] = ",".join([get_time_string(t) for t in time])
+    elif time is not None:
+        raise TypeError(f"unsupported time type: {type(time).__name__}")
 
     if region is not None:
         get_region_params(region, params, interface_config)

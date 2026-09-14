@@ -5,9 +5,11 @@ import pandas as pd
 
 from nuwe_cmadaas._log import logger
 from nuwe_cmadaas.util import (
+    forecast_hours,
     get_time_string,
     get_time_range_string,
     get_region_params,
+    validate_count,
 )
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas.music import get_or_create_client, CMADaaSClient, MusicError
@@ -118,6 +120,8 @@ def download_obs_file(
     Returns
     -------
     """
+    validate_count(count)
+
     # if elements is None:
     #     elements = STATION_DATASETS[data_code]["elements"]
 
@@ -148,40 +152,70 @@ def download_obs_file(
     elif isinstance(time, pd.Timestamp):
         interface_config["time"] = "Time"
         params["times"] = get_time_string(time)
-    elif isinstance(time, List):
+    elif isinstance(time, list):
+        if not time:
+            raise ValueError("time must not be an empty list")
+        if not all(isinstance(item, pd.Timestamp) for item in time):
+            raise TypeError("time list must contain pandas.Timestamp values")
         interface_config["time"] = "Time"
         params["times"] = ",".join([get_time_string(t) for t in time])
     elif isinstance(time, pd.Timedelta):
         interface_config["name"] = "getSurfLatestTime"
-        params["latestTime"] = str(int(time / pd.to_timedelta("1h")))
-        del params["orderby"]
-        del params["elements"]
+        params["latestTime"] = str(forecast_hours(time, "time"))
+        params.pop("orderby", None)
+        params.pop("elements", None)
+    elif time is not None:
+        raise TypeError(f"unsupported time type: {type(time).__name__}")
 
-    if isinstance(station, str or int):
+    if isinstance(station, (str, int)) and not isinstance(station, bool):
+        if isinstance(station, str) and not station:
+            raise ValueError("station must not be empty")
         interface_config["station"] = "StaID"
         params["staIds"] = station
-    elif isinstance(station, List):
+    elif isinstance(station, list):
+        if not station:
+            raise ValueError("station must not be an empty list")
+        if not all(
+            isinstance(item, (str, int)) and not isinstance(item, bool)
+            for item in station
+        ):
+            raise TypeError("station list must contain strings or integers")
         interface_config["station"] = "StaID"
-        params["staIds"] = ",".join(station)
-    elif isinstance(station, Tuple):
+        params["staIds"] = ",".join(str(item) for item in station)
+    elif isinstance(station, tuple):
+        if len(station) != 2:
+            raise ValueError("station range must contain exactly two station IDs")
+        if not all(
+            isinstance(item, (str, int)) and not isinstance(item, bool)
+            for item in station
+        ):
+            raise TypeError("station range must contain strings or integers")
         interface_config["station"] = "StaIdRange"
         params["minStaId"] = station[0]
         params["maxStaId"] = station[1]
+    elif station is not None:
+        raise TypeError(f"unsupported station type: {type(station).__name__}")
 
     if region is not None:
         get_region_params(region, params, interface_config)
 
     if station_level is not None:
-        del params["orderby"]
+        params.pop("orderby", None)
 
     if isinstance(station_level, str):
+        if not station_level:
+            raise ValueError("station_level must not be empty")
         params["staLevels"] = station_level
         if interface_config["station"] is None:
             interface_config["station"] = "StaLevels"
-    elif isinstance(station_level, List):
+    elif isinstance(station_level, list):
+        if not station_level or not all(isinstance(item, str) and item for item in station_level):
+            raise ValueError("station_level must be a non-empty list of strings")
         params["staLevels"] = ",".join(station_level)
         if interface_config["station"] is None:
             interface_config["station"] = "StaLevels"
+    elif station_level is not None:
+        raise TypeError(f"unsupported station_level type: {type(station_level).__name__}")
 
     params.update(**kwargs)
 

@@ -227,3 +227,18 @@ def test_retrieve_obs_station_returns_synthetic_music_error():
     )
 
     assert result == MusicError(-1234, "Synthetic station query failure")
+
+
+@pytest.mark.parametrize("count", [0, -1, 1.5, True])
+def test_retrieve_obs_station_rejects_invalid_count_without_request(count):
+    client = make_client()
+
+    with pytest.raises((TypeError, ValueError), match="count"):
+        retrieve_obs_station(
+            DATA_CODE,
+            elements=ELEMENTS,
+            count=count,
+            client=client,
+        )
+
+    assert client.calls == []

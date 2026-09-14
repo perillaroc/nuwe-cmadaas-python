@@ -17,7 +17,7 @@
     ...         pd.to_datetime("2021-01-01 00:00:00"),
     ...         pd.to_datetime("2021-01-02 00:00:00")
     ...     ],
-    ...     config_file="cedarkit.yaml"
+    ...     config="cedarkit.yaml"
     ... )
     >>> table
            Station_Id_d      Lat       Lon    Alti  ... PRE_1h  PRE_6h PRE_24h     PRS

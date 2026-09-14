@@ -25,6 +25,7 @@ nuwe-cmadaas-python 文档
    :caption: 指南
 
    guide/station
+   guide/music-compatibility
 
 
 索引和表格

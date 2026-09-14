@@ -13,17 +13,16 @@
 
 ## 安装
 
-克隆源码，使用 `pip` 命令安装 nuwe-cmadaas 包。
+使用 `pip` 命令安装 nuwe-cmadaas 包。
 
 ```
-git clone https://github.com/perillaroc/nuwe-cmadaas-python.git
-cd nuwe-cmadaas-python
-pip install .
+pip install nuwe-cmadaas
 ```
 
 ## 开始使用
 
-MUSIC 接口仅适用于 CMA 内网用户，使用前请先申请账户。
+> [!IMPORTANT]
+> MUSIC 接口仅适用于 CMA 内网用户，使用前请先申请账户。
 
 使用 `nuwe_cmadaas.CMADaaSClient` 类从 CMADaaS 中检索数据。
 
@@ -59,7 +58,7 @@ params = {
 client = CMADaaSClient(
     user=user,
     password=password,
-    config_file=client_config_path
+    config_file=client_config_path,
 )
 result = client.callAPI_to_array2D(interface_id, params)
 ```
@@ -72,4 +71,4 @@ result = client.callAPI_to_array2D(interface_id, params)
 
 ## License
 
-`nuwe-cmadaas-python` 未做特殊声明部分代码由 Wang Dapeng (CEMC/CMA) 开发，并采用 Apache License 2.0 协议。
+`nuwe-cmadaas-python` 未做特殊声明部分代码由 Wang Dapeng (CEMC/CMA) 开发，并采用 [Apache License 2.0 协议](LICENSE)。

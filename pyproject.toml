@@ -36,7 +36,7 @@ Homepage = "https://github.com/perillaroc/nuwe-cmadaas-python"
 Repository = "https://github.com/perillaroc/nuwe-cmadaas-python.git"
 
 [project.optional-dependencies]
-test = ["pytest"]
+test = ["pytest", "pytest-socket"]
 cov = ["pytest-cov", "codecov"]
 example = ["click"]
 
@@ -58,6 +58,12 @@ include-package-data = true
 
 [tool.setuptools.package-data]
 nuwe_cmadaas = ["data/datasets/*.yaml"]
+
+[tool.pytest.ini_options]
+markers = [
+    "unit: offline unit and component tests",
+    "integration: requires a real CMADaaS service and credentials",
+]
 
 [tool.setuptools_scm]
 version_file = "src/nuwe_cmadaas/_version.py"

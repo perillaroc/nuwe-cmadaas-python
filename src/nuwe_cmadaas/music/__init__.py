@@ -62,3 +62,28 @@ def get_or_create_client(
             logger.warning("client is set, use client in argument, config is ignored.")
         cmadaas_client = client
     return cmadaas_client
+
+
+__all__ = [
+    "Array2D",
+    "DataBlock",
+    "FileInfo",
+    "FilesInfo",
+    "GridArray2D",
+    "GridScalar2D",
+    "GridVector2D",
+    "MusicError",
+    "CMADaaSClient",
+    "CMADaaSError",
+    "CMADaaSAuthenticationError",
+    "CMADaaSConfigurationError",
+    "CMADaaSDecodeError",
+    "CMADaaSDownloadError",
+    "CMADaaSQueryError",
+    "CMADaaSRequestError",
+    "CMADaaSTransportError",
+    "CMADaasConfig",
+    "load_cmadaas_config",
+    "create_client",
+    "get_or_create_client",
+]

@@ -17,6 +17,7 @@ nuwe-cmadaas-python 文档
    usage/installation
    usage/quickstart
    usage/example
+   reference
 
 
 .. toctree::
@@ -26,9 +27,12 @@ nuwe-cmadaas-python 文档
 
    guide/station
    guide/music-compatibility
+   guide/support-matrix
+   guide/api-usage
    adr/0001-error-migration
    adr/0002-transport-hardening
    adr/0003-data-output-contract
+   adr/0004-public-api-compatibility
 
 
 索引和表格

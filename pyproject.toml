@@ -57,7 +57,7 @@ namespaces = false
 include-package-data = true
 
 [tool.setuptools.package-data]
-nuwe_cmadaas = ["data/datasets/*.yaml"]
+nuwe_cmadaas = ["data/datasets/*.yaml", "py.typed"]
 
 [tool.pytest.ini_options]
 addopts = "-m 'not integration'"

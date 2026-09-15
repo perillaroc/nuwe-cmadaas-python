@@ -5,7 +5,7 @@ import warnings
 import hashlib
 import time
 import uuid
-from copy import deepcopy
+import re
 from typing import Callable, Any, Dict, Optional, Union
 
 from .connection import Connection
@@ -19,6 +19,11 @@ from .data import (
 )
 from nuwe_cmadaas._log import logger
 from nuwe_cmadaas.config import CMADaasConfig
+from .protocol import (
+    build_music_url,
+    build_signature_params,
+    canonical_music_param_string,
+)
 
 
 CONFIG_FILE_NAME = "client.config"
@@ -57,6 +62,11 @@ class CMADaaSClient:
             password: Optional[str] = None,
             config: Optional[CMADaasConfig] = None,
             config_file: Optional[Union[pathlib.Path, str]] = None,
+            session=None,
+            transport=None,
+            log_policy: str = "full",
+            max_retries: int = 2,
+            retry_backoff: float = 0.1,
     ):
         """
         Notes
@@ -91,6 +101,13 @@ class CMADaaSClient:
 
         self.user = user
         self.password = password
+        if log_policy not in {"full", "redacted", "summary"}:
+            raise ValueError("log_policy must be one of full, redacted, summary")
+        self.session = session
+        self.transport = transport
+        self.log_policy = log_policy
+        self.max_retries = max_retries
+        self.retry_backoff = retry_backoff
 
         self._connection = None
 
@@ -111,7 +128,14 @@ class CMADaaSClient:
     def create_connect(self, user: str, password: str):
         self.user = user
         self.password = password
-        self._connection = Connection(connect_timeout=self.connect_timeout, read_timeout=self.read_timeout)
+        self._connection = Connection(
+            connect_timeout=self.connect_timeout,
+            read_timeout=self.read_timeout,
+            session=self.session,
+            transport=self.transport,
+            max_retries=self.max_retries,
+            retry_backoff=self.retry_backoff,
+        )
 
     def callAPI_to_array2D(
             self,
@@ -257,6 +281,7 @@ class CMADaaSClient:
             success_handler=handle_success,
             failure_handler=Connection.generate_pack_failure_handler(data),
             exception_handler=Connection.generate_exception_handler(data),
+            idempotent=False,
         )
 
     def callAPI_to_downFile(
@@ -265,6 +290,7 @@ class CMADaaSClient:
         params: Dict,
         file_dir: Union[str, pathlib.Path],
         server_id: str = None,
+        overwrite: bool = True,
     ) -> FilesInfo:
         file_dir_path = file_dir
         if isinstance(file_dir_path, str):
@@ -282,8 +308,14 @@ class CMADaaSClient:
             total_count = len(files_info.files_info)
             for index, file_info in enumerate(files_info.files_info):
                 logger.info(f"downloading file {index + 1}/{total_count}...")
+                if not self._is_safe_file_name(file_info.file_name):
+                    files_info.request.error_code = Connection.downloadError
+                    files_info.request.error_message = "unsafe server file name"
+                    return files_info
                 result = self._connection.download_file(
-                    file_info.file_url, file_dir_path.joinpath(file_info.file_name)
+                    file_info.file_url,
+                    file_dir_path.joinpath(file_info.file_name),
+                    overwrite=overwrite,
                 )
                 if result[0] != 0:
                     files_info.request.error_code = result[0]
@@ -432,37 +464,29 @@ class CMADaaSClient:
             server_ip=self.server_ip, server_port=self.server_port, server_id=server_id
         )
 
-        fetch_url = (
-            f"{basic_url}method={method}&userId={self.user}&interfaceId={interface_id}"
-            f"&language={CMADaaSClient.clientLanguage}&clientversion={CMADaaSClient.clientVersion}"
-        )
-
-        for key, value in params.items():
-            fetch_url += f"&{key}={value}"
-
         timestamp = str((round(time.time() * 1000)))
         nonce = str(uuid.uuid1())
-        fetch_url += '&timestamp=' + timestamp
-        fetch_url += '&nonce=' + nonce
-
-        sign_params = deepcopy(params)
-        sign_params['serviceNodeId'] = server_id
-        sign_params['method'] = method
-        sign_params['userId'] = self.user
-        sign_params['interfaceId'] = interface_id
-        sign_params['language'] = CMADaaSClient.clientLanguage
-        sign_params['clientversion'] = CMADaaSClient.clientVersion
-        sign_params['timestamp'] = timestamp
-        sign_params['nonce'] = nonce
-        sign_params['pwd'] = self.password
+        sign_params = build_signature_params(
+            params,
+            service_node_id=server_id,
+            method=method,
+            user=self.user,
+            interface_id=interface_id,
+            timestamp=timestamp,
+            nonce=nonce,
+            password=self.password,
+        )
         sign = CMADaaSClient._get_sign(sign_params)
-
-        if sign == "":
-            print("generate sign is None")
-
-        fetch_url += '&sign=' + sign
-
-        return fetch_url
+        return build_music_url(
+            basic_url,
+            method=method,
+            user=self.user,
+            interface_id=interface_id,
+            params=params,
+            timestamp=timestamp,
+            nonce=nonce,
+            sign=sign,
+        )
 
     def _do_request(
             self,
@@ -473,19 +497,52 @@ class CMADaaSClient:
             success_handler: Callable[[bytes], Any],
             failure_handler: Callable[[bytes], Any],
             exception_handler: Callable[[Exception], Any],
+            idempotent: bool = True,
     ):
         fetch_url = self._get_fetch_url(
             interface_id, method, params, server_id
         )
-        logger.info(f"fetch url: {fetch_url}")
+        request_id = uuid.uuid4().hex
+        if self.log_policy == "full":
+            logger.info(f"fetch url: {fetch_url}")
+        elif self.log_policy == "redacted":
+            logger.info(f"fetch url: {self._redact_url(fetch_url)}")
 
+        started = time.monotonic()
         result = self._connection.make_request(
             fetch_url,
             success_handler,
             failure_handler,
-            exception_handler
+            exception_handler,
+            idempotent=idempotent,
         )
+        if self.log_policy == "summary":
+            request = getattr(result, "request", None)
+            result_code = getattr(request, "error_code", "unknown")
+            logger.info(
+                f"request summary interface={interface_id} "
+                f"service_node={server_id or self.server_id} request_id={request_id} "
+                f"elapsed_ms={(time.monotonic() - started) * 1000:.1f} "
+                f"result_code={result_code} retries={self._connection.last_retries}"
+            )
         return result
+
+    @staticmethod
+    def _redact_url(fetch_url: str) -> str:
+        return re.sub(
+            r"([?&](?:userId|sign|pwd|password|passwd)=)[^&]*",
+            r"\1<redacted>",
+            fetch_url,
+            flags=re.IGNORECASE,
+        )
+
+    @staticmethod
+    def _is_safe_file_name(file_name: str) -> bool:
+        if not file_name or file_name in {".", ".."}:
+            return False
+        if "\\" in file_name or "/" in file_name:
+            return False
+        return pathlib.Path(file_name).name == file_name
 
     @staticmethod
     def _get_sign(sign_params: Dict) -> str:
@@ -500,18 +557,12 @@ class CMADaaSClient:
         -------
         str
         """
-        param_string = ""
+        sign_params = dict(sign_params)
         if "params" in sign_params:
             params_val = sign_params.pop("params")
             key_val_list = params_val.split("&")
             for keyVal in key_val_list:
-                sign_params[keyVal.split("=")[0]] = keyVal.split("=")[1]
-
-        keys = sorted(sign_params.keys())
-        for key in keys:
-            param_string = f"{param_string}{key}={sign_params.get(key)}&"
-        if param_string:
-            param_string = param_string[:-1]
-
-        sign = hashlib.md5(param_string.encode(encoding='UTF-8')).hexdigest().upper()
-        return sign
+                key, value = keyVal.split("=", 1)
+                sign_params[key] = value
+        param_string = canonical_music_param_string(sign_params)
+        return hashlib.md5(param_string.encode(encoding="UTF-8")).hexdigest().upper()

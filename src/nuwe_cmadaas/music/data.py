@@ -28,6 +28,7 @@ class RequestInfo:
             take_time: int = 0,
             col_count: int = 0,
             pb_request_info: pb.RequestInfo = None,
+            cause: BaseException = None,
     ):
         self.error_code = error_code
         self.error_message = error_message
@@ -38,6 +39,7 @@ class RequestInfo:
         self.row_count = row_count
         self.take_time = take_time
         self.col_count = col_count
+        self.cause = cause
 
         if pb_request_info is not None:
             self.load_protobuf(pb_request_info)
@@ -86,6 +88,7 @@ class ResponseData:
             self.request,
             interface_id=interface_id,
             params=params,
+            cause=getattr(self.request, "cause", None),
         )
         if error.cause is not None:
             raise error from error.cause

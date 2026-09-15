@@ -97,6 +97,10 @@ def error_from_request(
         error_type = CMADaaSAuthenticationError
     elif code == -10001:
         error_type = CMADaaSTransportError
+    elif code == -10003:
+        error_type = CMADaaSDecodeError
+    elif code == -10004:
+        error_type = CMADaaSDownloadError
     return error_type(
         "CMADaaS request failed",
         error_code=code,

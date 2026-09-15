@@ -16,8 +16,9 @@ from nuwe_cmadaas.util import (
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas.music import get_or_create_client, CMADaaSClient, MusicError
 from nuwe_cmadaas.dataset import load_dataset_config
+from nuwe_cmadaas.interfaces import resolve_interface
 
-from .util import _get_interface_id, _fix_params, InterfaceConfig
+from .util import _fix_params, InterfaceConfig
 from .file import download_obs_file
 
 
@@ -222,7 +223,22 @@ def retrieve_obs_upper_air(
 
     params.update(**kwargs)
 
-    interface_id = _get_interface_id(interface_config)
+    family = {
+        "getUparEle": "obs_upper",
+        "getUparGpsEle": "obs_upper_gps",
+        "getUparLightEle": "obs_upper_light",
+        "getUparArdEle": "obs_upper_ard",
+        "getSurfLatestTime": "obs_upper_latest",
+    }.get(interface_config["name"])
+    if family is None:
+        raise ValueError(
+            f"unregistered high-level upper-air interface: {interface_config['name']}"
+        )
+    interface_id = resolve_interface(
+        family,
+        _features_from_config(interface_config),
+        params=params,
+    ).interface_id
     logger.info(f"interface_id: {interface_id}")
 
     params = _fix_params(interface_id, params)
@@ -236,6 +252,36 @@ def retrieve_obs_upper_air(
 
     df = result.to_pandas()
     return df
+
+
+def _features_from_config(interface_config: InterfaceConfig) -> frozenset[str]:
+    features = set()
+    region = interface_config["region"]
+    if region is not None:
+        features.add(
+            "region" if region == "Rect" else f"region_{region.lower()}"
+        )
+    if interface_config["time"] == "TimeRange":
+        features.add("time_range")
+    elif interface_config["time"] is not None:
+        features.add("time")
+    station = interface_config["station"]
+    if station == "StaIdRange":
+        features.add("station_range")
+    elif station == "StaLevels":
+        features.add("station_level")
+    elif station is not None:
+        features.add("station")
+    level = interface_config["level"]
+    if level == "Press":
+        features.add("level_press")
+    elif level == "Height":
+        features.add("level_height")
+    elif level == "Vertical":
+        features.add("level_vertical")
+    elif level is not None:
+        features.add("level")
+    return frozenset(features)
 
 
 def download_obs_upper_air_file(

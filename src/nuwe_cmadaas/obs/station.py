@@ -14,8 +14,9 @@ from nuwe_cmadaas.util import (
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas.music import MusicError, CMADaaSClient, get_or_create_client
 from nuwe_cmadaas.dataset import load_dataset_config
+from nuwe_cmadaas.interfaces import resolve_interface
 
-from .util import _get_interface_id, InterfaceConfig
+from .util import InterfaceConfig
 
 
 def retrieve_obs_station(
@@ -182,7 +183,12 @@ def retrieve_obs_station(
 
     params.update(**kwargs)
 
-    interface_id = _get_interface_id(interface_config)
+    family = "obs_station_latest" if interface_config["name"] == "getSurfLatestTime" else "obs_station"
+    interface_id = resolve_interface(
+        family,
+        _features_from_config(interface_config),
+        params=params,
+    ).interface_id
     logger.info(f"interface_id: {interface_id}")
 
     cmadaas_client = get_or_create_client(config, client)
@@ -195,3 +201,22 @@ def retrieve_obs_station(
 
     df = result.to_pandas()
     return df
+
+
+def _features_from_config(interface_config: InterfaceConfig) -> frozenset[str]:
+    features = set()
+    region = interface_config["region"]
+    if region is not None:
+        features.add({"Rect": "region_rect", "Region": "region_region", "Basin": "region_basin"}[region])
+    if interface_config["time"] == "TimeRange":
+        features.add("time_range")
+    elif interface_config["time"] is not None:
+        features.add("time")
+    station = interface_config["station"]
+    if station == "StaIdRange":
+        features.add("station_range")
+    elif station == "StaLevels":
+        features.add("station_level")
+    elif station is not None:
+        features.add("station")
+    return frozenset(features)

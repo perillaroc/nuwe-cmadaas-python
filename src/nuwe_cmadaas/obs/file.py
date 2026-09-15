@@ -13,8 +13,9 @@ from nuwe_cmadaas.util import (
 )
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas.music import get_or_create_client, CMADaaSClient, MusicError
+from nuwe_cmadaas.interfaces import resolve_interface
 
-from .util import _get_interface_id, InterfaceConfig
+from .util import InterfaceConfig
 
 
 def download_obs_file(
@@ -189,7 +190,21 @@ def download_obs_file(
 
     params.update(**kwargs)
 
-    interface_id = _get_interface_id(interface_config)
+    if interface_config["name"] == "getSurfLatestTime":
+        family = "obs_file_latest"
+    elif interface_config["name"] == "getUparFile":
+        family = "obs_upper_file"
+    elif interface_config["name"] == "getSurfFile":
+        family = "obs_file"
+    else:
+        raise ValueError(
+            f"unregistered high-level observation file interface: {interface_config['name']}"
+        )
+    interface_id = resolve_interface(
+        family,
+        _features_from_config(interface_config),
+        params=params,
+    ).interface_id
     logger.info(f"interface_id: {interface_id}")
 
     cmadaas_client = get_or_create_client(config, client)
@@ -206,3 +221,22 @@ def download_obs_file(
         file_list.append(Path(output_dir, f.file_name))
 
     return file_list
+
+
+def _features_from_config(interface_config: InterfaceConfig) -> frozenset[str]:
+    features = set()
+    region = interface_config["region"]
+    if region is not None:
+        features.add({"Rect": "region_rect", "Region": "region_region", "Basin": "region_basin"}[region])
+    if interface_config["time"] == "TimeRange":
+        features.add("time_range")
+    elif interface_config["time"] is not None:
+        features.add("time")
+    station = interface_config["station"]
+    if station == "StaIdRange":
+        features.add("station_range")
+    elif station == "StaLevels":
+        features.add("station_level")
+    elif station is not None:
+        features.add("station")
+    return frozenset(features)

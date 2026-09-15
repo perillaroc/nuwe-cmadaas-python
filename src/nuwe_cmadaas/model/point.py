@@ -17,6 +17,7 @@ from nuwe_cmadaas.util import (
 from nuwe_cmadaas.music import MusicError, get_or_create_client, CMADaaSClient
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas._log import logger
+from nuwe_cmadaas.interfaces import resolve_interface
 
 
 class InterfaceConfig(TypedDict):
@@ -83,7 +84,11 @@ def retrieve_model_point(
     if station is not None:
         _get_station_params(station, params, interface_config)
 
-    interface_id = _get_interface_id(interface_config)
+    interface_id = resolve_interface(
+        "model_point",
+        _features_from_config(interface_config),
+        params=params,
+    ).interface_id
     logger.info(f"interface_id: {interface_id}")
 
     cmadaas_client = get_or_create_client(config, client)
@@ -99,22 +104,20 @@ def retrieve_model_point(
 
 
 def _get_interface_id(interface_config: InterfaceConfig) -> str:
-    interface_id = interface_config["name"]
+    return resolve_interface("model_point", _features_from_config(interface_config)).interface_id
 
-    point_part = interface_config["point"]
-    if point_part is not None:
-        interface_id += "At" + point_part
 
-    condition_part = "And".join(filter(None, [
-        interface_config["time"],
-        interface_config["level"],
-        interface_config["valid_time"],
-        interface_config["station"]
-    ]))
-    if len(condition_part) > 0:
-        interface_id += "By" + condition_part
-
-    return interface_id
+def _features_from_config(interface_config: InterfaceConfig) -> frozenset[str]:
+    features = {"time", "level"}
+    if interface_config["point"] is not None:
+        features.add("point")
+    if interface_config["station"] is not None:
+        features.add("station")
+    if interface_config["valid_time"] == "ValidtimeRange":
+        features.add("valid_time_range")
+    else:
+        features.add("valid_time")
+    return frozenset(features)
 
 
 def _get_point_params(

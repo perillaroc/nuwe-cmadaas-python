@@ -16,6 +16,7 @@ from nuwe_cmadaas.util import (
 from nuwe_cmadaas.music import MusicError, get_or_create_client, CMADaaSClient
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas._log import logger
+from nuwe_cmadaas.interfaces import resolve_interface
 
 
 class InterfaceConfig(TypedDict):
@@ -124,7 +125,12 @@ def retrieve_model_grid(
         interface_config["number"] = "FcstMember"
         params["fcstMember"] = number
 
-    interface_id = _get_interface_id(interface_config)
+    spec = resolve_interface(
+        f"model_grid_{data_type}",
+        _features_from_config(interface_config),
+        params=params,
+    )
+    interface_id = spec.interface_id
     logger.info(f"interface_id: {interface_id}")
 
     cmadaas_client = get_or_create_client(config, client)
@@ -195,19 +201,23 @@ def _get_interface_id(interface_config: InterfaceConfig) -> str:
     getNafpEleGridInRectByTimeAndLevelAndValidtimeAndFcstMember
 
     """
-    interface_id = interface_config["name"]
+    family = "model_grid_analysis" if interface_config["name"] == "getNafpAnaEleGrid" else "model_grid_forecast"
+    return resolve_interface(family, _features_from_config(interface_config)).interface_id
 
-    region_part = interface_config["region"]
-    if region_part is not None:
-        interface_id += "In" + region_part
 
-    condition_part = "And".join(filter(None, [
-        interface_config["time"],
-        interface_config["level"],
-        interface_config["valid_time"],
-        interface_config["number"],
-    ]))
-    if len(condition_part) > 0:
-        interface_id += "By" + condition_part
-
-    return interface_id
+def _features_from_config(interface_config: InterfaceConfig) -> frozenset[str]:
+    features = set()
+    if interface_config["region"] is not None:
+        features.add(
+            "region" if interface_config["region"] == "Rect"
+            else f"region_{interface_config['region'].lower()}"
+        )
+    if interface_config["time"] is not None:
+        features.add("time")
+    if interface_config["level"] is not None:
+        features.add("level")
+    if interface_config["valid_time"] is not None:
+        features.add("valid_time")
+    if interface_config["number"] is not None:
+        features.add("number")
+    return frozenset(features)

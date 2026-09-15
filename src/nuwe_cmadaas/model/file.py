@@ -14,6 +14,7 @@ from nuwe_cmadaas.util import (
 from nuwe_cmadaas.music import MusicError, get_or_create_client, CMADaaSClient
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas._log import logger
+from nuwe_cmadaas.interfaces import resolve_interface
 
 
 class InterfaceConfig(TypedDict):
@@ -107,7 +108,12 @@ def download_model_file(
     if region is not None:
         get_region_params(region, params, interface_config)
 
-    interface_id = _get_interface_id(interface_config)
+    family = "model_file_latest" if interface_config["name"] == "getNafpLatestTime" else "model_file"
+    interface_id = resolve_interface(
+        family,
+        _features_from_config(interface_config),
+        params=params,
+    ).interface_id
     logger.info(f"interface_id: {interface_id}")
 
     cmadaas_client = get_or_create_client(config, client)
@@ -127,27 +133,25 @@ def download_model_file(
 
 
 def _get_interface_id(interface_config: InterfaceConfig) -> str:
-    interface_id = interface_config["name"]
-
-    region_part = interface_config["region"]
-    if region_part is not None:
-        interface_id += "In" + region_part
-
-    condition_part = "And".join(filter(None, [
-        interface_config["element"],
-        interface_config["time"],
-        interface_config["level"],
-        interface_config["valid_time"]
-    ]))
-    if len(condition_part) > 0:
-        interface_id += "By" + condition_part
-
-    return _fix_interface_id(interface_id)
+    family = "model_file_latest" if interface_config["name"] == "getNafpLatestTime" else "model_file"
+    return resolve_interface(family, _features_from_config(interface_config)).interface_id
 
 
-def _fix_interface_id(interface_id: str) -> str:
-    fix_mapper = {
-        "getNafpFileByElementAndTimeRangeAndLevel": "getNafpFileByElementAndTimeRange",
-        "getNafpFileByElementAndTimeAndLevel": "getNafpFileByElementAndTime",
-    }
-    return fix_mapper.get(interface_id, interface_id)
+def _features_from_config(interface_config: InterfaceConfig) -> frozenset[str]:
+    features = set()
+    if interface_config["element"] is not None:
+        features.add("element")
+    if interface_config["region"] is not None:
+        features.add(
+            "region" if interface_config["region"] == "Rect"
+            else f"region_{interface_config['region'].lower()}"
+        )
+    if interface_config["time"] == "TimeRange":
+        features.add("time_range")
+    elif interface_config["time"] is not None:
+        features.add("time")
+    if interface_config["level"] is not None:
+        features.add("level")
+    if interface_config["valid_time"] is not None:
+        features.add("valid_time")
+    return frozenset(features)

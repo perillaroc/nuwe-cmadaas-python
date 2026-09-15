@@ -12,8 +12,9 @@ from nuwe_cmadaas.util import (
 )
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas.music import get_or_create_client, CMADaaSClient, MusicError
+from nuwe_cmadaas.interfaces import resolve_interface
 
-from .util import _get_interface_id, InterfaceConfig
+from .util import InterfaceConfig
 
 
 def retrieve_obs_grid(
@@ -101,7 +102,11 @@ def retrieve_obs_grid(
 
     params.update(**kwargs)
 
-    interface_id = _get_interface_id(interface_config)
+    interface_id = resolve_interface(
+        "obs_grid",
+        _features_from_config(interface_config),
+        params=params,
+    ).interface_id
     logger.info(f"interface_id: {interface_id}")
 
     cmadaas_client = get_or_create_client(config, client)
@@ -114,3 +119,17 @@ def retrieve_obs_grid(
 
     field = result.to_xarray()
     return field
+
+
+def _features_from_config(interface_config: InterfaceConfig) -> frozenset[str]:
+    features = set()
+    if interface_config["region"] is not None:
+        features.add(
+            "region" if interface_config["region"] == "Rect"
+            else f"region_{interface_config['region'].lower()}"
+        )
+    if interface_config["time"] == "TimeRange":
+        features.add("time_range")
+    elif interface_config["time"] is not None:
+        features.add("time")
+    return frozenset(features)

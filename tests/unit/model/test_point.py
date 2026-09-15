@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 import pandas as pd
 import pytest
 
@@ -12,7 +14,9 @@ def make_client():
     return FakeCMADaaSClient(make_array2d_response())
 
 
-@pytest.mark.parametrize("forecast_time", ["24h", pd.Timedelta(hours=24)])
+@pytest.mark.parametrize(
+    "forecast_time", ["24h", pd.Timedelta(hours=24), timedelta(hours=24)]
+)
 def test_retrieve_model_point_accepts_string_and_timedelta_leads(forecast_time):
     client = make_client()
 

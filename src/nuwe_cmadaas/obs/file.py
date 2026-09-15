@@ -1,14 +1,14 @@
 from typing import Union, List, Tuple, Optional, TypedDict
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pandas as pd
 
 from nuwe_cmadaas._log import logger
 from nuwe_cmadaas.util import (
-    forecast_hours,
-    get_time_string,
-    get_time_range_string,
     get_region_params,
+    station_filter_params,
+    time_filter_params,
     validate_count,
 )
 from nuwe_cmadaas.config import CMADaasConfig
@@ -20,7 +20,7 @@ from .util import _get_interface_id, InterfaceConfig
 def download_obs_file(
         data_code: str,
         elements: str = None,
-        time: Union[pd.Interval, pd.Timestamp, List, pd.Timedelta] = None,
+        time: Union[pd.Interval, pd.Timestamp, datetime, List, pd.Timedelta, timedelta] = None,
         station: Union[str, List, Tuple] = None,
         region=None,
         station_level: Union[str, List[str]] = None,
@@ -78,10 +78,10 @@ def download_obs_file(
     time:
         时间筛选条件，支持单个时间，时间列表，时间段和时间间隔
 
-        - 时间对象：``pd.Timestamp`` 类型，单个时间点，对应接口的 times 参数
-        - 时间列表：``typing.List[pd.Timestamp]`` 类型，多个时间列表，对应接口的 times 参数
+        - 时间对象：``pd.Timestamp`` 或 ``datetime.datetime`` 类型，单个时间点，对应接口的 times 参数
+        - 时间列表：``list`` 或 ``tuple`` 类型，元素为 pandas 或标准库 datetime，对应接口的 times 参数
         - 时间段：``pd.Interval`` 类型，起止时间，定义区间端点是否闭合，对应接口的 timeRange 参数
-        - 时间间隔：``pd.Timedelta`` 类型，用于获取地面资料最新时次 (getSurfLatestTime)，忽略其余筛选条件
+        - 时间间隔：``pd.Timedelta`` 或 ``datetime.timedelta`` 类型，用于获取地面资料最新时次 (getSurfLatestTime)，忽略其余筛选条件
     station:
         站点筛选条件，支持字符串，列表和元组
 
@@ -146,55 +146,25 @@ def download_obs_file(
     if count is not None:
         params["limitCnt"] = count
 
-    if isinstance(time, pd.Interval):
+    normalized_time, time_params = time_filter_params(time, single_key="times")
+    if normalized_time is not None and normalized_time.kind == "range":
         interface_config["time"] = "TimeRange"
-        params["timeRange"] = get_time_range_string(time)
-    elif isinstance(time, pd.Timestamp):
+    elif normalized_time is not None and normalized_time.kind in ("single", "multiple"):
         interface_config["time"] = "Time"
-        params["times"] = get_time_string(time)
-    elif isinstance(time, list):
-        if not time:
-            raise ValueError("time must not be an empty list")
-        if not all(isinstance(item, pd.Timestamp) for item in time):
-            raise TypeError("time list must contain pandas.Timestamp values")
-        interface_config["time"] = "Time"
-        params["times"] = ",".join([get_time_string(t) for t in time])
-    elif isinstance(time, pd.Timedelta):
+    elif normalized_time is not None and normalized_time.kind == "latest":
         interface_config["name"] = "getSurfLatestTime"
-        params["latestTime"] = str(forecast_hours(time, "time"))
         params.pop("orderby", None)
         params.pop("elements", None)
-    elif time is not None:
-        raise TypeError(f"unsupported time type: {type(time).__name__}")
+    params.update(time_params)
 
-    if isinstance(station, (str, int)) and not isinstance(station, bool):
-        if isinstance(station, str) and not station:
-            raise ValueError("station must not be empty")
+    normalized_station, station_params = station_filter_params(station)
+    if normalized_station is not None and normalized_station.kind == "id":
         interface_config["station"] = "StaID"
-        params["staIds"] = station
-    elif isinstance(station, list):
-        if not station:
-            raise ValueError("station must not be an empty list")
-        if not all(
-            isinstance(item, (str, int)) and not isinstance(item, bool)
-            for item in station
-        ):
-            raise TypeError("station list must contain strings or integers")
+    elif normalized_station is not None and normalized_station.kind == "ids":
         interface_config["station"] = "StaID"
-        params["staIds"] = ",".join(str(item) for item in station)
-    elif isinstance(station, tuple):
-        if len(station) != 2:
-            raise ValueError("station range must contain exactly two station IDs")
-        if not all(
-            isinstance(item, (str, int)) and not isinstance(item, bool)
-            for item in station
-        ):
-            raise TypeError("station range must contain strings or integers")
+    elif normalized_station is not None and normalized_station.kind == "range":
         interface_config["station"] = "StaIdRange"
-        params["minStaId"] = station[0]
-        params["maxStaId"] = station[1]
-    elif station is not None:
-        raise TypeError(f"unsupported station type: {type(station).__name__}")
+    params.update(station_params)
 
     if region is not None:
         get_region_params(region, params, interface_config)

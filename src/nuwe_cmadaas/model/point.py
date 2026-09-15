@@ -1,4 +1,5 @@
 from typing import Union, Optional, Dict, List, Tuple, TypedDict
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pandas as pd
@@ -7,7 +8,11 @@ from nuwe_cmadaas.util import (
     forecast_hour_range,
     forecast_hours,
     get_time_string,
+    normalize_level,
+    normalize_timestamp,
+    station_filter_params,
     validate_lat_lon_pair,
+    validate_level_pair,
 )
 from nuwe_cmadaas.music import MusicError, get_or_create_client, CMADaaSClient
 from nuwe_cmadaas.config import CMADaasConfig
@@ -26,8 +31,8 @@ class InterfaceConfig(TypedDict):
 def retrieve_model_point(
         data_code: str,
         parameter: str,
-        start_time: pd.Timestamp,
-        forecast_time: Union[str, pd.Timedelta, Tuple],
+        start_time: Union[pd.Timestamp, datetime],
+        forecast_time: Union[str, pd.Timedelta, timedelta, Tuple],
         level_type: Union[str, int],
         level: Union[int, float],
         point: Union[Tuple[float, float], List[Tuple[float, float]]] = None,
@@ -35,8 +40,7 @@ def retrieve_model_point(
         config: Optional[Union[CMADaasConfig, str, Path]] = None,
         client: Optional[CMADaaSClient] = None,
 ) -> Union[pd.DataFrame, MusicError]:
-    if level_type is None or level is None:
-        raise ValueError("level_type and level must be provided together")
+    validate_level_pair(level_type, level)
     if point is not None and station is not None:
         raise ValueError("point and station are mutually exclusive")
 
@@ -53,13 +57,13 @@ def retrieve_model_point(
         "dataCode": data_code,
         "fcstEle": parameter,
         "levelType": str(level_type),
-        "fcstLevel": str(level)
+        "fcstLevel": str(normalize_level(level))
     }
 
-    time = get_time_string(start_time)
+    time = get_time_string(normalize_timestamp(start_time, "start_time"))
     params["time"] = time
 
-    if isinstance(forecast_time, (str, pd.Timedelta)):
+    if isinstance(forecast_time, (str, pd.Timedelta, timedelta)):
         valid_time = forecast_hours(forecast_time)
         params["validTime"] = str(valid_time)
         interface_config["valid_time"] = "Validtime"
@@ -139,16 +143,8 @@ def _get_station_params(
         params: Dict,
         interface_config: Dict
 ):
+    normalized, station_params = station_filter_params(station)
+    if normalized.kind == "range":
+        raise TypeError("station range is not supported by retrieve_model_point")
     interface_config["station"] = "StaID"
-    if isinstance(station, list):
-        if not station:
-            raise ValueError("station must not be an empty list")
-        if not all(isinstance(item, str) and item for item in station):
-            raise TypeError("station must contain non-empty strings")
-        params["staIds"] = ",".join(station)
-    elif isinstance(station, str):
-        if not station:
-            raise ValueError("station must not be empty")
-        params["staIds"] = station
-    else:
-        raise TypeError(f"station type is not support: {type(station)}")
+    params.update(station_params)

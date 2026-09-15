@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import datetime
 
 import pandas as pd
 import pytest
@@ -25,5 +26,23 @@ def test_download_model_file_latest_time_does_not_delete_missing_elements(tmp_pa
         (
             "getNafpLatestTime",
             {"dataCode": "SYNTHETIC_MODEL", "latestTime": "6"},
+        )
+    ]
+
+
+def test_download_model_file_accepts_standard_datetime_start_time(tmp_path):
+    client = FakeCMADaaSClient(make_files_info_response())
+
+    download_model_file(
+        "SYNTHETIC_MODEL",
+        start_time=datetime(2026, 1, 2),
+        output_dir=tmp_path,
+        client=client,
+    )
+
+    assert client.calls == [
+        (
+            "getNafpFileByTime",
+            {"dataCode": "SYNTHETIC_MODEL", "time": "20260102000000"},
         )
     ]

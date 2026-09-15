@@ -1,13 +1,15 @@
 from typing import Union, Optional, Dict, List, TypedDict
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pandas as pd
 
 from nuwe_cmadaas.util import (
     forecast_hours,
-    get_time_string,
-    get_time_range_string,
     get_region_params,
+    normalize_level,
+    time_filter_params,
+    validate_level_pair,
 )
 from nuwe_cmadaas.music import MusicError, get_or_create_client, CMADaaSClient
 from nuwe_cmadaas.config import CMADaasConfig
@@ -26,8 +28,8 @@ class InterfaceConfig(TypedDict):
 def download_model_file(
         data_code: str,
         parameter: Optional[Union[str, List[str]]] = None,
-        start_time: Optional[Union[pd.Interval, pd.Timestamp, List, pd.Timedelta]] = None,
-        forecast_time: Optional[Union[str, pd.Timedelta]] = None,
+        start_time: Optional[Union[pd.Interval, pd.Timestamp, datetime, List, pd.Timedelta, timedelta]] = None,
+        forecast_time: Optional[Union[str, pd.Timedelta, timedelta]] = None,
         level_type: Optional[Union[str, int]] = None,
         level: Optional[Union[int, float]] = None,
         region: Optional[Dict] = None,
@@ -36,8 +38,7 @@ def download_model_file(
         config: Optional[Union[CMADaasConfig, str, Path]] = None,
         client: Optional[CMADaaSClient] = None,
 ) -> Union[List[Path], MusicError]:
-    if (level_type is None) != (level is None):
-        raise ValueError("level_type and level must be provided together")
+    validate_level_pair(level_type, level)
 
     interface_config = InterfaceConfig(
         name="getNafpFile",
@@ -77,27 +78,20 @@ def download_model_file(
         params["levelType"] = str(level_type)
         interface_config["level"] = "Level"
     if level is not None:
-        params["fcstLevel"] = str(level)
+        params["fcstLevel"] = str(normalize_level(level))
 
-    if isinstance(start_time, pd.Interval):
+    normalized_time, time_params = time_filter_params(
+        start_time, field_name="start_time"
+    )
+    if normalized_time is not None and normalized_time.kind == "range":
         interface_config["time"] = "TimeRange"
-        params["timeRange"] = get_time_range_string(start_time)
-    elif isinstance(start_time, pd.Timestamp):
+    elif normalized_time is not None and normalized_time.kind in ("single", "multiple"):
         interface_config["time"] = "Time"
-        params["time"] = get_time_string(start_time)
-    elif isinstance(start_time, list):
-        if not start_time:
-            raise ValueError("start_time must not be an empty list")
-        if not all(isinstance(item, pd.Timestamp) for item in start_time):
-            raise TypeError("start_time list must contain pandas.Timestamp values")
-        interface_config["time"] = "Time"
-        params["times"] = ",".join([get_time_string(t) for t in start_time])
-    elif isinstance(start_time, pd.Timedelta):
+    elif normalized_time is not None and normalized_time.kind == "latest":
         interface_config["name"] = "getNafpLatestTime"
-        params["latestTime"] = str(forecast_hours(start_time, "start_time"))
+    params.update(time_params)
+    if normalized_time is not None and normalized_time.kind == "latest":
         params.pop("elements", None)
-    elif start_time is not None:
-        raise TypeError(f"unsupported start_time type: {type(start_time).__name__}")
 
     if forecast_time is not None:
         valid_time = forecast_hours(forecast_time)

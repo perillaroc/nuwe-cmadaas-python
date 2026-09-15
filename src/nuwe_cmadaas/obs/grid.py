@@ -1,4 +1,5 @@
 from typing import Union, List, Optional, Dict
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
@@ -6,9 +7,8 @@ import xarray as xr
 
 from nuwe_cmadaas._log import logger
 from nuwe_cmadaas.util import (
-    get_time_string,
-    get_time_range_string,
     get_region_params,
+    time_filter_params,
 )
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas.music import get_or_create_client, CMADaaSClient, MusicError
@@ -19,7 +19,7 @@ from .util import _get_interface_id, InterfaceConfig
 def retrieve_obs_grid(
         data_code: str,
         parameter: Optional[str] = None,
-        time: Optional[Union[pd.Interval, pd.Timestamp, List]] = None,
+        time: Optional[Union[pd.Interval, pd.Timestamp, datetime, List]] = None,
         region: Optional[Dict] = None,
         config: Optional[Union[CMADaasConfig, str, Path]] = None,
         client: Optional[CMADaaSClient] = None,
@@ -54,8 +54,8 @@ def retrieve_obs_grid(
     time
         时间筛选条件，支持单个时间，时间列表，时间段和时间间隔
 
-        - 时间对象：``pd.Timestamp`` 类型，单个时间点，对应接口的 times 参数
-        - 时间列表：``typing.List[pd.Timestamp]`` 类型，多个时间列表，对应接口的 times 参数
+        - 时间对象：``pd.Timestamp`` 或 ``datetime.datetime`` 类型，单个时间点，对应接口的 times 参数
+        - 时间列表：``list`` 或 ``tuple`` 类型，元素为 pandas 或标准库 datetime，对应接口的 times 参数
         - 时间段：``pd.Interval`` 类型，起止时间，定义区间端点是否闭合，对应接口的 timeRange 参数
     region
         区域筛选条件：
@@ -87,21 +87,14 @@ def retrieve_obs_grid(
     if isinstance(parameter, str):
         params["fcstEle"] = parameter
 
-    if isinstance(time, pd.Interval):
+    normalized_time, time_params = time_filter_params(time)
+    if normalized_time is not None and normalized_time.kind == "range":
         interface_config["time"] = "TimeRange"
-        params["timeRange"] = get_time_range_string(time)
-    elif isinstance(time, pd.Timestamp):
+    elif normalized_time is not None and normalized_time.kind in ("single", "multiple"):
         interface_config["time"] = "Time"
-        params["time"] = get_time_string(time)
-    elif isinstance(time, list):
-        if not time:
-            raise ValueError("time must not be an empty list")
-        if not all(isinstance(item, pd.Timestamp) for item in time):
-            raise TypeError("time list must contain pandas.Timestamp values")
-        interface_config["time"] = "Time"
-        params["times"] = ",".join([get_time_string(t) for t in time])
-    elif time is not None:
-        raise TypeError(f"unsupported time type: {type(time).__name__}")
+    elif normalized_time is not None and normalized_time.kind == "latest":
+        raise TypeError("time timedelta is not supported by retrieve_obs_grid")
+    params.update(time_params)
 
     if region is not None:
         get_region_params(region, params, interface_config)

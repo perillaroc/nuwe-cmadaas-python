@@ -1,10 +1,18 @@
 from typing import Union, Optional, Dict, Literal, TypedDict
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pandas as pd
 import xarray as xr
 
-from nuwe_cmadaas.util import forecast_hours, get_time_string, get_region_params
+from nuwe_cmadaas.util import (
+    forecast_hours,
+    get_time_string,
+    get_region_params,
+    normalize_level,
+    normalize_timestamp,
+    validate_level_pair,
+)
 from nuwe_cmadaas.music import MusicError, get_or_create_client, CMADaaSClient
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas._log import logger
@@ -22,8 +30,8 @@ class InterfaceConfig(TypedDict):
 def retrieve_model_grid(
         data_code: str,
         parameter: str,
-        start_time: Optional[pd.Timestamp] = None,
-        forecast_time: Optional[Union[str, pd.Timedelta]] = None,
+        start_time: Optional[Union[pd.Timestamp, datetime]] = None,
+        forecast_time: Optional[Union[str, pd.Timedelta, timedelta]] = None,
         level_type: Optional[Union[str, int]] = None,
         level: Optional[Union[int, float]] = None,
         region: Optional[Dict] = None,
@@ -44,7 +52,7 @@ def retrieve_model_grid(
     start_time
         起报时间
     forecast_time
-        预报时效，``pandas.Timedelta`` 支持的字符串，例如 `"24h"`
+        预报时效，支持 ``pandas.Timedelta``、``datetime.timedelta`` 和可转换的字符串，例如 `"24h"`
     level_type
         层次类型
     level
@@ -74,8 +82,7 @@ def retrieve_model_grid(
     if data_type not in data_type_mapper:
         allowed = ", ".join(sorted(data_type_mapper))
         raise ValueError(f"data_type must be one of {allowed}; got {data_type!r}")
-    if (level_type is None) != (level is None):
-        raise ValueError("level_type and level must be provided together")
+    validate_level_pair(level_type, level)
 
     interface_config = InterfaceConfig(
         name="getNafpEleGrid",
@@ -98,11 +105,11 @@ def retrieve_model_grid(
         interface_config["level"] = "Level"
 
     if level is not None:
-        params["fcstLevel"] = str(level)
+        params["fcstLevel"] = str(normalize_level(level))
 
     if start_time is not None:
         interface_config["time"] = "Time"
-        time = get_time_string(start_time)
+        time = get_time_string(normalize_timestamp(start_time, "start_time"))
         params["time"] = time
 
     if forecast_time is not None:

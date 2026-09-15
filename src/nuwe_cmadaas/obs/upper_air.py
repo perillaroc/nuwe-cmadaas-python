@@ -15,6 +15,7 @@ from nuwe_cmadaas.util import (
 )
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas.music import get_or_create_client, CMADaaSClient, MusicError
+from nuwe_cmadaas.music.errors import handle_response_error
 from nuwe_cmadaas.dataset import load_dataset_config
 from nuwe_cmadaas.interfaces import resolve_interface
 
@@ -36,6 +37,7 @@ def retrieve_obs_upper_air(
         interface_data_type: Optional[str] = None,
         config: Optional[Union[CMADaasConfig, str, Path]] = None,
         client: Optional[CMADaaSClient] = None,
+        strict: bool = False,
         **kwargs,
 ) -> Union[pd.DataFrame, MusicError]:
     """
@@ -245,10 +247,16 @@ def retrieve_obs_upper_air(
 
     cmadaas_client = get_or_create_client(config, client)
     result = cmadaas_client.callAPI_to_array2D(interface_id, params)
-    if result.request.error_code != 0:
+    if not result.ok:
         logger.warning(f"request error {result.request.error_code}: {result.request.error_message}")
-        music_error = MusicError(code=result.request.error_code, message=result.request.error_message)
-        return music_error
+        error = handle_response_error(
+            result,
+            interface_id=interface_id,
+            params=params,
+            strict=strict,
+        )
+        if error is not None:
+            return error
 
     df = result.to_pandas()
     return df
@@ -294,6 +302,7 @@ def download_obs_upper_air_file(
         output_dir: str = "./",
         config: Optional[Union[CMADaasConfig, str, Path]] = None,
         client: Optional[CMADaaSClient] = None,
+        strict: bool = False,
         **kwargs,
 ) -> Union[List, MusicError]:
     interface_data_type = "Upar"
@@ -308,6 +317,7 @@ def download_obs_upper_air_file(
         interface_data_type=interface_data_type,
         config=config,
         client=client,
+        strict=strict,
         **kwargs
     )
     return result

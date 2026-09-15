@@ -15,6 +15,7 @@ from nuwe_cmadaas.util import (
     validate_level_pair,
 )
 from nuwe_cmadaas.music import MusicError, get_or_create_client, CMADaaSClient
+from nuwe_cmadaas.music.errors import handle_response_error
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas._log import logger
 from nuwe_cmadaas.interfaces import resolve_interface
@@ -40,6 +41,7 @@ def retrieve_model_point(
         station: Union[List[str], str] = None,
         config: Optional[Union[CMADaasConfig, str, Path]] = None,
         client: Optional[CMADaaSClient] = None,
+        strict: bool = False,
 ) -> Union[pd.DataFrame, MusicError]:
     validate_level_pair(level_type, level)
     if point is not None and station is not None:
@@ -94,10 +96,16 @@ def retrieve_model_point(
     cmadaas_client = get_or_create_client(config, client)
     result = cmadaas_client.callAPI_to_array2D(interface_id, params)
 
-    if result.request.error_code != 0:
+    if not result.ok:
         logger.warning(f"request error {result.request.error_code}: {result.request.error_message}")
-        music_error = MusicError(code=result.request.error_code, message=result.request.error_message)
-        return music_error
+        error = handle_response_error(
+            result,
+            interface_id=interface_id,
+            params=params,
+            strict=strict,
+        )
+        if error is not None:
+            return error
 
     df = result.to_pandas()
     return df

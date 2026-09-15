@@ -8,8 +8,10 @@ are registered here.
 from dataclasses import dataclass
 from typing import Iterable, Mapping
 
+from nuwe_cmadaas.music.errors import CMADaaSQueryError
 
-class UnsupportedQueryError(ValueError):
+
+class UnsupportedQueryError(CMADaaSQueryError):
     """Raised when a high-level query has no registered MUSIC interface."""
 
 

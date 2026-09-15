@@ -13,6 +13,16 @@ from .data import (
 )
 
 from .client import CMADaaSClient
+from .errors import (
+    CMADaaSError,
+    CMADaaSAuthenticationError,
+    CMADaaSConfigurationError,
+    CMADaaSDecodeError,
+    CMADaaSDownloadError,
+    CMADaaSQueryError,
+    CMADaaSRequestError,
+    CMADaaSTransportError,
+)
 
 from nuwe_cmadaas.config import load_cmadaas_config, CMADaasConfig
 from nuwe_cmadaas._log import logger

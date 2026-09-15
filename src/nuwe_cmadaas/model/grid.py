@@ -14,6 +14,7 @@ from nuwe_cmadaas.util import (
     validate_level_pair,
 )
 from nuwe_cmadaas.music import MusicError, get_or_create_client, CMADaaSClient
+from nuwe_cmadaas.music.errors import handle_response_error
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas._log import logger
 from nuwe_cmadaas.interfaces import resolve_interface
@@ -40,6 +41,7 @@ def retrieve_model_grid(
         data_type: Optional[Literal["analysis", "forecast"]] = None,
         config: Optional[Union[CMADaasConfig, str, Path]] = None,
         client: Optional[CMADaaSClient] = None,
+        strict: bool = False,
 ) -> Union[xr.DataArray, MusicError]:
     """
     获取数值模式的二维网格数据
@@ -136,10 +138,16 @@ def retrieve_model_grid(
     cmadaas_client = get_or_create_client(config, client)
     result = cmadaas_client.callAPI_to_gridArray2D(interface_id, params)
 
-    if result.request.error_code != 0:
+    if not result.ok:
         logger.warning(f"request error {result.request.error_code}: {result.request.error_message}")
-        music_error = MusicError(code=result.request.error_code, message=result.request.error_message)
-        return music_error
+        error = handle_response_error(
+            result,
+            interface_id=interface_id,
+            params=params,
+            strict=strict,
+        )
+        if error is not None:
+            return error
 
     field = result.to_xarray()
     return field

@@ -6,6 +6,7 @@ import pandas as pd
 import xarray as xr
 
 from nuwe_cmadaas.music import apiinterface_pb2 as pb
+from .errors import error_from_request
 
 
 @dataclass
@@ -67,6 +68,28 @@ class ResponseData:
         if request is None:
             request = RequestInfo()
         self.request = request
+
+    @property
+    def ok(self) -> bool:
+        """Whether the MUSIC response contains no request error."""
+        return self.request.error_code == 0
+
+    def raise_for_error(self, *, interface_id=None, params=None):
+        """Raise a structured exception when the response contains an error.
+
+        The method is intentionally a no-op for successful responses so it can
+        be used by callers immediately after every compatible client call.
+        """
+        if self.ok:
+            return self
+        error = error_from_request(
+            self.request,
+            interface_id=interface_id,
+            params=params,
+        )
+        if error.cause is not None:
+            raise error from error.cause
+        raise error
 
     def load_from_protobuf_content(self, content: bytes):
         raise NotImplementedError()

@@ -15,6 +15,109 @@ class MusicError:
     message: str
 
 
+def _empty_grid() -> np.ndarray:
+    return np.empty((0, 0), dtype=float)
+
+
+def _grid_axis(
+        values,
+        start: float,
+        end: float,
+        step: float,
+        count: int,
+        axis_name: str,
+) -> list[float]:
+    if count < 0:
+        raise ValueError(f"{axis_name} count must be non-negative; got {count}")
+    if values is not None and len(values) > 0:
+        axis = list(values)
+    elif count > 0 and step == 0:
+        axis = list(np.linspace(start, end, count, endpoint=True))
+    else:
+        axis = [start + i * step for i in range(count)]
+    if len(axis) != count:
+        raise ValueError(
+            f"{axis_name} coordinate length does not match grid dimensions: "
+            f"{len(axis)} != {count}"
+        )
+    return axis
+
+
+def _validate_grid_values(
+        response_name: str,
+        lat_count: int,
+        lon_count: int,
+        lats,
+        lons,
+        **values,
+) -> tuple[list[float], list[float]]:
+    if lat_count < 0 or lon_count < 0:
+        raise ValueError(
+            f"{response_name} dimensions must be non-negative; "
+            f"got {lat_count} * {lon_count}"
+        )
+    if len(lats) != lat_count:
+        raise ValueError(
+            f"{response_name} latitude coordinate length does not match "
+            f"grid dimensions: {len(lats)} != {lat_count}"
+        )
+    if len(lons) != lon_count:
+        raise ValueError(
+            f"{response_name} longitude coordinate length does not match "
+            f"grid dimensions: {len(lons)} != {lon_count}"
+        )
+    expected = lat_count * lon_count
+    for name, data in values.items():
+        actual = np.asarray(data).size
+        if actual != expected:
+            value_name = "data" if name == "data" else f"{name} data"
+            raise ValueError(
+                f"{response_name} {value_name} length does not match grid "
+                f"dimensions: {actual} != {lat_count} * {lon_count}"
+            )
+    return list(lats), list(lons)
+
+
+def _grid_coordinates(
+        start_lat: float,
+        end_lat: float,
+        lat_step: float,
+        lat_count: int,
+        lats,
+        start_lon: float,
+        end_lon: float,
+        lon_step: float,
+        lon_count: int,
+        lons,
+) -> dict:
+    lats = _grid_axis(
+        lats, start_lat, end_lat, lat_step, lat_count, "latitude"
+    )
+    lons = _grid_axis(
+        lons, start_lon, end_lon, lon_step, lon_count, "longitude"
+    )
+    return {
+        "latitude": xr.Variable(
+            "latitude",
+            lats,
+            attrs={
+                "units": "degrees_north",
+                "standard_name": "latitude",
+                "long_name": "latitude",
+            },
+        ),
+        "longitude": xr.Variable(
+            "longitude",
+            lons,
+            attrs={
+                "units": "degrees_east",
+                "standard_name": "longitude",
+                "long_name": "longitude",
+            },
+        ),
+    }
+
+
 class RequestInfo:
     def __init__(
             self,
@@ -70,6 +173,7 @@ class ResponseData:
         if request is None:
             request = RequestInfo()
         self.request = request
+        self.metadata = {}
 
     @property
     def ok(self) -> bool:
@@ -93,6 +197,21 @@ class ResponseData:
         if error.cause is not None:
             raise error from error.cause
         raise error
+
+    def _ensure_convertible(self):
+        if not self.ok:
+            self.raise_for_error()
+
+    def _output_metadata(self) -> dict:
+        metadata = dict(self.metadata)
+        request_metadata = {
+            "request_time": self.request.request_time,
+            "response_time": self.request.response_time,
+        }
+        for key, value in request_metadata.items():
+            if value and key not in metadata:
+                metadata[key] = value
+        return metadata
 
     def load_from_protobuf_content(self, content: bytes):
         raise NotImplementedError()
@@ -122,13 +241,21 @@ class Array2D(ResponseData):
             col_count: int = 0,
     ):
         super().__init__(request=request)
-        self.data = data
-        self.element_names = element_names
+        self.data = np.empty((0, 0), dtype=object) if data is None else data
+        self.element_names = [] if element_names is None else list(element_names)
         self.row_count = row_count
         self.col_count = col_count
 
     def to_pandas(self) -> pd.DataFrame:
-        df = pd.DataFrame(self.data, columns=self.element_names)
+        self._ensure_convertible()
+        data = np.asarray(self.data)
+        if data.ndim != 2 or data.shape[1] != len(self.element_names):
+            raise ValueError(
+                "Array2D data shape does not match element names: "
+                f"{data.shape} and {len(self.element_names)}"
+            )
+        df = pd.DataFrame(data, columns=self.element_names)
+        df.attrs.update(self._output_metadata())
         return df
 
     def load_from_protobuf_content(self, content: bytes):
@@ -140,10 +267,23 @@ class Array2D(ResponseData):
         self.request = RequestInfo.create_from_protobuf(ret_array_2d.request)
         self.element_names = [i for i in ret_array_2d.elementNames]
         if self.request.error_code != 0:
+            self.data = np.empty((0, 0), dtype=object)
+            self.row_count = 0
+            self.col_count = 0
             return
 
         self.row_count = ret_array_2d.request.rowCount
         self.col_count = ret_array_2d.request.colCount
+        if self.row_count < 0 or self.col_count < 0:
+            raise ValueError(
+                "Array2D dimensions must be non-negative: "
+                f"{self.row_count} * {self.col_count}"
+            )
+        if len(self.element_names) != self.col_count:
+            raise ValueError(
+                "Array2D element name count does not match columns: "
+                f"{len(self.element_names)} != {self.col_count}"
+            )
         total_count = len(ret_array_2d.data)
         expected_count = self.row_count * self.col_count
         if total_count != expected_count:
@@ -165,8 +305,8 @@ class DataBlock(ResponseData):
             request: RequestInfo = None,
     ):
         super().__init__(request=request)
-        self.data_name = data_name
-        self.data = data
+        self.data_name = "" if data_name is None else data_name
+        self.data = b"" if data is None else data
 
     def load_from_protobuf_content(self, content: bytes):
         protobuf_object = self.protobuf_object_type()
@@ -200,7 +340,7 @@ class GridArray2D(ResponseData):
             user_element_name: str = "",
     ):
         super().__init__(request=request)
-        self.data = data
+        self.data = _empty_grid() if data is None else data
         self.start_lat = start_lat
         self.start_lon = start_lon
         self.end_lat = end_lat
@@ -209,56 +349,34 @@ class GridArray2D(ResponseData):
         self.lon_count = lon_count
         self.lon_step = lon_step
         self.lat_step = lat_step
-        self.lats = lats
-        self.lons = lons
+        self.lats = [] if lats is None else list(lats)
+        self.lons = [] if lons is None else list(lons)
         self.units = units
         self.user_element_name = user_element_name
 
     def to_xarray(self) -> xr.DataArray:
-        coords = {}
-        if len(self.lats) > 0:
-            lats = self.lats
-        else:
-            lats = np.linspace(
-                self.start_lat, self.end_lat, self.lat_count,
-                endpoint=True
+        self._ensure_convertible()
+        data = np.asarray(self.data)
+        if data.ndim != 2 or data.shape != (self.lat_count, self.lon_count):
+            raise ValueError(
+                "GridArray2D data shape does not match grid dimensions: "
+                f"{data.shape} != ({self.lat_count}, {self.lon_count})"
             )
-
-        if len(self.lons) > 0:
-            lons = self.lons
-        else:
-            lons = np.linspace(
-                self.start_lon, self.end_lon, self.lon_count,
-                endpoint=True
-            )
-
-        coords["latitude"] = xr.Variable(
-            "latitude",
-            lats,
-            attrs={
-                "units": "degrees_north",
-                "standard_name": "latitude",
-                "long_name": "latitude"
-            },
-        )
-        coords["longitude"] = xr.Variable(
-            "longitude",
-            lons,
-            attrs={
-                "units": "degrees_east",
-                "standard_name": "longitude",
-                "long_name": "longitude"
-            }
+        coords = _grid_coordinates(
+            self.start_lat, self.end_lat, self.lat_step, self.lat_count,
+            self.lats, self.start_lon, self.end_lon, self.lon_step,
+            self.lon_count, self.lons,
         )
 
         dims = ("latitude", "longitude")
 
         field = xr.DataArray(
-            self.data,
+            data,
             dims=dims,
             coords=coords,
             attrs={
                 "units": self.units,
+                **self._output_metadata(),
             },
             name=self.user_element_name,
         )
@@ -274,6 +392,11 @@ class GridArray2D(ResponseData):
         self.request = RequestInfo.create_from_protobuf(ret_grid_array_2d.request)
 
         if self.request.error_code != 0:
+            self.data = _empty_grid()
+            self.lats = []
+            self.lons = []
+            self.lat_count = 0
+            self.lon_count = 0
             return
 
         self.start_lat = ret_grid_array_2d.startLat
@@ -285,26 +408,24 @@ class GridArray2D(ResponseData):
         self.lon_step = ret_grid_array_2d.lonStep
         self.lat_step = ret_grid_array_2d.latStep
 
-        if len(ret_grid_array_2d.lats) > 0:
-            self.lats = list(ret_grid_array_2d.lats)
-        else:
-            self.lats = [self.start_lat + i * self.lat_step for i in range(self.lat_count)]
-
-        if len(ret_grid_array_2d.lons) > 0:
-            self.lons = list(ret_grid_array_2d.lons)
-        else:
-            self.lons = [self.start_lon + i * self.lon_step for i in range(self.lon_count)]
+        self.lats = _grid_axis(
+            ret_grid_array_2d.lats,
+            self.start_lat, self.end_lat, self.lat_step,
+            self.lat_count, "latitude",
+        )
+        self.lons = _grid_axis(
+            ret_grid_array_2d.lons,
+            self.start_lon, self.end_lon, self.lon_step,
+            self.lon_count, "longitude",
+        )
 
         self.units = ret_grid_array_2d.units
         self.user_element_name = ret_grid_array_2d.userEleName
 
-        data_count = len(ret_grid_array_2d.data)
-        expected_count = self.lat_count * self.lon_count
-        if data_count != expected_count:
-            raise ValueError(
-                "GridArray2D data length does not match grid dimensions: "
-                f"{data_count} != {self.lat_count} * {self.lon_count}"
-            )
+        _validate_grid_values(
+            "GridArray2D", self.lat_count, self.lon_count,
+            self.lats, self.lons, data=ret_grid_array_2d.data,
+        )
         self.data = np.array(ret_grid_array_2d.data).reshape(
             [self.lat_count, self.lon_count]
         )
@@ -327,7 +448,7 @@ class FileInfo:
         self.size = size
         self.file_url = file_url
         self.image_base64 = image_base64
-        self.attributes = attributes
+        self.attributes = [] if attributes is None else list(attributes)
 
     @classmethod
     def create_from_protobuf(cls, pb_file_info: pb.FileInfo):
@@ -347,7 +468,7 @@ class FilesInfo(ResponseData):
 
     def __init__(self, files_info: List[FileInfo] = None, request: RequestInfo = None):
         super().__init__(request)
-        self.files_info = files_info
+        self.files_info = [] if files_info is None else list(files_info)
 
     def load_from_protobuf_content(self, content: bytes):
         protobuf_object = self.protobuf_object_type()
@@ -358,6 +479,7 @@ class FilesInfo(ResponseData):
         self.request = RequestInfo.create_from_protobuf(ret_files_info.request)
 
         if self.request.error_code != 0:
+            self.files_info = []
             return
 
         files_info = ret_files_info.fileInfos
@@ -386,8 +508,8 @@ class GridVector2D(ResponseData):
             v_element_name: str = "",
     ):
         super().__init__(request)
-        self.u_datas = u_datas
-        self.v_datas = v_datas
+        self.u_datas = _empty_grid() if u_datas is None else u_datas
+        self.v_datas = _empty_grid() if v_datas is None else v_datas
         self.start_lat = start_lat
         self.start_lon = start_lon
         self.end_lat = end_lat
@@ -396,10 +518,37 @@ class GridVector2D(ResponseData):
         self.lon_count = lon_count
         self.lon_step = lon_step
         self.lat_step = lat_step
-        self.lats = lats
-        self.lons = lons
+        self.lats = [] if lats is None else list(lats)
+        self.lons = [] if lons is None else list(lons)
         self.u_element_name = u_element_name
         self.v_element_name = v_element_name
+
+    def to_xarray(self) -> xr.Dataset:
+        self._ensure_convertible()
+        u_data = np.asarray(self.u_datas)
+        v_data = np.asarray(self.v_datas)
+        _validate_grid_values(
+            "GridVector2D", self.lat_count, self.lon_count,
+            self.lats, self.lons, u_datas=u_data, v_datas=v_data,
+        )
+        shape = (self.lat_count, self.lon_count)
+        if u_data.shape != shape or v_data.shape != shape:
+            raise ValueError(
+                "GridVector2D data shape does not match grid dimensions: "
+                f"{u_data.shape}, {v_data.shape} != {shape}"
+            )
+        return xr.Dataset(
+            data_vars={
+                self.u_element_name or "u": (("latitude", "longitude"), u_data),
+                self.v_element_name or "v": (("latitude", "longitude"), v_data),
+            },
+            coords=_grid_coordinates(
+                self.start_lat, self.end_lat, self.lat_step, self.lat_count,
+                self.lats, self.start_lon, self.end_lon, self.lon_step,
+                self.lon_count, self.lons,
+            ),
+            attrs=self._output_metadata(),
+        )
 
     def load_from_protobuf_content(self, content: bytes):
         protobuf_object = self.protobuf_object_type()
@@ -410,6 +559,12 @@ class GridVector2D(ResponseData):
         self.request = RequestInfo.create_from_protobuf(ret_grid_vector_2d.request)
 
         if self.request.error_code != 0:
+            self.u_datas = _empty_grid()
+            self.v_datas = _empty_grid()
+            self.lats = []
+            self.lons = []
+            self.lat_count = 0
+            self.lon_count = 0
             return
 
         self.start_lat = ret_grid_vector_2d.startLat
@@ -421,16 +576,33 @@ class GridVector2D(ResponseData):
         self.lon_step = ret_grid_vector_2d.lonStep
         self.lat_step = ret_grid_vector_2d.latStep
 
-        self.lats = list(ret_grid_vector_2d.lats)
-        self.lons = list(ret_grid_vector_2d.lons)
+        self.lats = _grid_axis(
+            ret_grid_vector_2d.lats,
+            self.start_lat, self.end_lat, self.lat_step,
+            self.lat_count, "latitude",
+        )
+        self.lons = _grid_axis(
+            ret_grid_vector_2d.lons,
+            self.start_lon, self.end_lon, self.lon_step,
+            self.lon_count, "longitude",
+        )
 
         self.u_element_name = ret_grid_vector_2d.u_EleName
         self.v_element_name = ret_grid_vector_2d.v_EleName
 
         row_count = self.lat_count
         col_count = self.lon_count
-        self.u_datas = np.array(ret_grid_vector_2d.u_datas).reshape([row_count, col_count])
-        self.v_datas = np.array(ret_grid_vector_2d.v_datas).reshape([row_count, col_count])
+        _validate_grid_values(
+            "GridVector2D", row_count, col_count, self.lats, self.lons,
+            u_datas=ret_grid_vector_2d.u_datas,
+            v_datas=ret_grid_vector_2d.v_datas,
+        )
+        self.u_datas = np.array(ret_grid_vector_2d.u_datas).reshape(
+            [row_count, col_count]
+        )
+        self.v_datas = np.array(ret_grid_vector_2d.v_datas).reshape(
+            [row_count, col_count]
+        )
 
 
 class GridScalar2D(ResponseData):
@@ -454,7 +626,7 @@ class GridScalar2D(ResponseData):
             user_element_name: str = "",
     ):
         super().__init__(request)
-        self.data = data
+        self.data = _empty_grid() if data is None else data
         self.start_lat = start_lat
         self.start_lon = start_lon
         self.end_lat = end_lat
@@ -463,10 +635,31 @@ class GridScalar2D(ResponseData):
         self.lon_count = lon_count
         self.lon_step = lon_step
         self.lat_step = lat_step
-        self.lats = lats
-        self.lons = lons
+        self.lats = [] if lats is None else list(lats)
+        self.lons = [] if lons is None else list(lons)
         self.units = units
         self.user_element_name = user_element_name
+
+    def to_xarray(self) -> xr.DataArray:
+        self._ensure_convertible()
+        data = np.asarray(self.data)
+        shape = (self.lat_count, self.lon_count)
+        if data.ndim != 2 or data.shape != shape:
+            raise ValueError(
+                "GridScalar2D data shape does not match grid dimensions: "
+                f"{data.shape} != {shape}"
+            )
+        return xr.DataArray(
+            data,
+            dims=("latitude", "longitude"),
+            coords=_grid_coordinates(
+                self.start_lat, self.end_lat, self.lat_step, self.lat_count,
+                self.lats, self.start_lon, self.end_lon, self.lon_step,
+                self.lon_count, self.lons,
+            ),
+            attrs={"units": self.units, **self._output_metadata()},
+            name=self.user_element_name,
+        )
 
     def load_from_protobuf_content(self, content: bytes):
         protobuf_object = self.protobuf_object_type()
@@ -477,6 +670,11 @@ class GridScalar2D(ResponseData):
         self.request = RequestInfo.create_from_protobuf(ret_grid_scalar_2d.request)
 
         if self.request.error_code != 0:
+            self.data = _empty_grid()
+            self.lats = []
+            self.lons = []
+            self.lat_count = 0
+            self.lon_count = 0
             return
 
         self.start_lat = ret_grid_scalar_2d.startLat
@@ -488,12 +686,26 @@ class GridScalar2D(ResponseData):
         self.lon_step = ret_grid_scalar_2d.lonStep
         self.lat_step = ret_grid_scalar_2d.latStep
 
-        self.lats = ret_grid_scalar_2d.lats
-        self.lons = ret_grid_scalar_2d.lons
+        self.lats = _grid_axis(
+            ret_grid_scalar_2d.lats,
+            self.start_lat, self.end_lat, self.lat_step,
+            self.lat_count, "latitude",
+        )
+        self.lons = _grid_axis(
+            ret_grid_scalar_2d.lons,
+            self.start_lon, self.end_lon, self.lon_step,
+            self.lon_count, "longitude",
+        )
 
         self.units = ret_grid_scalar_2d.units
         self.user_element_name = ret_grid_scalar_2d.userEleName
 
         row_count = self.lat_count
         col_count = self.lon_count
-        self.data = np.array(ret_grid_scalar_2d.datas).reshape([row_count, col_count])
+        _validate_grid_values(
+            "GridScalar2D", row_count, col_count, self.lats, self.lons,
+            data=ret_grid_scalar_2d.datas,
+        )
+        self.data = np.array(ret_grid_scalar_2d.datas).reshape(
+            [row_count, col_count]
+        )

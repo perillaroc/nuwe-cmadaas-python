@@ -28,6 +28,7 @@ nuwe-cmadaas-python 文档
    guide/music-compatibility
    adr/0001-error-migration
    adr/0002-transport-hardening
+   adr/0003-data-output-contract
 
 
 索引和表格

@@ -4,7 +4,11 @@ import requests
 from nuwe_cmadaas.music.client import CMADaaSClient
 from nuwe_cmadaas.music.connection import Connection
 from nuwe_cmadaas.music.protocol import encode_music_params
-from tests.fixtures import make_array2d_content, make_files_info_content
+from tests.fixtures import (
+    make_array2d_content,
+    make_files_info_content,
+    make_grid_array2d_content,
+)
 
 
 pytestmark = pytest.mark.unit
@@ -268,3 +272,39 @@ def test_download_rejects_server_path_traversal_before_file_request(tmp_path):
     assert result.request.error_message == "unsafe server file name"
     assert len(calls) == 1
     assert not (tmp_path.parent / "outside.bin").exists()
+
+
+def test_grid_output_carries_query_metadata_without_changing_values():
+    class Transport:
+        def get(self, url, **kwargs):
+            return FakeResponse(make_grid_array2d_content())
+
+    client = CMADaaSClient(
+        server_ip="synthetic.example",
+        server_port=8080,
+        server_id="synthetic-service",
+        connection_timeout=1,
+        read_timeout=2,
+        user="synthetic-user",
+        password="synthetic-password",
+        transport=Transport(),
+        max_retries=0,
+    )
+    result = client.callAPI_to_gridArray2D(
+        "syntheticInterface",
+        {
+            "time": "20260102000000",
+            "validTime": "24",
+            "levelType": "100",
+            "fcstLevel": "850",
+            "fcstMember": 2,
+        },
+    )
+
+    field = result.to_xarray()
+    assert field.attrs["interface_id"] == "syntheticInterface"
+    assert field.attrs["time"] == "20260102000000"
+    assert field.attrs["valid_time"] == "24"
+    assert field.attrs["level_type"] == "100"
+    assert field.attrs["level"] == "850"
+    assert field.attrs["member"] == 2

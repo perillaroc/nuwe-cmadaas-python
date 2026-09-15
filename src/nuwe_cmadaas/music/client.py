@@ -516,6 +516,7 @@ class CMADaaSClient:
             exception_handler,
             idempotent=idempotent,
         )
+        self._attach_output_metadata(result, interface_id, params)
         if self.log_policy == "summary":
             request = getattr(result, "request", None)
             result_code = getattr(request, "error_code", "unknown")
@@ -526,6 +527,24 @@ class CMADaaSClient:
                 f"result_code={result_code} retries={self._connection.last_retries}"
             )
         return result
+
+    @staticmethod
+    def _attach_output_metadata(result, interface_id: str, params: Dict) -> None:
+        metadata = getattr(result, "metadata", None)
+        if not isinstance(metadata, dict):
+            return
+        metadata["interface_id"] = interface_id
+        parameter_names = {
+            "time": "time",
+            "timeRange": "time_range",
+            "validTime": "valid_time",
+            "levelType": "level_type",
+            "fcstLevel": "level",
+            "fcstMember": "member",
+        }
+        for source_name, metadata_name in parameter_names.items():
+            if source_name in params:
+                metadata[metadata_name] = params[source_name]
 
     @staticmethod
     def _redact_url(fetch_url: str) -> str:

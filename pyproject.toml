@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=64", "setuptools_scm>=8"]
+requires = ["setuptools>=77", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,14 +8,14 @@ authors = [
     {name="Wang Dapeng", email="perillaroc@gmail.com"}
 ]
 description = "A python API for CMADaaS MUSIC."
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 readme = "README.md"
 keywords = ["music", "cmadaas"]
 classifiers = [
     "Development Status :: 3 - Alpha",
 
     "Intended Audience :: Developers",
-
-    'License :: OSI Approved :: Apache Software License',
 
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -39,6 +39,23 @@ Repository = "https://github.com/perillaroc/nuwe-cmadaas-python.git"
 test = ["pytest", "pytest-socket"]
 cov = ["pytest-cov", "codecov"]
 example = ["click"]
+
+[dependency-groups]
+test = ["pytest", "pytest-socket"]
+cov = [
+    { include-group = "test" },
+    "pytest-cov",
+    "codecov",
+]
+docs = [
+    "sphinx>=7.3",
+    "sphinx-book-theme>=1.1",
+    "ipython",
+]
+dev = [
+    { include-group = "cov" },
+    { include-group = "docs" },
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -1274,9 +1274,9 @@ cases:
   test_node: tests/integration/obs/test_station.py::test_registered_case[OS-007]
   documentation_anchor: guide/high-level/obs/station#os-007
   implemented: true
-  online_status: implemented-unverified
-  reason: Case implemented; awaiting authorized service verification
-  last_verified_environment_and_time: null
+  online_status: passed
+  reason: '2026-09-29: live service returned a nonempty station table with the requested columns and station ID'
+  last_verified_environment_and_time: '2026-09-29 22:18:04 +08:00; local WSL, Python 3.14; dataset SURF_CHN_MUL_HOR, station 54533, OS-007 enabled; no credentials recorded'
 - case_id: OS-008
   family: obs_station
   query_features:

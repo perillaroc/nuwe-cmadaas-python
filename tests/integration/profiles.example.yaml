@@ -1,0 +1,122 @@
+# Copy to a private file and set NUWE_CMADAAS_TEST_PROFILE to its path.
+# Credentials and service address belong in CEDARKIT_CONFIG, not this file.
+# Replace every EXAMPLE value with data available to your account before enabling.
+datasets:
+  obs_station_hourly:
+    enabled: false
+    data_code: EXAMPLE_STATION_CODE
+    elements: Station_Id_C,TEM
+    station_id: EXAMPLE_ID
+    station_ids: [EXAMPLE_ID]
+    station_range: [EXAMPLE_MIN, EXAMPLE_MAX]
+    region:
+      type: rect
+      start_longitude: 110.0
+      end_longitude: 110.2
+      start_latitude: 30.0
+      end_latitude: 30.2
+    station_level: "011"
+    expected_columns: [Station_Id_C, TEM]
+    max_rows: 20
+  obs_grid:
+    enabled: false
+    data_code: EXAMPLE_OBS_GRID_CODE
+    parameter: TEM
+    region:
+      type: rect
+      start_longitude: 110.0
+      end_longitude: 110.2
+      start_latitude: 30.0
+      end_latitude: 30.2
+    expected_units: K
+  obs_file:
+    enabled: false
+    data_code: EXAMPLE_OBS_FILE_CODE
+    station_id: EXAMPLE_ID
+  obs_upper_regular:
+    enabled: false
+    data_code: EXAMPLE_UPPER_CODE
+    elements: Station_Id_C,TEM
+    station_id: EXAMPLE_ID
+    level_type: "100"
+    level: 850
+    expected_columns: [Station_Id_C, TEM]
+    max_rows: 20
+  obs_upper_gps:
+    enabled: false
+    data_code: EXAMPLE_GPS_CODE
+    elements: Station_Id_C
+    max_rows: 20
+  obs_upper_light:
+    enabled: false
+    data_code: EXAMPLE_LIGHT_CODE
+    elements: Station_Id_C
+    max_rows: 20
+  obs_upper_ard:
+    enabled: false
+    data_code: EXAMPLE_ARD_CODE
+    elements: Station_Id_C
+    max_rows: 20
+  obs_upper_file:
+    enabled: false
+    data_code: EXAMPLE_UPPER_FILE_CODE
+    station_id: EXAMPLE_ID
+  model_forecast:
+    enabled: false
+    data_code: EXAMPLE_MODEL_FORECAST_CODE
+    parameter: TEM
+    level_type: "100"
+    level: 850
+    forecast_time: 24h
+    member_numbers: [0, 10]
+    expected_units: K
+  model_analysis:
+    enabled: false
+    data_code: EXAMPLE_MODEL_ANALYSIS_CODE
+    parameter: TEM
+    level_type: "100"
+    level: 850
+    expected_units: K
+  model_point:
+    enabled: false
+    data_code: EXAMPLE_MODEL_POINT_CODE
+    parameter: TEM
+    level_type: "100"
+    level: 850
+    forecast_time: 24h
+    station_id: EXAMPLE_ID
+    longitude: 110.0
+    latitude: 30.0
+    expected_columns: [TEM]
+    max_rows: 20
+  model_file:
+    enabled: false
+    data_code: EXAMPLE_MODEL_FILE_CODE
+    parameter: TEM
+    level_type: "100"
+    level: 850
+    forecast_time: 24h
+low_level:
+  callAPI_to_array2D:
+    enabled: false
+    interface_id: EXAMPLE_TABLE_INTERFACE
+    data_code: EXAMPLE_TABLE_CODE
+    params: {elements: Station_Id_C,TEM}
+    formats: []
+  callAPI_to_gridArray2D: {enabled: false}
+  callAPI_to_gridScalar2D: {enabled: false}
+  callAPI_to_gridVector2D: {enabled: false}
+  callAPI_to_fileList: {enabled: false}
+  callAPI_to_downFile: {enabled: false}
+  callAPI_to_saveAsFile: {enabled: false}
+  callAPI_to_dataBlock: {enabled: false}
+  callAPI_to_serializedStr: {enabled: false, formats: []}
+cases:
+  OS-007: {enabled: false}
+download_limits:
+  max_files: 2
+  max_total_bytes: 10485760
+  preflight_file_list: true
+  unbounded_download_approved: false
+  approved_data_scope: null
+  approval_reason: null

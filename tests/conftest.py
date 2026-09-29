@@ -15,12 +15,14 @@ from .fixtures.protobuf import (
 
 
 def pytest_collection_modifyitems(config, items):
-    """Classify the pre-existing service-backed tests as integrations."""
+    """Classify tests by their top-level directory."""
     tests_root = Path(__file__).parent
     for item in items:
         relative_path = Path(item.path).relative_to(tests_root)
-        if relative_path.parts and relative_path.parts[0] in {"obs", "model"}:
+        if relative_path.parts and relative_path.parts[0] == "integration":
             item.add_marker(pytest.mark.integration)
+        elif relative_path.parts and relative_path.parts[0] == "unit":
+            item.add_marker(pytest.mark.unit)
 
 
 def _integration_config_is_available() -> bool:

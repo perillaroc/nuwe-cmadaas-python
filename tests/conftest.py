@@ -19,6 +19,10 @@ def pytest_collection_modifyitems(config, items):
         relative_path = Path(item.path).relative_to(tests_root)
         if relative_path.parts and relative_path.parts[0] == "integration":
             item.add_marker(pytest.mark.integration)
+            if not any(item.iter_markers(name="smoke")) and not any(
+                item.iter_markers(name="extended")
+            ):
+                item.add_marker(pytest.mark.extended)
         elif relative_path.parts and relative_path.parts[0] == "unit":
             item.add_marker(pytest.mark.unit)
 

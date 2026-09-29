@@ -81,6 +81,8 @@ addopts = "-m 'not integration'"
 markers = [
     "unit: offline unit and component tests",
     "integration: requires a real CMADaaS service and credentials",
+    "smoke: small stable service-backed scenario",
+    "extended: other service-backed scenario or larger data request",
 ]
 
 [tool.setuptools_scm]

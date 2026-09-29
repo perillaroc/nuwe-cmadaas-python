@@ -3,11 +3,39 @@
 import os
 from pathlib import Path
 
+import pandas as pd
 import pytest
 import yaml
 
 from nuwe_cmadaas.config import load_cmadaas_config
 from nuwe_cmadaas.music import create_client
+
+
+@pytest.fixture
+def start_date():
+    """Runtime base date for grid/model cases; station tests override it."""
+    return (pd.Timestamp.now() - pd.offsets.Day()).normalize() - pd.Timedelta(days=2)
+
+
+@pytest.fixture
+def base_time(start_date):
+    return start_date
+
+
+@pytest.fixture
+def short_time_range(base_time):
+    return pd.Interval(base_time, base_time + pd.Timedelta(hours=1), closed="both")
+
+
+@pytest.fixture
+def time_list(base_time):
+    return [base_time, base_time + pd.Timedelta(hours=1)]
+
+
+@pytest.fixture
+def latest_delta():
+    """Latest-time cases use a relative duration, not the ordinary base date."""
+    return pd.Timedelta(hours=1)
 
 
 @pytest.fixture(scope="session")

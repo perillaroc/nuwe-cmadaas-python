@@ -2,18 +2,15 @@ import pytest
 import pandas as pd
 
 
-# These are explicitly online integration tests. Dynamic dates keep the
-# service-backed examples aligned with data currently available on CMADaaS.
 @pytest.fixture
 def start_date():
-    s = (pd.Timestamp.now() - pd.offsets.Day()).normalize()
-    return s
+    """Station data uses yesterday's date, as in the original online tests."""
+    return (pd.Timestamp.now() - pd.offsets.Day()).normalize()
 
 
 @pytest.fixture
 def end_date():
-    s = pd.Timestamp.now().normalize()
-    return s
+    return pd.Timestamp.now().normalize()
 
 
 @pytest.fixture

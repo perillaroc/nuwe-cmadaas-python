@@ -1,4 +1,4 @@
-# B12 low-level table/grid cases. B13 and B14 add their cases to this manifest.
+# Low-level MUSIC cases. B14 adds serialization and data-block cases here.
 cases:
 - case_id: LLT-001
   family: music_array2d
@@ -118,4 +118,164 @@ cases:
   implemented: true
   online_status: passed
   reason: GFS analysis returned a 720 by 1441 U/V grid at validTime zero.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+- case_id: LLF-001
+  family: music_file_list
+  query_features: []
+  interface_id: getNafpFileByElementAndTime
+  public_function: CMADaaSClient.callAPI_to_fileList
+  public_kwargs:
+    interface_id: getNafpFileByElementAndTime
+    params:
+      dataCode: {profile: data_code}
+      time: {fixture: music_cycle_time}
+      fcstEle: {profile: element}
+      levelType: {profile: level_type}
+  expected_return_contract:
+    kind: FilesInfo
+    max_files: 1
+    file_suffix: grib2
+  profile_key: callAPI_to_fileList
+  tier: smoke
+  enabled: true
+  test_node: tests/integration/music/test_files.py::test_file_list[LLF-001]
+  documentation_anchor: guide/low-level/file-list#llf-001
+  implemented: true
+  online_status: passed
+  reason: CMA-GFS query returned metadata for one 28,492,363-byte GRIB2 file without writing it.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+- case_id: LLF-002
+  family: music_down_file
+  query_features: []
+  interface_id: getNafpFileByElementAndTime
+  public_function: CMADaaSClient.callAPI_to_downFile
+  public_kwargs:
+    interface_id: getNafpFileByElementAndTime
+    params:
+      dataCode: {profile: data_code}
+      time: {fixture: music_cycle_time}
+      fcstEle: {profile: element}
+      levelType: {profile: level_type}
+    file_dir: {fixture: online_output_dir}
+    overwrite: false
+  expected_return_contract:
+    kind: FilesInfo
+    max_files: 1
+    file_suffix: grib2
+  profile_key: callAPI_to_downFile
+  tier: extended
+  enabled: true
+  test_node: tests/integration/music/test_files.py::test_down_file[LLF-002]
+  documentation_anchor: guide/low-level/downloads#llf-002
+  implemented: true
+  online_status: passed
+  reason: Exact-query preflight bounded one 28,492,363-byte GRIB2 file; downFile wrote it to tmp_path.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+- case_id: LLS-001
+  family: music_save_as_file
+  query_features: [json]
+  interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+  public_function: CMADaaSClient.callAPI_to_saveAsFile
+  public_kwargs:
+    interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+    params:
+      dataCode: {profile: data_code}
+      time: {fixture: music_cycle_time}
+      fcstEle: {profile: element}
+      levelType: {profile: level_type}
+      fcstLevel: {profile: level}
+      validTime: {profile: valid_time}
+      latLons: {profile: lat_lons}
+    data_format: json
+    file_name: {fixture: music_save_json_path}
+  expected_return_contract: {kind: FilesInfo, format: json, max_bytes: 1048576}
+  profile_key: callAPI_to_saveAsFile
+  tier: extended
+  enabled: true
+  test_node: tests/integration/music/test_files.py::test_save_as_file[LLS-001]
+  documentation_anchor: guide/low-level/save-as-file#lls-001
+  implemented: true
+  online_status: passed
+  reason: One GFS point record saved and parsed as JSON.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+- case_id: LLS-002
+  family: music_save_as_file
+  query_features: [xml]
+  interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+  public_function: CMADaaSClient.callAPI_to_saveAsFile
+  public_kwargs:
+    interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+    params:
+      dataCode: {profile: data_code}
+      time: {fixture: music_cycle_time}
+      fcstEle: {profile: element}
+      levelType: {profile: level_type}
+      fcstLevel: {profile: level}
+      validTime: {profile: valid_time}
+      latLons: {profile: lat_lons}
+    data_format: xml
+    file_name: {fixture: music_save_xml_path}
+  expected_return_contract: {kind: FilesInfo, format: xml, max_bytes: 1048576}
+  profile_key: callAPI_to_saveAsFile
+  tier: extended
+  enabled: true
+  test_node: tests/integration/music/test_files.py::test_save_as_file[LLS-002]
+  documentation_anchor: guide/low-level/save-as-file#lls-002
+  implemented: true
+  online_status: passed
+  reason: One GFS point record saved and parsed as XML.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+- case_id: LLS-003
+  family: music_save_as_file
+  query_features: [text]
+  interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+  public_function: CMADaaSClient.callAPI_to_saveAsFile
+  public_kwargs:
+    interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+    params:
+      dataCode: {profile: data_code}
+      time: {fixture: music_cycle_time}
+      fcstEle: {profile: element}
+      levelType: {profile: level_type}
+      fcstLevel: {profile: level}
+      validTime: {profile: valid_time}
+      latLons: {profile: lat_lons}
+    data_format: text
+    file_name: {fixture: music_save_text_path}
+  expected_return_contract: {kind: FilesInfo, format: text, max_bytes: 1048576}
+  profile_key: callAPI_to_saveAsFile
+  tier: extended
+  enabled: true
+  test_node: tests/integration/music/test_files.py::test_save_as_file[LLS-003]
+  documentation_anchor: guide/low-level/save-as-file#lls-003
+  implemented: true
+  online_status: passed
+  reason: One GFS point record saved as a text table.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+- case_id: LLS-004
+  family: music_save_as_file
+  query_features: [html]
+  interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+  public_function: CMADaaSClient.callAPI_to_saveAsFile
+  public_kwargs:
+    interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+    params:
+      dataCode: {profile: data_code}
+      time: {fixture: music_cycle_time}
+      fcstEle: {profile: element}
+      levelType: {profile: level_type}
+      fcstLevel: {profile: level}
+      validTime: {profile: valid_time}
+      latLons: {profile: lat_lons}
+    data_format: html
+    file_name: {fixture: music_save_html_path}
+  expected_return_contract: {kind: FilesInfo, format: html, max_bytes: 1048576}
+  profile_key: callAPI_to_saveAsFile
+  tier: extended
+  enabled: true
+  test_node: tests/integration/music/test_files.py::test_save_as_file[LLS-004]
+  documentation_anchor: guide/low-level/save-as-file#lls-004
+  implemented: true
+  online_status: passed
+  reason: One GFS point record saved as an HTML table.
   last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS

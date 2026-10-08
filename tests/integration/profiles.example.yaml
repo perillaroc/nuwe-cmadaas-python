@@ -244,9 +244,23 @@ low_level:
     level_type: "100"
     level: "850"
     valid_time: "0"
-  callAPI_to_fileList: {enabled: false}
-  callAPI_to_downFile: {enabled: false}
-  callAPI_to_saveAsFile: {enabled: false}
+  callAPI_to_fileList: &gfs_file
+    enabled: false
+    data_code: NAFP_FOR_FTM_GRAPES_CFSV2_NEHE
+    element: TEM
+    level_type: "103"
+    max_files: 1
+  callAPI_to_downFile: *gfs_file
+  callAPI_to_saveAsFile:
+    enabled: false
+    data_code: NAFP_FOR_FTM_GRAPES_CFSV2_NEHE
+    element: TEM
+    level_type: "103"
+    level: "2"
+    valid_time: "24"
+    lat_lons: "39.9/116.4"
+    formats: [json, xml, text, html]
+    max_output_bytes: 1048576
   callAPI_to_dataBlock: {enabled: false}
   callAPI_to_serializedStr: {enabled: false, formats: []}
 cases:
@@ -287,6 +301,12 @@ cases:
   LLG-001: {enabled: false}  # one-degree GFS forecast grid
   LLG-002: {enabled: false}  # one-degree scalar grid
   LLG-003: {enabled: false}  # full Northeast Hemisphere U/V grid
+  LLF-001: {enabled: false}  # file metadata only; no download
+  LLF-002: {enabled: false}  # one GRIB2 file, about 28.5 MB
+  LLS-001: {enabled: false}  # small JSON file
+  LLS-002: {enabled: false}  # small XML file
+  LLS-003: {enabled: false}  # small text file
+  LLS-004: {enabled: false}  # small HTML file
 download_limits:
   max_files: 2
   max_total_bytes: 67108864

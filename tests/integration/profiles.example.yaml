@@ -36,6 +36,7 @@ datasets:
     enabled: false
     data_code: EXAMPLE_LATEST_STATION_CODE
     expected_columns: [Datetime]
+    latest_hours: 24
   obs_station_level_range:
     enabled: false
     data_code: EXAMPLE_LEVEL_RANGE_CODE
@@ -276,10 +277,49 @@ low_level:
     lat_lons: "39.9/116.4"
     formats: [json, xml, text, html]
 cases:
+  OS-002: {enabled: false}
+  OS-002-time-list: {enabled: false}
+  OS-003: {enabled: false}
+  OS-004: {enabled: false}
   OS-007: {enabled: false}
+  OS-007-time-list: {enabled: false}
+  OS-007-list: {enabled: false}
+  OS-008: {enabled: false}
+  OS-008-time-list: {enabled: false}
+  OS-009: {enabled: false}
+  OS-009-day-list: {enabled: false}
+  OS-009-day-scalar: {enabled: false}
+  OS-010: {enabled: false}
+  OS-012: {enabled: false}
+  OS-014: {enabled: false}
+  OS-014-time-list: {enabled: false}
+  OS-015: {enabled: false}
+  OS-017: {enabled: false}
+  OS-017-time-list: {enabled: false}
+  OS-018: {enabled: false}
+  OS-020: {enabled: false}
+  OS-020-time-list: {enabled: false}
+  OS-021: {enabled: false}
+  OSL-001: {enabled: false}
   OG-002: {enabled: false}  # full national grid; enable separately
   OG-005: {enabled: false}  # small rectangle smoke case
+  OU-002: {enabled: false}
+  OU-003: {enabled: false}
+  OU-008: {enabled: false}
+  OU-009: {enabled: false}
   OU-010: {enabled: false}  # regular upper-air smoke case
+  OU-011: {enabled: false}
+  OU-014: {enabled: false}
+  OU-015: {enabled: false}
+  OU-016: {enabled: false}
+  OU-017: {enabled: false}
+  OUG-008: {enabled: false}
+  OUG-010: {enabled: false}
+  OUG-011: {enabled: false}
+  OUL-009: {enabled: false}
+  OUA-001: {enabled: false}
+  OUA-002: {enabled: false}
+  OULAT-001: {enabled: false}
   OF-002: {enabled: false}
   OF-003: {enabled: false}
   OF-009: {enabled: false}  # requires a station file data code granted to this account
@@ -309,6 +349,7 @@ cases:
   MF-012: {enabled: false}  # requires an explicit extended download cap
   MF-019: {enabled: false}  # requires an explicit extended download cap
   MFL-001: {enabled: false}  # metadata query; no download
+  OFL-001: {enabled: false}  # surface latest-time table; no download
   LLT-001: {enabled: false}  # GFS point table
   LLG-001: {enabled: false}  # one-degree GFS forecast grid
   LLG-002: {enabled: false}  # one-degree scalar grid

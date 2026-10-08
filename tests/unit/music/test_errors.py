@@ -12,7 +12,10 @@ from nuwe_cmadaas.music import (
     CMADaaSRequestError,
     MusicError,
 )
-from nuwe_cmadaas.obs import download_obs_file, retrieve_obs_grid, retrieve_obs_station, retrieve_obs_upper_air
+from nuwe_cmadaas.obs import (
+    download_obs_file, download_obs_upper_air_file, retrieve_obs_grid,
+    retrieve_obs_station, retrieve_obs_upper_air,
+)
 from tests.fixtures import (
     FakeCMADaaSClient,
     make_array2d_response,
@@ -146,3 +149,26 @@ def test_strict_file_downloads_raise_and_legacy_path_warns(tmp_path):
     with pytest.warns(DeprecationWarning, match="MusicError"):
         result = download_obs_file("SYNTHETIC_STATION", time=pd.Timestamp("2026-01-02"), output_dir=Path(tmp_path), client=legacy_client)
     assert result == MusicError(-3005, "file failure")
+
+
+@pytest.mark.parametrize(
+    ("download", "interface_id"),
+    [
+        (download_obs_file, "getSurfFileByTime"),
+        (download_obs_upper_air_file, "getUparFileByTime"),
+    ],
+)
+def test_strict_observation_file_error_is_never_an_empty_download(
+    tmp_path, download, interface_id
+):
+    client = FakeCMADaaSClient(
+        make_files_info_response(error_code=-3005, error_message="file failure")
+    )
+    with pytest.raises(CMADaaSRequestError) as raised:
+        download(
+            "SYNTHETIC_DATA", time=pd.Timestamp("2026-01-02"),
+            output_dir=tmp_path, client=client, strict=True,
+        )
+    assert raised.value.error_code == -3005
+    assert raised.value.interface_id == interface_id
+    assert client.calls == [(interface_id, {"dataCode": "SYNTHETIC_DATA", "times": "20260102000000"})]

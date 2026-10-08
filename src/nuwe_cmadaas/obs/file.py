@@ -14,7 +14,7 @@ from nuwe_cmadaas.util import (
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas.music import get_or_create_client, CMADaaSClient, MusicError
 from nuwe_cmadaas.music.errors import handle_response_error
-from nuwe_cmadaas.interfaces import resolve_interface
+from nuwe_cmadaas.interfaces import UnsupportedQueryError, resolve_interface
 
 from .util import InterfaceConfig
 
@@ -84,7 +84,7 @@ def download_obs_file(
         - 时间对象：``pd.Timestamp`` 或 ``datetime.datetime`` 类型，单个时间点，对应接口的 times 参数
         - 时间列表：``list`` 或 ``tuple`` 类型，元素为 pandas 或标准库 datetime，对应接口的 times 参数
         - 时间段：``pd.Interval`` 类型，起止时间，定义区间端点是否闭合，对应接口的 timeRange 参数
-        - 时间间隔：``pd.Timedelta`` 或 ``datetime.timedelta`` 类型，用于获取地面资料最新时次 (getSurfLatestTime)，忽略其余筛选条件
+        - 时间间隔：不支持文件下载；最新时次应作为表格查询
     station:
         站点筛选条件，支持字符串，列表和元组
 
@@ -155,9 +155,10 @@ def download_obs_file(
     elif normalized_time is not None and normalized_time.kind in ("single", "multiple"):
         interface_config["time"] = "Time"
     elif normalized_time is not None and normalized_time.kind == "latest":
-        interface_config["name"] = "getSurfLatestTime"
-        params.pop("orderby", None)
-        params.pop("elements", None)
+        raise UnsupportedQueryError(
+            "getSurfLatestTime returns a Datetime table and cannot download files; "
+            "use CMADaaSClient.callAPI_to_array2D"
+        )
     params.update(time_params)
 
     normalized_station, station_params = station_filter_params(station)
@@ -192,9 +193,7 @@ def download_obs_file(
 
     params.update(**kwargs)
 
-    if interface_config["name"] == "getSurfLatestTime":
-        family = "obs_file_latest"
-    elif interface_config["name"] == "getUparFile":
+    if interface_config["name"] == "getUparFile":
         family = "obs_upper_file"
     elif interface_config["name"] == "getSurfFile":
         family = "obs_file"

@@ -6,7 +6,7 @@ import pandas as pd
 import pytest
 
 from nuwe_cmadaas.interfaces import UnsupportedQueryError, resolve_interface
-from nuwe_cmadaas.obs import download_obs_file
+from nuwe_cmadaas.obs import download_obs_file, download_obs_upper_air_file
 from tests.fixtures import FakeCMADaaSClient, make_files_info_response
 from tests.integration.file_download import BoundedDownloadClient
 
@@ -93,18 +93,17 @@ def test_catalog_absent_file_combination_is_rejected_before_request(
     assert client.calls == []
 
 
-def test_download_obs_file_latest_time_does_not_delete_missing_optional_keys(tmp_path):
+@pytest.mark.parametrize("download", [download_obs_file, download_obs_upper_air_file])
+def test_latest_time_cannot_be_downloaded_before_request(tmp_path, download):
     client = FakeCMADaaSClient(make_files_info_response())
 
-    download_obs_file(
-        "SYNTHETIC_STATION", time=pd.Timedelta(hours=6),
-        output_dir=tmp_path, client=client,
-    )
+    with pytest.raises(UnsupportedQueryError, match="returns a Datetime table"):
+        download(
+            "SYNTHETIC_STATION", time=pd.Timedelta(hours=6),
+            output_dir=tmp_path, client=client,
+        )
 
-    assert client.calls == [(
-        "getSurfLatestTime",
-        {"dataCode": "SYNTHETIC_STATION", "latestTime": "6"},
-    )]
+    assert client.calls == []
 
 
 @pytest.mark.parametrize("count", [0, -1, 1.5, True])

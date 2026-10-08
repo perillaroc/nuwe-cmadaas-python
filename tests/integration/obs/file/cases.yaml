@@ -104,16 +104,24 @@ cases:
   family: obs_file_latest
   query_features: []
   interface_id: getSurfLatestTime
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract: null
-  profile_key: obs_file
+  public_function: CMADaaSClient.callAPI_to_array2D
+  public_kwargs:
+    interface_id: getSurfLatestTime
+    params:
+      dataCode: {profile: data_code}
+      latestTime: {profile: latest_hours}
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns: [Datetime]
+    max_rows: 1
+  profile_key: obs_station_latest
   tier: extended
   enabled: false
-  test_node: null
+  test_node: tests/integration/obs/file/test_latest_time.py::test_registered_case[OFL-001]
   documentation_anchor: guide/high-level/obs/files#ofl-001
-  implemented: false
-  online_status: blocked-contract
-  reason: The 2026-10-07 SURF_API catalog declares getSurfLatestTime as RetArray2D;
-    a downloadable RetFilesInfo response is not established (B07-fix-01).
+  implemented: true
+  online_status: implemented-unverified
+  reason: The catalog declares RetArray2D and OSL-001 previously verified the same service ID;
+    this distinct case has not been run online.
   last_verified_environment_and_time: null

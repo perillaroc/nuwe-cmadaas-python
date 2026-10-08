@@ -64,6 +64,12 @@ pytestmark = pytest.mark.unit
             "getSurfFileByTimeRangeAndStaID",
             "file_list",
         ),
+        (
+            "obs_file_latest",
+            set(),
+            "getSurfLatestTime",
+            "array_2d",
+        ),
     ],
 )
 def test_registered_interface_spec_is_exact(family, features, interface_id, return_type):

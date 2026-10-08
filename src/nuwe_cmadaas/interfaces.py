@@ -357,7 +357,7 @@ INTERFACE_SPECS = tuple(
     for family, declarations in _DECLARATIONS.items()
     for spec in _make_specs(
         family,
-        "file_list" if family in {"model_file", "obs_file", "obs_upper_file", "obs_file_latest"}
+        "file_list" if family in {"model_file", "obs_file", "obs_upper_file"}
         else "grid_array_2d" if family in {"model_grid_forecast", "model_grid_analysis", "obs_grid"}
         else "array_2d",
         declarations,

@@ -1,87 +1,146 @@
-# Case definitions for model/point.
-# Case IDs are unique across all integration manifests.
+# NAFP_API catalog-backed point and station forecast cases.
 cases:
 - case_id: MP-001
   family: model_point
-  query_features:
-  - level
-  - point
-  - time
-  - valid_time
+  query_features: [level, point, time, valid_time]
   interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
   public_function: retrieve_model_point
-  public_kwargs: null
+  public_kwargs:
+    data_code: {profile: data_code}
+    parameter: {profile: parameter}
+    start_time: {fixture: model_point_cycle_time}
+    forecast_time: {profile: forecast_time}
+    level_type: {profile: level_type}
+    level: {profile: level}
+    point: {tuple: {profile: point}}
   expected_return_contract:
     kind: dataframe
+    nonempty: true
+    columns: {profile: expected_columns}
+    point_matches: {profile: point}
+  profile_key: model_point
+  tier: smoke
+  enabled: true
+  test_node: tests/integration/model/point/test_point.py::test_registered_case[MP-001]
+  documentation_anchor: guide/high-level/model/point#mp-001
+  implemented: true
+  online_status: passed
+  reason: Live point result matched position, cycle, level, lead, and finite 2 m temperature bounds.
+  last_verified_environment_and_time: 2026-10-08 20:13 +0800; local WSL, Python 3.14;
+    dynamic three-days-ago 06 cycle; direct CMADaaS; NAFP_FOR_FTM_GRAPES_CFSV2_NEHE
+- case_id: MP-001-multi-point
+  family: model_point
+  query_features: [level, point, time, valid_time]
+  interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+  public_function: retrieve_model_point
+  public_kwargs:
+    data_code: {profile: data_code}
+    parameter: {profile: parameter}
+    start_time: {fixture: model_point_cycle_time}
+    forecast_time: {profile: forecast_time}
+    level_type: {profile: level_type}
+    level: {profile: level}
+    point:
+    - {tuple: {profile: point}}
+    - {tuple: {profile: second_point}}
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns: {profile: expected_columns}
+    points_match:
+    - {profile: point}
+    - {profile: second_point}
   profile_key: model_point
   tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/point#mp-001
-  implemented: false
-  online_status: planned
-  reason: Awaiting B10 case implementation
-  last_verified_environment_and_time: null
+  enabled: true
+  test_node: tests/integration/model/point/test_point.py::test_registered_case[MP-001-multi-point]
+  documentation_anchor: guide/high-level/model/point#mp-001-multi-point
+  implemented: true
+  online_status: passed
+  reason: Two requested coordinates returned two distinct bounded temperature rows.
+  last_verified_environment_and_time: 2026-10-08 20:13 +0800; local WSL, Python 3.14;
+    dynamic three-days-ago 06 cycle; direct CMADaaS; NAFP_FOR_FTM_GRAPES_CFSV2_NEHE
 - case_id: MP-002
   family: model_point
-  query_features:
-  - level
-  - point
-  - time
-  - valid_time_range
+  query_features: [level, point, time, valid_time_range]
   interface_id: getNafpEleAtPointByTimeAndLevelAndValidtimeRange
   public_function: retrieve_model_point
-  public_kwargs: null
+  public_kwargs:
+    data_code: {profile: data_code}
+    parameter: {profile: parameter}
+    start_time: {fixture: model_point_cycle_time}
+    forecast_time: {tuple: {profile: forecast_time_range}}
+    level_type: {profile: level_type}
+    level: {profile: level}
+    point: {tuple: {profile: point}}
   expected_return_contract:
     kind: dataframe
+    nonempty: true
+    columns: {profile: expected_columns}
+    point_matches: {profile: point}
   profile_key: model_point
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/model/point/test_point.py::test_registered_case[MP-002]
   documentation_anchor: guide/high-level/model/point#mp-002
-  implemented: false
-  online_status: planned
-  reason: Awaiting B10 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live point lead-range result contained multiple leads within 6..24 h and valid temperature values.
+  last_verified_environment_and_time: 2026-10-08 20:13 +0800; local WSL, Python 3.14;
+    dynamic three-days-ago 06 cycle; direct CMADaaS; NAFP_FOR_FTM_GRAPES_CFSV2_NEHE
 - case_id: MP-003
   family: model_point
-  query_features:
-  - level
-  - station
-  - time
-  - valid_time
+  query_features: [level, station, time, valid_time]
   interface_id: getNafpEleByTimeAndLevelAndValidtimeAndStaID
   public_function: retrieve_model_point
-  public_kwargs: null
+  public_kwargs:
+    data_code: {profile: data_code}
+    parameter: {profile: parameter}
+    start_time: {fixture: model_point_cycle_time}
+    forecast_time: {profile: forecast_time}
+    level_type: {profile: level_type}
+    level: {profile: level}
+    station: {profile: station_id}
   expected_return_contract:
     kind: dataframe
+    nonempty: true
+    columns: {profile: expected_station_columns}
+    station_matches: {profile: station_id}
   profile_key: model_point
-  tier: extended
-  enabled: false
-  test_node: null
+  tier: smoke
+  enabled: true
+  test_node: tests/integration/model/point/test_point.py::test_registered_case[MP-003]
   documentation_anchor: guide/high-level/model/point#mp-003
-  implemented: false
-  online_status: planned
-  reason: Awaiting B10 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live station 54511 result matched station ID, cycle, level, lead, and temperature bounds.
+  last_verified_environment_and_time: 2026-10-08 20:13 +0800; local WSL, Python 3.14;
+    dynamic three-days-ago 06 cycle; direct CMADaaS; NAFP_FOR_FTM_GRAPES_CFSV2_NEHE
 - case_id: MP-004
   family: model_point
-  query_features:
-  - level
-  - station
-  - time
-  - valid_time_range
+  query_features: [level, station, time, valid_time_range]
   interface_id: getNafpEleByTimeAndLevelAndValidtimeRangeAndStaID
   public_function: retrieve_model_point
-  public_kwargs: null
+  public_kwargs:
+    data_code: {profile: data_code}
+    parameter: {profile: parameter}
+    start_time: {fixture: model_point_cycle_time}
+    forecast_time: {tuple: {profile: forecast_time_range}}
+    level_type: {profile: level_type}
+    level: {profile: level}
+    station: {profile: station_id}
   expected_return_contract:
     kind: dataframe
+    nonempty: true
+    columns: {profile: expected_station_columns}
+    station_matches: {profile: station_id}
   profile_key: model_point
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/model/point/test_point.py::test_registered_case[MP-004]
   documentation_anchor: guide/high-level/model/point#mp-004
-  implemented: false
-  online_status: planned
-  reason: Awaiting B10 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live station 54511 lead-range result contained multiple bounded leads and valid temperatures.
+  last_verified_environment_and_time: 2026-10-08 20:13 +0800; local WSL, Python 3.14;
+    dynamic three-days-ago 06 cycle; direct CMADaaS; NAFP_FOR_FTM_GRAPES_CFSV2_NEHE

@@ -3,8 +3,13 @@ import pandas as pd
 
 
 @pytest.fixture
-def start_time_for_reps(start_date):
-    return start_date + pd.Timedelta(hours=6)
+def model_cycle_time(base_time):
+    return base_time + pd.Timedelta(hours=6)
+
+
+@pytest.fixture
+def start_time_for_reps(model_cycle_time):
+    return model_cycle_time
 
 @pytest.fixture
 def future_start_date():

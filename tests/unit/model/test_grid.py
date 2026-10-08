@@ -65,7 +65,8 @@ def test_retrieve_model_grid_builds_analysis_request():
         DATA_CODE,
         parameter=PARAMETER,
         start_time=TIME,
-        forecast_time=pd.Timedelta(hours=0),
+        level_type=100,
+        level=850,
         data_type="analysis",
         client=client,
     )
@@ -73,31 +74,33 @@ def test_retrieve_model_grid_builds_analysis_request():
     assert isinstance(result, xr.DataArray)
     assert client.calls == [
         (
-            "getNafpAnaEleGridByTimeAndValidtime",
+            "getNafpAnaEleGridByTimeAndLevel",
             {
                 "dataCode": DATA_CODE,
                 "fcstEle": PARAMETER,
                 "time": "20260102000000",
-                "validTime": "0",
+                "levelType": "100",
+                "fcstLevel": "850",
             },
         )
     ]
 
 
-def test_retrieve_model_grid_builds_minimal_forecast_request():
+def test_retrieve_model_grid_builds_time_only_forecast_request():
     client = FakeCMADaaSClient(make_grid_array2d_response())
 
     result = retrieve_model_grid(
         DATA_CODE,
         parameter=PARAMETER,
+        start_time=TIME,
         client=client,
     )
 
     assert isinstance(result, xr.DataArray)
     assert client.calls == [
         (
-            "getNafpEleGrid",
-            {"dataCode": DATA_CODE, "fcstEle": PARAMETER},
+            "getNafpEleGridByTime",
+            {"dataCode": DATA_CODE, "fcstEle": PARAMETER, "time": "20260102000000"},
         )
     ]
 
@@ -113,6 +116,7 @@ def test_retrieve_model_grid_returns_synthetic_music_error():
     result = retrieve_model_grid(
         DATA_CODE,
         parameter=PARAMETER,
+        start_time=TIME,
         client=client,
     )
 
@@ -165,12 +169,12 @@ def test_retrieve_model_grid_rejects_invalid_query_without_request(kwargs, messa
             {
                 "name": "getNafpEleGrid",
                 "region": None,
-                "time": None,
+                "time": "Time",
                 "level": None,
                 "valid_time": None,
                 "number": None,
             },
-            "getNafpEleGrid",
+            "getNafpEleGridByTime",
         ),
     ],
 )

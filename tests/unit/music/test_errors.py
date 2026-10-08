@@ -69,13 +69,14 @@ def test_strict_model_grid_raises_structured_request_error():
         retrieve_model_grid(
             "SYNTHETIC_MODEL",
             parameter="TEM",
+            start_time=pd.Timestamp("2026-01-02"),
             client=client,
             strict=True,
         )
 
     assert raised.value.error_code == -3234
-    assert raised.value.interface_id == "getNafpEleGrid"
-    assert client.calls[0][0] == "getNafpEleGrid"
+    assert raised.value.interface_id == "getNafpEleGridByTime"
+    assert client.calls[0][0] == "getNafpEleGridByTime"
 
 
 @pytest.mark.parametrize(

@@ -72,6 +72,21 @@ _MODEL_GRID_SUFFIXES = {
         "InRectByTimeAndLevelAndValidtimeAndFcstMember",
 }
 
+_CATALOG_MODEL_GRID_IDS = {
+    "model_grid_forecast": {
+        "getNafpEleGridByTime",
+        "getNafpEleGridByTimeAndLevelAndValidtime",
+        "getNafpEleGridInRectByTime",
+        "getNafpEleGridInRectByTimeAndLevelAndValidtime",
+        "getNafpEleGridByTimeAndLevelAndValidtimeAndFcstMember",
+        "getNafpEleGridInRectByTimeAndLevelAndValidtimeAndFcstMember",
+    },
+    "model_grid_analysis": {
+        "getNafpAnaEleGridByTimeAndLevel",
+        "getNafpAnaEleGridInRectByTimeAndLevel",
+    },
+}
+
 
 def _model_grid_declarations(base: str) -> dict[frozenset[str], tuple[str, frozenset[str]]]:
     required = {"dataCode", "fcstEle"}
@@ -278,8 +293,14 @@ def _upper_declarations(base: str) -> dict[frozenset[str], tuple[str, frozenset[
 
 
 _DECLARATIONS = {
-    "model_grid_forecast": _model_grid_declarations("getNafpEleGrid"),
-    "model_grid_analysis": _model_grid_declarations("getNafpAnaEleGrid"),
+    "model_grid_forecast": {
+        features: spec for features, spec in _model_grid_declarations("getNafpEleGrid").items()
+        if spec[0] in _CATALOG_MODEL_GRID_IDS["model_grid_forecast"]
+    },
+    "model_grid_analysis": {
+        features: spec for features, spec in _model_grid_declarations("getNafpAnaEleGrid").items()
+        if spec[0] in _CATALOG_MODEL_GRID_IDS["model_grid_analysis"]
+    },
     "model_point": {
         _features("time", "level", "valid_time", "point"): ("getNafpEleAtPointByTimeAndLevelAndValidtime", _features("dataCode", "fcstEle", "time", "levelType", "fcstLevel", "validTime", "latLons")),
         _features("time", "level", "valid_time_range", "point"): ("getNafpEleAtPointByTimeAndLevelAndValidtimeRange", _features("dataCode", "fcstEle", "time", "levelType", "fcstLevel", "minVT", "maxVT", "latLons")),

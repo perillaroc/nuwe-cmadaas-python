@@ -1,134 +1,41 @@
-# Case definitions for model/grid.
-# Case IDs are unique across all integration manifests.
+# Catalog-backed model-grid cases. Absent IDs reject before request.
 cases:
-- case_id: MGF-001
-  family: model_grid_forecast
-  query_features: []
-  interface_id: getNafpEleGrid
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_forecast
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mgf-001
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
 - case_id: MGF-002
   family: model_grid_forecast
   query_features:
   - time
   interface_id: getNafpEleGridByTime
   public_function: retrieve_model_grid
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    parameter:
+      profile: parameter
+    start_time:
+      fixture: base_time
   expected_return_contract:
     kind: dataarray
-  profile_key: model_forecast
+    dims:
+    - latitude
+    - longitude
+    nonempty: true
+  profile_key: model_forecast_time_only
   tier: extended
   enabled: false
-  test_node: null
+  test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGF-002]
   documentation_anchor: guide/high-level/model/grid#mgf-002
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGF-003
-  family: model_grid_forecast
-  query_features:
-  - level
-  interface_id: getNafpEleGridByLevel
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_forecast
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mgf-003
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGF-004
-  family: model_grid_forecast
-  query_features:
-  - valid_time
-  interface_id: getNafpEleGridByValidtime
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_forecast
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mgf-004
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGF-005
-  family: model_grid_forecast
-  query_features:
-  - level
-  - time
-  interface_id: getNafpEleGridByTimeAndLevel
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_forecast
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mgf-005
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGF-006
-  family: model_grid_forecast
-  query_features:
-  - time
-  - valid_time
-  interface_id: getNafpEleGridByTimeAndValidtime
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_forecast
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mgf-006
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGF-007
-  family: model_grid_forecast
-  query_features:
-  - level
-  - valid_time
-  interface_id: getNafpEleGridByLevelAndValidtime
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_forecast
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mgf-007
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: failed
+  verification_blocker: needs-other-nafp-dataset
+  reason: Access was granted to NAFP_FOR_SC_GRAPESBCGZ_9KM_CHN, but the live
+    service returned -3001 for both TEM and the listed TPE03 element. The portal
+    element list and this service response disagree. Further investigation of
+    this interface is deferred in favor of CEMC GFS/MESO/TYM/GEPS/REPS data.
+  last_verified_environment_and_time: 2026-10-08 16:43 +0800; local WSL, Python
+    3.14; dynamic three-days-ago time; direct CMADaaS; NAFP_FOR_SC_GRAPESBCGZ_9KM_CHN
+  run_prerequisite: Another NAFP numerical prediction dataset supported by this
+    exact interface, with verified access, element, and recent data, is required
+    if this interface is revisited; other data categories are not applicable.
 - case_id: MGF-008
   family: model_grid_forecast
   query_features:
@@ -137,36 +44,37 @@ cases:
   - valid_time
   interface_id: getNafpEleGridByTimeAndLevelAndValidtime
   public_function: retrieve_model_grid
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    parameter:
+      profile: parameter
+    start_time:
+      fixture: model_cycle_time
+    level_type:
+      profile: level_type
+    level:
+      profile: level
+    forecast_time:
+      profile: forecast_time
   expected_return_contract:
     kind: dataarray
+    dims:
+    - latitude
+    - longitude
+    nonempty: true
   profile_key: model_forecast
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGF-008]
   documentation_anchor: guide/high-level/model/grid#mgf-008
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGF-009
-  family: model_grid_forecast
-  query_features:
-  - region
-  interface_id: getNafpEleGridInRect
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_forecast
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mgf-009
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live DataArray passed dimension, coordinate, query metadata, region/member
+    where applicable, and finite-value assertions.
+  last_verified_environment_and_time: 2026-10-08 16:24 +0800; local WSL, Python 3.14;
+    dynamic three-days-ago time; direct CMADaaS; NAFP_GRAPES_MESO_FOR_3KM; full-domain
+    forecast
 - case_id: MGF-010
   family: model_grid_forecast
   query_features:
@@ -174,116 +82,41 @@ cases:
   - time
   interface_id: getNafpEleGridInRectByTime
   public_function: retrieve_model_grid
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    parameter:
+      profile: parameter
+    start_time:
+      fixture: base_time
+    region:
+      profile: region
   expected_return_contract:
     kind: dataarray
-  profile_key: model_forecast
+    dims:
+    - latitude
+    - longitude
+    nonempty: true
+  profile_key: model_forecast_rect_time
   tier: extended
   enabled: false
-  test_node: null
+  test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGF-010]
   documentation_anchor: guide/high-level/model/grid#mgf-010
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGF-011
-  family: model_grid_forecast
-  query_features:
-  - level
-  - region
-  interface_id: getNafpEleGridInRectByLevel
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_forecast
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mgf-011
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGF-012
-  family: model_grid_forecast
-  query_features:
-  - region
-  - valid_time
-  interface_id: getNafpEleGridInRectByValidtime
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_forecast
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mgf-012
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGF-013
-  family: model_grid_forecast
-  query_features:
-  - level
-  - region
-  - time
-  interface_id: getNafpEleGridInRectByTimeAndLevel
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_forecast
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mgf-013
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGF-014
-  family: model_grid_forecast
-  query_features:
-  - region
-  - time
-  - valid_time
-  interface_id: getNafpEleGridInRectByTimeAndValidtime
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_forecast
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mgf-014
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGF-015
-  family: model_grid_forecast
-  query_features:
-  - level
-  - region
-  - valid_time
-  interface_id: getNafpEleGridInRectByLevelAndValidtime
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_forecast
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mgf-015
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: failed
+  verification_blocker: needs-other-nafp-dataset
+  reason: NAFP_FOR_SC_GRAPESBCGZ_9KM_CHN returned -3001 for listed elements
+    TPE03, TPE06, TPE24, TEMC24, PRSC24, TPE, CAPE, and VIS, as well as TEM
+    and 14 common candidates. The rectangle lies inside the documented coverage.
+    The earlier HRCLDAS dataset also returned -3001 for seven candidates.
+    Further investigation of this interface is deferred in favor of CEMC
+    GFS/MESO/TYM/GEPS/REPS data.
+  last_verified_environment_and_time: 2026-10-08 16:43 +0800; local WSL, Python
+    3.14; dynamic three-days-ago time; direct CMADaaS; NAFP_FOR_SC_GRAPESBCGZ_9KM_CHN;
+    southern-China small rectangle
+  run_prerequisite: Another NAFP numerical prediction dataset supported by this
+    exact interface, with verified access, element, and recent data, is required
+    if this interface is revisited; other data categories are not applicable.
 - case_id: MGF-016
   family: model_grid_forecast
   query_features:
@@ -293,18 +126,39 @@ cases:
   - valid_time
   interface_id: getNafpEleGridInRectByTimeAndLevelAndValidtime
   public_function: retrieve_model_grid
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    parameter:
+      profile: parameter
+    start_time:
+      fixture: model_cycle_time
+    level_type:
+      profile: level_type
+    level:
+      profile: level
+    forecast_time:
+      profile: forecast_time
+    region:
+      profile: region
   expected_return_contract:
     kind: dataarray
+    dims:
+    - latitude
+    - longitude
+    nonempty: true
   profile_key: model_forecast
-  tier: extended
-  enabled: false
-  test_node: null
+  tier: smoke
+  enabled: true
+  test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGF-016]
   documentation_anchor: guide/high-level/model/grid#mgf-016
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live DataArray passed dimension, coordinate, query metadata, region/member
+    where applicable, and finite-value assertions.
+  last_verified_environment_and_time: 2026-10-08 16:24 +0800; local WSL, Python 3.14;
+    dynamic three-days-ago time; direct CMADaaS; NAFP_GRAPES_MESO_FOR_3KM; small-rectangle
+    forecast
 - case_id: MGF-017
   family: model_grid_forecast
   query_features:
@@ -314,18 +168,85 @@ cases:
   - valid_time
   interface_id: getNafpEleGridByTimeAndLevelAndValidtimeAndFcstMember
   public_function: retrieve_model_grid
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    parameter:
+      profile: parameter
+    start_time:
+      fixture: start_time_for_reps
+    level_type:
+      profile: level_type
+    level:
+      profile: level
+    forecast_time:
+      profile: forecast_time
+    number:
+      profile: member_number
   expected_return_contract:
     kind: dataarray
-  profile_key: model_forecast
+    dims:
+    - latitude
+    - longitude
+    nonempty: true
+  profile_key: model_reps_control
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGF-017]
   documentation_anchor: guide/high-level/model/grid#mgf-017
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live DataArray passed dimension, coordinate, query metadata, region/member
+    where applicable, and finite-value assertions.
+  last_verified_environment_and_time: 2026-10-08 16:24 +0800; local WSL, Python 3.14;
+    dynamic three-days-ago time; direct CMADaaS; NAFP_GRAPESREPS_FOR_FTM_CHN; control
+    member 0
+  legacy_tests:
+  - model/grid/test_cma_reps.py::test_control_field
+- case_id: MGF-017-member-10
+  family: model_grid_forecast
+  query_features:
+  - level
+  - number
+  - time
+  - valid_time
+  interface_id: getNafpEleGridByTimeAndLevelAndValidtimeAndFcstMember
+  public_function: retrieve_model_grid
+  public_kwargs:
+    data_code:
+      profile: data_code
+    parameter:
+      profile: parameter
+    start_time:
+      fixture: start_time_for_reps
+    level_type:
+      profile: level_type
+    level:
+      profile: level
+    forecast_time:
+      profile: forecast_time
+    number:
+      profile: member_number
+  expected_return_contract:
+    kind: dataarray
+    dims:
+    - latitude
+    - longitude
+    nonempty: true
+  profile_key: model_reps_member
+  tier: extended
+  enabled: true
+  test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGF-017-member-10]
+  documentation_anchor: guide/high-level/model/grid#mgf-017-member-10
+  implemented: true
+  online_status: passed
+  reason: Live DataArray passed dimension, coordinate, query metadata, region/member
+    where applicable, and finite-value assertions.
+  last_verified_environment_and_time: 2026-10-08 16:24 +0800; local WSL, Python 3.14;
+    dynamic three-days-ago time; direct CMADaaS; NAFP_GRAPESREPS_FOR_FTM_DIS_CHN;
+    perturbation member 10
+  legacy_tests:
+  - model/grid/test_cma_reps.py::test_member_field
 - case_id: MGF-018
   family: model_grid_forecast
   query_features:
@@ -336,89 +257,41 @@ cases:
   - valid_time
   interface_id: getNafpEleGridInRectByTimeAndLevelAndValidtimeAndFcstMember
   public_function: retrieve_model_grid
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    parameter:
+      profile: parameter
+    start_time:
+      fixture: start_time_for_reps
+    level_type:
+      profile: level_type
+    level:
+      profile: level
+    forecast_time:
+      profile: forecast_time
+    region:
+      profile: region
+    number:
+      profile: member_number
   expected_return_contract:
     kind: dataarray
-  profile_key: model_forecast
-  tier: extended
-  enabled: false
-  test_node: null
+    dims:
+    - latitude
+    - longitude
+    nonempty: true
+  profile_key: model_reps_member
+  tier: smoke
+  enabled: true
+  test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGF-018]
   documentation_anchor: guide/high-level/model/grid#mgf-018
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGA-001
-  family: model_grid_analysis
-  query_features: []
-  interface_id: getNafpAnaEleGrid
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_analysis
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mga-001
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGA-002
-  family: model_grid_analysis
-  query_features:
-  - time
-  interface_id: getNafpAnaEleGridByTime
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_analysis
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mga-002
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGA-003
-  family: model_grid_analysis
-  query_features:
-  - level
-  interface_id: getNafpAnaEleGridByLevel
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_analysis
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mga-003
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGA-004
-  family: model_grid_analysis
-  query_features:
-  - valid_time
-  interface_id: getNafpAnaEleGridByValidtime
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_analysis
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mga-004
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live DataArray passed dimension, coordinate, query metadata, region/member
+    where applicable, and finite-value assertions.
+  last_verified_environment_and_time: 2026-10-08 16:24 +0800; local WSL, Python 3.14;
+    dynamic three-days-ago time; direct CMADaaS; NAFP_GRAPESREPS_FOR_FTM_DIS_CHN;
+    perturbation member 10, small rectangle
 - case_id: MGA-005
   family: model_grid_analysis
   query_features:
@@ -426,151 +299,36 @@ cases:
   - time
   interface_id: getNafpAnaEleGridByTimeAndLevel
   public_function: retrieve_model_grid
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    parameter:
+      profile: parameter
+    data_type: analysis
+    start_time:
+      fixture: base_time
+    level_type:
+      profile: level_type
+    level:
+      profile: level
   expected_return_contract:
     kind: dataarray
+    dims:
+    - latitude
+    - longitude
+    nonempty: true
   profile_key: model_analysis
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGA-005]
   documentation_anchor: guide/high-level/model/grid#mga-005
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGA-006
-  family: model_grid_analysis
-  query_features:
-  - time
-  - valid_time
-  interface_id: getNafpAnaEleGridByTimeAndValidtime
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_analysis
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mga-006
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGA-007
-  family: model_grid_analysis
-  query_features:
-  - level
-  - valid_time
-  interface_id: getNafpAnaEleGridByLevelAndValidtime
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_analysis
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mga-007
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGA-008
-  family: model_grid_analysis
-  query_features:
-  - level
-  - time
-  - valid_time
-  interface_id: getNafpAnaEleGridByTimeAndLevelAndValidtime
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_analysis
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mga-008
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGA-009
-  family: model_grid_analysis
-  query_features:
-  - region
-  interface_id: getNafpAnaEleGridInRect
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_analysis
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mga-009
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGA-010
-  family: model_grid_analysis
-  query_features:
-  - region
-  - time
-  interface_id: getNafpAnaEleGridInRectByTime
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_analysis
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mga-010
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGA-011
-  family: model_grid_analysis
-  query_features:
-  - level
-  - region
-  interface_id: getNafpAnaEleGridInRectByLevel
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_analysis
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mga-011
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGA-012
-  family: model_grid_analysis
-  query_features:
-  - region
-  - valid_time
-  interface_id: getNafpAnaEleGridInRectByValidtime
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_analysis
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mga-012
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live DataArray passed dimension, coordinate, query metadata, region/member
+    where applicable, and finite-value assertions.
+  last_verified_environment_and_time: 2026-10-08 16:24 +0800; local WSL, Python 3.14;
+    dynamic three-days-ago time; direct CMADaaS; NAFP_GRAPES_MESO_ANA_3KM; full-domain
+    analysis
 - case_id: MGA-013
   family: model_grid_analysis
   query_features:
@@ -579,119 +337,35 @@ cases:
   - time
   interface_id: getNafpAnaEleGridInRectByTimeAndLevel
   public_function: retrieve_model_grid
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    parameter:
+      profile: parameter
+    data_type: analysis
+    start_time:
+      fixture: base_time
+    level_type:
+      profile: level_type
+    level:
+      profile: level
+    region:
+      profile: region
   expected_return_contract:
     kind: dataarray
+    dims:
+    - latitude
+    - longitude
+    nonempty: true
   profile_key: model_analysis
-  tier: extended
-  enabled: false
-  test_node: null
+  tier: smoke
+  enabled: true
+  test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGA-013]
   documentation_anchor: guide/high-level/model/grid#mga-013
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGA-014
-  family: model_grid_analysis
-  query_features:
-  - region
-  - time
-  - valid_time
-  interface_id: getNafpAnaEleGridInRectByTimeAndValidtime
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_analysis
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mga-014
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGA-015
-  family: model_grid_analysis
-  query_features:
-  - level
-  - region
-  - valid_time
-  interface_id: getNafpAnaEleGridInRectByLevelAndValidtime
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_analysis
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mga-015
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGA-016
-  family: model_grid_analysis
-  query_features:
-  - level
-  - region
-  - time
-  - valid_time
-  interface_id: getNafpAnaEleGridInRectByTimeAndLevelAndValidtime
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_analysis
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mga-016
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGA-017
-  family: model_grid_analysis
-  query_features:
-  - level
-  - number
-  - time
-  - valid_time
-  interface_id: getNafpAnaEleGridByTimeAndLevelAndValidtimeAndFcstMember
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_analysis
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mga-017
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
-- case_id: MGA-018
-  family: model_grid_analysis
-  query_features:
-  - level
-  - number
-  - region
-  - time
-  - valid_time
-  interface_id: getNafpAnaEleGridInRectByTimeAndLevelAndValidtimeAndFcstMember
-  public_function: retrieve_model_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: model_analysis
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/grid#mga-018
-  implemented: false
-  online_status: planned
-  reason: Awaiting B09 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live DataArray passed dimension, coordinate, query metadata, region/member
+    where applicable, and finite-value assertions.
+  last_verified_environment_and_time: 2026-10-08 16:24 +0800; local WSL, Python 3.14;
+    dynamic three-days-ago time; direct CMADaaS; NAFP_GRAPES_MESO_ANA_3KM; small-rectangle
+    analysis

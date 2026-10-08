@@ -119,19 +119,51 @@ datasets:
     max_files: 1
   model_forecast:
     enabled: false
-    data_code: EXAMPLE_MODEL_FORECAST_CODE
+    data_code: NAFP_GRAPES_MESO_FOR_3KM
     parameter: TEM
     level_type: "100"
     level: 850
     forecast_time: 24h
-    member_numbers: [0, 10]
+    region: {type: rect, start_longitude: 115.0, end_longitude: 117.0, start_latitude: 41.0, end_latitude: 39.0}
     expected_units: K
-  model_analysis:
+  model_forecast_time_only:
     enabled: false
-    data_code: EXAMPLE_MODEL_ANALYSIS_CODE
+    # Deferred: requires another supported NAFP numerical prediction dataset.
+    data_code: NAFP_FOR_SC_GRAPESBCGZ_9KM_CHN
+    parameter: TPE03
+  model_forecast_rect_time:
+    enabled: false
+    # Deferred: requires another supported NAFP numerical prediction dataset.
+    data_code: NAFP_FOR_SC_GRAPESBCGZ_9KM_CHN
+    parameter: TPE03
+    region: {type: rect, start_longitude: 112.0, end_longitude: 113.0, start_latitude: 24.0, end_latitude: 23.0}
+  model_reps_control:
+    enabled: false
+    data_code: NAFP_GRAPESREPS_FOR_FTM_CHN
     parameter: TEM
     level_type: "100"
     level: 850
+    forecast_time: 24h
+    member_number: 0
+    region: {type: rect, start_longitude: 115.0, end_longitude: 117.0, start_latitude: 41.0, end_latitude: 39.0}
+    expected_units: K
+  model_reps_member:
+    enabled: false
+    data_code: NAFP_GRAPESREPS_FOR_FTM_DIS_CHN
+    parameter: TEM
+    level_type: "100"
+    level: 850
+    forecast_time: 24h
+    member_number: 10
+    region: {type: rect, start_longitude: 115.0, end_longitude: 117.0, start_latitude: 41.0, end_latitude: 39.0}
+    expected_units: K
+  model_analysis:
+    enabled: false
+    data_code: NAFP_GRAPES_MESO_ANA_3KM
+    parameter: TEM
+    level_type: "100"
+    level: 850
+    region: {type: rect, start_longitude: 115.0, end_longitude: 117.0, start_latitude: 41.0, end_latitude: 39.0}
     expected_units: K
   model_point:
     enabled: false
@@ -179,6 +211,15 @@ cases:
   OUF-003: {enabled: false}
   OUF-007: {enabled: false}
   OUF-009: {enabled: false}
+  MGF-002: {enabled: false}  # deferred; needs another supported NAFP dataset
+  MGF-008: {enabled: false}  # full-domain forecast
+  MGF-010: {enabled: false}  # deferred; needs another supported NAFP dataset
+  MGF-016: {enabled: false}
+  MGF-017: {enabled: false}  # full-domain REPS control
+  MGF-017-member-10: {enabled: false}  # full-domain REPS member
+  MGF-018: {enabled: false}
+  MGA-005: {enabled: false}  # full-domain analysis
+  MGA-013: {enabled: false}
 download_limits:
   max_files: 2
   max_total_bytes: 10485760

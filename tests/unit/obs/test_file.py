@@ -8,7 +8,7 @@ import pytest
 from nuwe_cmadaas.interfaces import UnsupportedQueryError, resolve_interface
 from nuwe_cmadaas.obs import download_obs_file
 from tests.fixtures import FakeCMADaaSClient, make_files_info_response
-from tests.integration.obs.file.test_file import BoundedDownloadClient
+from tests.integration.file_download import BoundedDownloadClient
 
 
 pytestmark = pytest.mark.unit

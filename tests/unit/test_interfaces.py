@@ -121,8 +121,9 @@ def test_upper_air_file_query_uses_registered_interface(tmp_path):
 
     download_obs_upper_air_file(
         "UPAR_GLB_MUL_FTM",
+        time=pd.Timestamp("2026-01-02"),
         output_dir=tmp_path,
         client=client,
     )
 
-    assert client.calls[0][0] == "getUparFile"
+    assert client.calls[0][0] == "getUparFileByTime"

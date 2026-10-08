@@ -217,9 +217,17 @@ _OBS_FILE_DECLARATIONS = {
     ),
 }
 
-_OBS_UPPER_FILE_DECLARATIONS = {}
-for _feature_set, (_interface_id, _required) in _obs_station_declarations("getUparFile").items():
-    _OBS_UPPER_FILE_DECLARATIONS[_feature_set] = (_interface_id, _required)
+_OBS_UPPER_FILE_DECLARATIONS = {
+    # Only these IDs exist in the 2026-10-07 UPAR_API catalog.
+    _features("time"): ("getUparFileByTime", _features("dataCode", "times")),
+    _features("time_range"): ("getUparFileByTimeRange", _features("dataCode", "timeRange")),
+    _features("station", "time"): (
+        "getUparFileByTimeAndStaID", _features("dataCode", "times", "staIds")
+    ),
+    _features("station", "time_range"): (
+        "getUparFileByTimeRangeAndStaID", _features("dataCode", "timeRange", "staIds")
+    ),
+}
 
 
 _UPPER_SUFFIXES = {

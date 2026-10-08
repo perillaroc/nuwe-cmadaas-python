@@ -108,8 +108,15 @@ datasets:
     expected_columns: [Datetime]
   obs_upper_file:
     enabled: false
-    data_code: EXAMPLE_UPPER_FILE_CODE
-    station_id: EXAMPLE_ID
+    # Access to this catalog-supported wind-profiler file code is now granted.
+    data_code: UPAR_WPR_STATUS
+    max_files: 1
+  obs_upper_file_station:
+    enabled: false
+    # Access and station 54511 were verified for both station file cases.
+    data_code: UPAR_WPR_STATUS
+    station_id: "54511"
+    max_files: 1
   model_forecast:
     enabled: false
     data_code: EXAMPLE_MODEL_FORECAST_CODE
@@ -168,6 +175,10 @@ cases:
   OF-002: {enabled: false}
   OF-003: {enabled: false}
   OF-009: {enabled: false}  # requires a station file data code granted to this account
+  OUF-002: {enabled: false}
+  OUF-003: {enabled: false}
+  OUF-007: {enabled: false}
+  OUF-009: {enabled: false}
 download_limits:
   max_files: 2
   max_total_bytes: 10485760

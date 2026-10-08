@@ -181,14 +181,38 @@ datasets:
     expected_station_columns: [lat, lon, station_id_c, datetime, level, validtime, TEM_103]
     expected_value_bounds: [150, 350]
     max_rows: 20
-  model_file:
+  model_file_gfs:
     enabled: false
-    # For B11, prefer a catalog-supported CMA-GFS product; use MESO only at 3KM.
-    data_code: EXAMPLE_MODEL_FILE_CODE
+    # MF-003/004 use limitCnt=1 (about 50 MB); MF-008 is about 28.5 MB.
+    data_code: NAFP_FOR_FTM_GRAPES_CFSV2_NEHE
     parameter: TEM
-    level_type: "100"
-    level: 850
+    level_type: "103"
+    level: 2
     forecast_time: 24h
+    max_files: 1
+  model_file_reps_control:
+    enabled: false
+    # MF-009 passed with a one-file, 1.5 GiB extended profile; disabled by default.
+    data_code: NAFP_GRAPESREPS_FOR_FTM_CHN
+    parameter: TEM
+    level_type: "103"
+    level: 2
+    forecast_time: 24h
+    max_files: 1
+  model_file_reps_member:
+    enabled: false
+    # MF-010/012/019 passed with a one-file, 1.5 GiB extended profile.
+    data_code: NAFP_GRAPESREPS_FOR_FTM_DIS_CHN
+    parameter: TEM
+    level_type: "103"
+    level: 2
+    forecast_time: 24h
+    max_files: 1
+  model_latest:
+    enabled: false
+    # getNafpLatestTime returns a Datetime table for this cataloged CMA-GFS analysis product.
+    data_code: NAFP_ANA_FTM_GRAPES_GFS_NEHE
+    latest_hours: "72"
 low_level:
   callAPI_to_array2D:
     enabled: false
@@ -230,9 +254,17 @@ cases:
   MP-002: {enabled: false}
   MP-003: {enabled: false}
   MP-004: {enabled: false}
+  MF-003: {enabled: false}  # limitCnt=1; enable with CMA-GFS dataset
+  MF-004: {enabled: false}  # limitCnt=1; enable with CMA-GFS dataset
+  MF-008: {enabled: false}  # CMA-GFS TEM/103 file
+  MF-009: {enabled: false}  # requires an explicit extended download cap
+  MF-010: {enabled: false}  # requires an explicit extended download cap
+  MF-012: {enabled: false}  # requires an explicit extended download cap
+  MF-019: {enabled: false}  # requires an explicit extended download cap
+  MFL-001: {enabled: false}  # metadata query; no download
 download_limits:
   max_files: 2
-  max_total_bytes: 10485760
+  max_total_bytes: 67108864
   preflight_file_list: true
   unbounded_download_approved: false
   approved_data_scope: null

@@ -108,25 +108,15 @@ def _model_grid_declarations(base: str) -> dict[frozenset[str], tuple[str, froze
 
 
 _MODEL_FILE_DECLARATIONS = {
-    _features(): ("getNafpFile", _features("dataCode")),
-    _features("element"): ("getNafpFileByElement", _features("dataCode", "fcstEle", "elements")),
     _features("time"): ("getNafpFileByTime", _features("dataCode", "time")),
     _features("time_range"): ("getNafpFileByTimeRange", _features("dataCode", "timeRange")),
-    _features("level"): ("getNafpFileByLevel", _features("dataCode", "levelType", "fcstLevel")),
-    _features("time", "level"): ("getNafpFileByTimeAndLevel", _features("dataCode", "time", "levelType", "fcstLevel")),
-    _features("time_range", "level"): ("getNafpFileByTimeRangeAndLevel", _features("dataCode", "timeRange", "levelType", "fcstLevel")),
-    # MUSIC has no Element+Time(+Level) variants with a Level suffix.
-    _features("element", "time"): ("getNafpFileByElementAndTime", _features("dataCode", "fcstEle", "elements", "time")),
-    _features("element", "time_range"): ("getNafpFileByElementAndTimeRange", _features("dataCode", "fcstEle", "elements", "timeRange")),
-    _features("element", "time", "level"): ("getNafpFileByElementAndTime", _features("dataCode", "fcstEle", "elements", "time", "levelType", "fcstLevel")),
-    _features("element", "time_range", "level"): ("getNafpFileByElementAndTimeRange", _features("dataCode", "fcstEle", "elements", "timeRange", "levelType", "fcstLevel")),
-    _features("element", "time", "valid_time"): ("getNafpFileByElementAndTimeAndValidtime", _features("dataCode", "fcstEle", "elements", "time", "validTime")),
-    _features("element", "time_range", "valid_time"): ("getNafpFileByElementAndTimeRangeAndValidtime", _features("dataCode", "fcstEle", "elements", "timeRange", "validTime")),
-    _features("region"): ("getNafpFileInRect", _features("dataCode", "minLat", "minLon", "maxLat", "maxLon")),
-    _features("region", "time"): ("getNafpFileInRectByTime", _features("dataCode", "time", "minLat", "minLon", "maxLat", "maxLon")),
-    _features("region", "time_range"): ("getNafpFileInRectByTimeRange", _features("dataCode", "timeRange", "minLat", "minLon", "maxLat", "maxLon")),
-    _features("region", "element", "time"): ("getNafpFileInRectByElementAndTime", _features("dataCode", "fcstEle", "elements", "time", "minLat", "minLon", "maxLat", "maxLon")),
-    _features("region", "element", "time_range"): ("getNafpFileInRectByElementAndTimeRange", _features("dataCode", "fcstEle", "elements", "timeRange", "minLat", "minLon", "maxLat", "maxLon")),
+    # The catalog requires levelType for element searches, even without fcstLevel.
+    # elements is optional on these file interfaces.
+    _features("element", "time"): ("getNafpFileByElementAndTime", _features("dataCode", "fcstEle", "time", "levelType")),
+    _features("element", "time_range"): ("getNafpFileByElementAndTimeRange", _features("dataCode", "fcstEle", "timeRange", "levelType")),
+    _features("element", "time", "level"): ("getNafpFileByElementAndTimeAndLevel", _features("dataCode", "fcstEle", "time", "levelType", "fcstLevel")),
+    _features("element", "time", "valid_time"): ("getNafpFileByElementAndTimeAndValidtime", _features("dataCode", "fcstEle", "time", "levelType", "validTime")),
+    _features("element", "time", "level", "valid_time"): ("getNafpFileByElementAndTimeAndLevelAndValidtime", _features("dataCode", "fcstEle", "time", "levelType", "fcstLevel", "validTime")),
 }
 
 
@@ -367,7 +357,7 @@ INTERFACE_SPECS = tuple(
     for family, declarations in _DECLARATIONS.items()
     for spec in _make_specs(
         family,
-        "file_list" if family in {"model_file", "model_file_latest", "obs_file", "obs_upper_file", "obs_file_latest"}
+        "file_list" if family in {"model_file", "obs_file", "obs_upper_file", "obs_file_latest"}
         else "grid_array_2d" if family in {"model_grid_forecast", "model_grid_analysis", "obs_grid"}
         else "array_2d",
         declarations,

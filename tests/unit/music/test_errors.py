@@ -132,11 +132,15 @@ def test_strict_file_downloads_raise_and_legacy_path_warns(tmp_path):
         error_message="file failure",
     )
     strict_client = FakeCMADaaSClient(error_result)
+    cycle = (pd.Timestamp.now() - pd.Timedelta(days=3)).normalize()
 
     with pytest.raises(CMADaaSRequestError) as raised:
-        download_model_file("SYNTHETIC_MODEL", output_dir=tmp_path, client=strict_client, strict=True)
+        download_model_file(
+            "SYNTHETIC_MODEL", start_time=cycle,
+            output_dir=tmp_path, client=strict_client, strict=True,
+        )
 
-    assert raised.value.interface_id == "getNafpFile"
+    assert raised.value.interface_id == "getNafpFileByTime"
 
     legacy_client = FakeCMADaaSClient(error_result)
     with pytest.warns(DeprecationWarning, match="MusicError"):

@@ -37,7 +37,7 @@ pytestmark = pytest.mark.unit
         (
             "model_file",
             {"element", "time", "level"},
-            "getNafpFileByElementAndTime",
+            "getNafpFileByElementAndTimeAndLevel",
             "file_list",
         ),
         (

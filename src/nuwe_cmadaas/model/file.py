@@ -15,7 +15,7 @@ from nuwe_cmadaas.music import MusicError, get_or_create_client, CMADaaSClient
 from nuwe_cmadaas.music.errors import handle_response_error
 from nuwe_cmadaas.config import CMADaasConfig
 from nuwe_cmadaas._log import logger
-from nuwe_cmadaas.interfaces import resolve_interface
+from nuwe_cmadaas.interfaces import UnsupportedQueryError, resolve_interface
 
 
 class InterfaceConfig(TypedDict):
@@ -40,8 +40,10 @@ def download_model_file(
         config: Optional[Union[CMADaasConfig, str, Path]] = None,
         client: Optional[CMADaaSClient] = None,
         strict: bool = False,
+        count: Optional[int] = None,
 ) -> Union[List[Path], MusicError]:
-    validate_level_pair(level_type, level)
+    if level is not None or parameter is None:
+        validate_level_pair(level_type, level)
 
     interface_config = InterfaceConfig(
         name="getNafpFile",
@@ -79,9 +81,9 @@ def download_model_file(
 
     if level_type is not None:
         params["levelType"] = str(level_type)
-        interface_config["level"] = "Level"
     if level is not None:
         params["fcstLevel"] = str(normalize_level(level))
+        interface_config["level"] = "Level"
 
     normalized_time, time_params = time_filter_params(
         start_time, field_name="start_time"
@@ -91,10 +93,11 @@ def download_model_file(
     elif normalized_time is not None and normalized_time.kind in ("single", "multiple"):
         interface_config["time"] = "Time"
     elif normalized_time is not None and normalized_time.kind == "latest":
-        interface_config["name"] = "getNafpLatestTime"
+        raise UnsupportedQueryError(
+            "getNafpLatestTime returns a Datetime table and cannot download files; "
+            "use CMADaaSClient.callAPI_to_array2D"
+        )
     params.update(time_params)
-    if normalized_time is not None and normalized_time.kind == "latest":
-        params.pop("elements", None)
 
     if forecast_time is not None:
         valid_time = forecast_hours(forecast_time)
@@ -111,11 +114,21 @@ def download_model_file(
         get_region_params(region, params, interface_config)
 
     family = "model_file_latest" if interface_config["name"] == "getNafpLatestTime" else "model_file"
-    interface_id = resolve_interface(
+    spec = resolve_interface(
         family,
         _features_from_config(interface_config),
         params=params,
-    ).interface_id
+    )
+    if count is not None:
+        if type(count) is not int or count <= 0:
+            raise ValueError("count must be a positive integer")
+        if spec.interface_id not in {"getNafpFileByTime", "getNafpFileByTimeRange"}:
+            raise ValueError("count is supported only for model file time queries")
+        params["limitCnt"] = str(count)
+    missing = spec.required_params.difference(params)
+    if missing:
+        raise ValueError(f"{spec.interface_id} requires parameters: {', '.join(sorted(missing))}")
+    interface_id = spec.interface_id
     logger.info(f"interface_id: {interface_id}")
 
     cmadaas_client = get_or_create_client(config, client)

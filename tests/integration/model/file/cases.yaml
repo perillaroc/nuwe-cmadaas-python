@@ -1,133 +1,66 @@
-# Case definitions for model/file.
-# Case IDs are unique across all integration manifests.
+# Catalog-backed model file cases. Absent combinations reject before a client request.
+# Download cases require exact-query preflight and strict file/byte limits.
 cases:
-- case_id: MF-001
-  family: model_file
-  query_features: []
-  interface_id: getNafpFile
-  public_function: download_model_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: model_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/files#mf-001
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
-- case_id: MF-002
-  family: model_file
-  query_features:
-  - element
-  interface_id: getNafpFileByElement
-  public_function: download_model_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: model_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/files#mf-002
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
 - case_id: MF-003
   family: model_file
   query_features:
   - time
   interface_id: getNafpFileByTime
   public_function: download_model_file
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    start_time:
+      fixture: model_file_cycle_time
+    output_dir:
+      fixture: online_output_dir
+    count:
+      profile: max_files
   expected_return_contract:
     kind: paths
-  profile_key: model_file
+    nonempty: true
+    within_output_dir: true
+    files_exist: true
+  profile_key: model_file_gfs
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/model/file/test_file.py::test_registered_case[MF-003]
   documentation_anchor: guide/high-level/model/files#mf-003
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: With limitCnt=1, preflight and actual download returned one 50,100,565-byte CMA-GFS file.
+  last_verified_environment_and_time: 2026-10-08 21:22 +0800; local WSL, Python 3.14; dynamic three-days-ago
+    06 cycle; direct CMADaaS; exact-query preflight
 - case_id: MF-004
   family: model_file
   query_features:
   - time_range
   interface_id: getNafpFileByTimeRange
   public_function: download_model_file
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    start_time:
+      fixture: model_file_cycle_time_range
+    output_dir:
+      fixture: online_output_dir
+    count:
+      profile: max_files
   expected_return_contract:
     kind: paths
-  profile_key: model_file
+    nonempty: true
+    within_output_dir: true
+    files_exist: true
+  profile_key: model_file_gfs
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/model/file/test_file.py::test_registered_case[MF-004]
   documentation_anchor: guide/high-level/model/files#mf-004
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
-- case_id: MF-005
-  family: model_file
-  query_features:
-  - level
-  interface_id: getNafpFileByLevel
-  public_function: download_model_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: model_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/files#mf-005
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
-- case_id: MF-006
-  family: model_file
-  query_features:
-  - level
-  - time
-  interface_id: getNafpFileByTimeAndLevel
-  public_function: download_model_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: model_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/files#mf-006
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
-- case_id: MF-007
-  family: model_file
-  query_features:
-  - level
-  - time_range
-  interface_id: getNafpFileByTimeRangeAndLevel
-  public_function: download_model_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: model_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/files#mf-007
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: With limitCnt=1, preflight and actual download returned one 50,100,565-byte CMA-GFS file.
+  last_verified_environment_and_time: 2026-10-08 21:22 +0800; local WSL, Python 3.14; dynamic three-days-ago
+    06 cycle; direct CMADaaS; exact-query preflight
 - case_id: MF-008
   family: model_file
   query_features:
@@ -135,18 +68,33 @@ cases:
   - time
   interface_id: getNafpFileByElementAndTime
   public_function: download_model_file
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    start_time:
+      fixture: model_file_cycle_time
+    output_dir:
+      fixture: online_output_dir
+    parameter:
+      profile: parameter
+    level_type:
+      profile: level_type
   expected_return_contract:
     kind: paths
-  profile_key: model_file
+    nonempty: true
+    within_output_dir: true
+    files_exist: true
+  profile_key: model_file_gfs
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/model/file/test_file.py::test_registered_case[MF-008]
   documentation_anchor: guide/high-level/model/files#mf-008
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Exact-query preflight returned one 28,492,363-byte CMA-GFS file; bounded download created a
+    nonempty file in the temporary directory.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; dynamic three-days-ago 06 cycle;
+    direct CMADaaS
 - case_id: MF-009
   family: model_file
   query_features:
@@ -154,58 +102,70 @@ cases:
   - time_range
   interface_id: getNafpFileByElementAndTimeRange
   public_function: download_model_file
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    start_time:
+      fixture: model_file_cycle_time_range
+    output_dir:
+      fixture: online_output_dir
+    parameter:
+      profile: parameter
+    level_type:
+      profile: level_type
   expected_return_contract:
     kind: paths
-  profile_key: model_file
+    nonempty: true
+    within_output_dir: true
+    files_exist: true
+  profile_key: model_file_reps_control
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/model/file/test_file.py::test_registered_case[MF-009]
   documentation_anchor: guide/high-level/model/files#mf-009
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Extended bounded preflight and actual download returned one 207,764,963-byte CMA-REPS control
+    file.
+  last_verified_environment_and_time: 2026-10-08 21:22 +0800; local WSL, Python 3.14; dynamic three-days-ago
+    06 cycle; direct CMADaaS; exact-query preflight
 - case_id: MF-010
   family: model_file
   query_features:
   - element
   - level
   - time
-  interface_id: getNafpFileByElementAndTime
+  interface_id: getNafpFileByElementAndTimeAndLevel
   public_function: download_model_file
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    start_time:
+      fixture: model_file_cycle_time
+    output_dir:
+      fixture: online_output_dir
+    parameter:
+      profile: parameter
+    level_type:
+      profile: level_type
+    level:
+      profile: level
   expected_return_contract:
     kind: paths
-  profile_key: model_file
+    nonempty: true
+    within_output_dir: true
+    files_exist: true
+  profile_key: model_file_reps_member
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/model/file/test_file.py::test_registered_case[MF-010]
   documentation_anchor: guide/high-level/model/files#mf-010
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
-- case_id: MF-011
-  family: model_file
-  query_features:
-  - element
-  - level
-  - time_range
-  interface_id: getNafpFileByElementAndTimeRange
-  public_function: download_model_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: model_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/files#mf-011
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Extended bounded preflight and actual download returned one 1,245,688,428-byte CMA-REPS disturbed-member
+    file.
+  last_verified_environment_and_time: 2026-10-08 21:22 +0800; local WSL, Python 3.14; dynamic three-days-ago
+    06 cycle; direct CMADaaS; exact-query preflight
 - case_id: MF-012
   family: model_file
   query_features:
@@ -214,147 +174,101 @@ cases:
   - valid_time
   interface_id: getNafpFileByElementAndTimeAndValidtime
   public_function: download_model_file
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    start_time:
+      fixture: model_file_cycle_time
+    output_dir:
+      fixture: online_output_dir
+    parameter:
+      profile: parameter
+    level_type:
+      profile: level_type
+    forecast_time:
+      profile: forecast_time
   expected_return_contract:
     kind: paths
-  profile_key: model_file
+    nonempty: true
+    within_output_dir: true
+    files_exist: true
+  profile_key: model_file_reps_member
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/model/file/test_file.py::test_registered_case[MF-012]
   documentation_anchor: guide/high-level/model/files#mf-012
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
-- case_id: MF-013
+  implemented: true
+  online_status: passed
+  reason: Extended bounded preflight and actual download returned one 1,245,688,428-byte CMA-REPS disturbed-member
+    file.
+  last_verified_environment_and_time: 2026-10-08 21:22 +0800; local WSL, Python 3.14; dynamic three-days-ago
+    06 cycle; direct CMADaaS; exact-query preflight
+- case_id: MF-019
   family: model_file
   query_features:
   - element
-  - time_range
+  - level
+  - time
   - valid_time
-  interface_id: getNafpFileByElementAndTimeRangeAndValidtime
+  interface_id: getNafpFileByElementAndTimeAndLevelAndValidtime
   public_function: download_model_file
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    start_time:
+      fixture: model_file_cycle_time
+    output_dir:
+      fixture: online_output_dir
+    parameter:
+      profile: parameter
+    level_type:
+      profile: level_type
+    level:
+      profile: level
+    forecast_time:
+      profile: forecast_time
   expected_return_contract:
     kind: paths
-  profile_key: model_file
+    nonempty: true
+    within_output_dir: true
+    files_exist: true
+  profile_key: model_file_reps_member
   tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/files#mf-013
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
-- case_id: MF-014
-  family: model_file
-  query_features:
-  - region
-  interface_id: getNafpFileInRect
-  public_function: download_model_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: model_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/files#mf-014
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
-- case_id: MF-015
-  family: model_file
-  query_features:
-  - region
-  - time
-  interface_id: getNafpFileInRectByTime
-  public_function: download_model_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: model_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/files#mf-015
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
-- case_id: MF-016
-  family: model_file
-  query_features:
-  - region
-  - time_range
-  interface_id: getNafpFileInRectByTimeRange
-  public_function: download_model_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: model_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/files#mf-016
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
-- case_id: MF-017
-  family: model_file
-  query_features:
-  - element
-  - region
-  - time
-  interface_id: getNafpFileInRectByElementAndTime
-  public_function: download_model_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: model_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/files#mf-017
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
-- case_id: MF-018
-  family: model_file
-  query_features:
-  - element
-  - region
-  - time_range
-  interface_id: getNafpFileInRectByElementAndTimeRange
-  public_function: download_model_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: model_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/model/files#mf-018
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
+  enabled: true
+  test_node: tests/integration/model/file/test_file.py::test_registered_case[MF-019]
+  documentation_anchor: guide/high-level/model/files#mf-019
+  implemented: true
+  online_status: passed
+  reason: Extended bounded preflight and actual download returned one 1,245,688,428-byte CMA-REPS disturbed-member
+    file.
+  last_verified_environment_and_time: 2026-10-08 21:22 +0800; local WSL, Python 3.14; dynamic three-days-ago
+    06 cycle; direct CMADaaS; exact-query preflight
 - case_id: MFL-001
   family: model_file_latest
   query_features: []
   interface_id: getNafpLatestTime
-  public_function: download_model_file
-  public_kwargs: null
-  expected_return_contract: null
-  profile_key: model_file
+  public_function: CMADaaSClient.callAPI_to_array2D
+  public_kwargs:
+    interface_id: getNafpLatestTime
+    params:
+      dataCode:
+        profile: data_code
+      latestTime:
+        profile: latest_hours
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+    - Datetime
+    max_rows: 1
+  profile_key: model_latest
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/model/file/test_latest_time.py::test_registered_case[MFL-001]
   documentation_anchor: guide/high-level/model/files#mfl-001
-  implemented: false
-  online_status: planned
-  reason: Awaiting B11 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: CMA-GFS Northeast Hemisphere analysis returned one Datetime row via callAPI_to_array2D; file-list
+    method returned -10002 and cannot download.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; latestTime=72 relative hours;
+    direct CMADaaS; NAFP_ANA_FTM_GRAPES_GFS_NEHE

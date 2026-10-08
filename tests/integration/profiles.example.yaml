@@ -369,6 +369,3 @@ download_limits:
   max_files: 2
   max_total_bytes: 67108864
   preflight_file_list: true
-  unbounded_download_approved: false
-  approved_data_scope: null
-  approval_reason: null

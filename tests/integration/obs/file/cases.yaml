@@ -1,5 +1,5 @@
 # Catalog-backed surface file cases; absent IDs require UnsupportedQueryError.
-# The latest-time file route is blocked pending B07-fix-01.
+# The latest-time ID returns a table; file download rejects relative durations.
 cases:
 - case_id: OF-002
   family: obs_file

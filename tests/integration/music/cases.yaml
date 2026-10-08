@@ -1,4 +1,4 @@
-# Low-level MUSIC cases. B14 adds serialization and data-block cases here.
+# Low-level MUSIC cases, including the unverified DataBlock service capability.
 cases:
 - case_id: LLT-001
   family: music_array2d
@@ -279,3 +279,134 @@ cases:
   online_status: passed
   reason: One GFS point record saved as an HTML table.
   last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+- case_id: LLR-001
+  family: music_serialized_str
+  query_features: [json]
+  interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+  public_function: CMADaaSClient.callAPI_to_serializedStr
+  public_kwargs:
+    interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+    params:
+      dataCode: {profile: data_code}
+      time: {fixture: music_cycle_time}
+      fcstEle: {profile: element}
+      levelType: {profile: level_type}
+      fcstLevel: {profile: level}
+      validTime: {profile: valid_time}
+      latLons: {profile: lat_lons}
+    data_format: json
+  expected_return_contract: {kind: str, format: json, max_chars: 4096}
+  profile_key: callAPI_to_serializedStr
+  tier: smoke
+  enabled: true
+  test_node: tests/integration/music/test_serialization.py::test_registered_case[LLR-001]
+  documentation_anchor: guide/low-level/serialization#llr-001
+  implemented: true
+  online_status: passed
+  reason: GFS point query returned a parseable JSON string with one matching record.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+- case_id: LLR-002
+  family: music_serialized_str
+  query_features: [xml]
+  interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+  public_function: CMADaaSClient.callAPI_to_serializedStr
+  public_kwargs:
+    interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+    params:
+      dataCode: {profile: data_code}
+      time: {fixture: music_cycle_time}
+      fcstEle: {profile: element}
+      levelType: {profile: level_type}
+      fcstLevel: {profile: level}
+      validTime: {profile: valid_time}
+      latLons: {profile: lat_lons}
+    data_format: xml
+  expected_return_contract: {kind: str, format: xml, max_chars: 4096}
+  profile_key: callAPI_to_serializedStr
+  tier: extended
+  enabled: true
+  test_node: tests/integration/music/test_serialization.py::test_registered_case[LLR-002]
+  documentation_anchor: guide/low-level/serialization#llr-002
+  implemented: true
+  online_status: passed
+  reason: GFS point query returned a parseable XML string with one matching record.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+- case_id: LLR-003
+  family: music_serialized_str
+  query_features: [text]
+  interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+  public_function: CMADaaSClient.callAPI_to_serializedStr
+  public_kwargs:
+    interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+    params:
+      dataCode: {profile: data_code}
+      time: {fixture: music_cycle_time}
+      fcstEle: {profile: element}
+      levelType: {profile: level_type}
+      fcstLevel: {profile: level}
+      validTime: {profile: valid_time}
+      latLons: {profile: lat_lons}
+    data_format: text
+  expected_return_contract: {kind: str, format: text, max_chars: 4096}
+  profile_key: callAPI_to_serializedStr
+  tier: extended
+  enabled: true
+  test_node: tests/integration/music/test_serialization.py::test_registered_case[LLR-003]
+  documentation_anchor: guide/low-level/serialization#llr-003
+  implemented: true
+  online_status: passed
+  reason: GFS point query returned a text table string with one matching record.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+- case_id: LLR-004
+  family: music_serialized_str
+  query_features: [html]
+  interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+  public_function: CMADaaSClient.callAPI_to_serializedStr
+  public_kwargs:
+    interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+    params:
+      dataCode: {profile: data_code}
+      time: {fixture: music_cycle_time}
+      fcstEle: {profile: element}
+      levelType: {profile: level_type}
+      fcstLevel: {profile: level}
+      validTime: {profile: valid_time}
+      latLons: {profile: lat_lons}
+    data_format: html
+  expected_return_contract: {kind: str, format: html, max_chars: 4096}
+  profile_key: callAPI_to_serializedStr
+  tier: extended
+  enabled: true
+  test_node: tests/integration/music/test_serialization.py::test_registered_case[LLR-004]
+  documentation_anchor: guide/low-level/serialization#llr-004
+  implemented: true
+  online_status: passed
+  reason: GFS point query returned an HTML table string with one matching record.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+- case_id: LLB-001
+  family: music_data_block
+  query_features: []
+  interface_id: getRadaDataBlockByTime
+  public_function: CMADaaSClient.callAPI_to_dataBlock
+  public_kwargs:
+    interface_id: getRadaDataBlockByTime
+    params:
+      dataCode: {profile: data_code}
+      time: {fixture: music_cycle_time}
+  expected_return_contract: {kind: DataBlock, nonempty_name: true, nonempty_bytes: true}
+  profile_key: callAPI_to_dataBlock
+  tier: extended
+  enabled: false
+  test_node: tests/integration/music/test_data_block.py::test_registered_case[LLB-001]
+  documentation_anchor: guide/low-level/data-block#llb-001
+  implemented: true
+  online_status: implemented-unverified
+  verification_blocker: no-cataloged-ret-data-block-capability
+  reason: The 2026-10-07 catalog lists no RetDataBlock client interface and no supported data codes
+    for this radar ID. RADA_L2_UFMT returned -2001 as undefined for this interface; decoding it
+    through dataBlock returned -10003. Known GFS table and grid IDs decoded as empty DataBlock
+    despite ok=true, so they are not positive examples. Offline protobuf/client regression checks named bytes.
+  run_prerequisite: Confirm a service interface that returns RetDataBlock, a dataCode granted to
+    this account and a recent bounded sample; replace the example profile code before enabling.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; 2026-10-07 NAFP/RADA catalog;
+    direct CMADaaS probes with GFS and RADA_L2_UFMT

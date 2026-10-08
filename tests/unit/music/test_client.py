@@ -6,6 +6,7 @@ from nuwe_cmadaas.music.connection import Connection
 from nuwe_cmadaas.music.protocol import encode_music_params
 from tests.fixtures import (
     make_array2d_content,
+    make_data_block_content,
     make_files_info_content,
     make_grid_array2d_content,
 )
@@ -70,6 +71,26 @@ def test_call_api_to_array2d_preserves_gateway_business_error(monkeypatch):
 
     assert result.request.error_code == -1004
     assert result.request.error_message == "Synthetic authentication failure"
+
+
+def test_call_api_to_data_block_decodes_named_bytes(monkeypatch):
+    client = make_client()
+    calls = []
+
+    def fake_get(url, **kwargs):
+        calls.append(url)
+        return FakeResponse(make_data_block_content(data_name="synthetic.bin", data=b"\x00\x01payload"))
+
+    monkeypatch.setattr("nuwe_cmadaas.music.connection.requests.get", fake_get)
+    with pytest.warns(UserWarning, match="no verified live-service interface"):
+        result = client.callAPI_to_dataBlock("syntheticInterface", {"dataCode": "SYNTHETIC"})
+
+    assert result.ok
+    assert result.request.error_code == 0
+    assert result.data_name == "synthetic.bin"
+    assert isinstance(result.data, bytes)
+    assert result.data == b"\x00\x01payload"
+    assert len(calls) == 1
 
 
 def test_call_api_to_serialized_str_returns_success_content(monkeypatch):

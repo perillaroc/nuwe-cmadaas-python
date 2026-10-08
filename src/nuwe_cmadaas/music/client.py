@@ -341,7 +341,7 @@ class CMADaaSClient:
             params: Dict,
             server_id: str = None
     ) -> DataBlock:
-        warnings.warn("callAPI_to_dataBlock is not tested")
+        warnings.warn("callAPI_to_dataBlock has no verified live-service interface")
         data_block = DataBlock()
 
         method = self.callAPI_to_dataBlock.__name__

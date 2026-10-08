@@ -1,0 +1,830 @@
+# Case definitions for obs/station.
+# Case IDs are unique across all integration manifests.
+cases:
+- case_id: OS-002
+  family: obs_station
+  query_features:
+  - time
+  interface_id: getSurfEleByTime
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_base_time
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-002]
+  documentation_anchor: guide/high-level/obs/station#os-002
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+- case_id: OS-002-time-list
+  family: obs_station
+  query_features:
+  - time
+  interface_id: getSurfEleByTime
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_time_list
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-002-time-list]
+  documentation_anchor: guide/high-level/obs/station#os-002-time-list
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  legacy_tests:
+  - station/test_getSurfEleByTime.py::test_hourly
+- case_id: OS-003
+  family: obs_station
+  query_features:
+  - time_range
+  interface_id: getSurfEleByTimeRange
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_hour_left_time_range
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-003]
+  documentation_anchor: guide/high-level/obs/station#os-003
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  legacy_tests:
+  - station/test_getSurfEleByTimeRange.py::test_hourly
+- case_id: OS-004
+  family: obs_station
+  query_features:
+  - station
+  interface_id: getSurfEleByStaID
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    station: &id001
+      profile: station_id
+    count:
+      profile: max_rows
+    order:
+      profile: order
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+    station_matches: *id001
+  profile_key: obs_station_climate_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-004]
+  documentation_anchor: guide/high-level/obs/station#os-004
+  implemented: true
+  online_status: "passed"
+  reason: "Climate temperature dataset (1991-2020 reference period) passed live assertions without a time selector; order Station_Id_C:asc avoids unavailable Station_ID_d"
+  last_verified_environment_and_time: "2026-10-08T14:08:50.073946+08:00; local WSL, Python 3.14; SURF_CLI_CHN_HOR_TEM_1991_2020; station 54511, max_rows 20; no times/timeRange parameter"
+- case_id: OS-007
+  family: obs_station
+  query_features:
+  - station
+  - time
+  interface_id: getSurfEleByTimeAndStaID
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_base_time
+    station: &id002
+      profile: station_id
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+    station_matches: *id002
+  profile_key: obs_station_hourly
+  tier: smoke
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-007]
+  documentation_anchor: guide/high-level/obs/station#os-007
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+- case_id: OS-007-time-list
+  family: obs_station
+  query_features:
+  - station
+  - time
+  interface_id: getSurfEleByTimeAndStaID
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_time_list
+    station:
+      profile: station_id
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+    station_matches:
+      profile: station_id
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-007-time-list]
+  documentation_anchor: guide/high-level/obs/station#os-007-time-list
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  legacy_tests:
+  - station/test_getSurfEleByTimeRangeAndStaID.py::test_hourly_station_id
+- case_id: OS-007-list
+  family: obs_station
+  query_features:
+  - station
+  - time
+  interface_id: getSurfEleByTimeAndStaID
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_base_time
+    station:
+      profile: station_ids
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+    station_in:
+      profile: station_ids
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-007-list]
+  documentation_anchor: guide/high-level/obs/station#os-007-list
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+- case_id: OS-008
+  family: obs_station
+  query_features:
+  - station_range
+  - time
+  interface_id: getSurfEleByTimeAndStaIdRange
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_base_time
+    station:
+      tuple:
+        profile: station_range
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+    station_between:
+      profile: station_range
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-008]
+  documentation_anchor: guide/high-level/obs/station#os-008
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+- case_id: OS-008-time-list
+  family: obs_station
+  query_features:
+  - station_range
+  - time
+  interface_id: getSurfEleByTimeAndStaIdRange
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_time_list
+    station:
+      tuple:
+        profile: station_range
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+    station_between:
+      profile: station_range
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-008-time-list]
+  documentation_anchor: guide/high-level/obs/station#os-008-time-list
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  legacy_tests:
+  - station/test_getSurfEleByTimeAndStaIdRange.py::test_hourly
+- case_id: OS-009
+  family: obs_station
+  query_features:
+  - station
+  - time_range
+  interface_id: getSurfEleByTimeRangeAndStaID
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_short_time_range
+    station: &id003
+      profile: station_id
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+    station_matches: *id003
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-009]
+  documentation_anchor: guide/high-level/obs/station#os-009
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+- case_id: OS-009-day-list
+  family: obs_station
+  query_features:
+  - station
+  - time_range
+  interface_id: getSurfEleByTimeRangeAndStaID
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_day_time_range
+    station:
+      profile: station_ids
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+    station_in:
+      profile: station_ids
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-009-day-list]
+  documentation_anchor: guide/high-level/obs/station#os-009-day-list
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  legacy_tests:
+  - station/test_getSurfEleByTimeAndStaID.py::test_hourly_station_list
+  - station/test_getSurfEleByTimeRangeAndStaID.py::test_hourly
+- case_id: OS-009-day-scalar
+  family: obs_station
+  query_features:
+  - station
+  - time_range
+  interface_id: getSurfEleByTimeRangeAndStaID
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_day_time_range
+    station:
+      profile: station_id
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+    station_matches:
+      profile: station_id
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-009-day-scalar]
+  documentation_anchor: guide/high-level/obs/station#os-009-day-scalar
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  legacy_tests:
+  - station/test_getSurfEleByTimeAndStaID.py::test_hourly_station
+- case_id: OS-010
+  family: obs_station
+  query_features:
+  - station_range
+  - time_range
+  interface_id: getSurfEleByTimeRangeAndStaIDRange
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_six_hour_time_range
+    station:
+      tuple:
+        profile: station_range
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+    station_between:
+      profile: station_range
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-010]
+  documentation_anchor: guide/high-level/obs/station#os-010
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  legacy_tests:
+  - station/test_getSurfEleByTimeRangeAndStaIDRange.py::test_hourly
+- case_id: OS-012
+  family: obs_station
+  query_features:
+  - station_level
+  - time_range
+  interface_id: getSurfEleByTimeRangeAndStaLevels
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_short_time_range
+    station_level:
+      profile: station_level
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+  profile_key: obs_station_level_range
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-012]
+  documentation_anchor: guide/high-level/obs/station#os-012
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR_N; previous-day station fixtures, bounded opt-in profile"
+- case_id: OS-014
+  family: obs_station
+  query_features:
+  - region_rect
+  - time
+  interface_id: getSurfEleInRectByTime
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_base_time
+    region:
+      profile: region
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+    coordinates_within:
+      profile: region
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-014]
+  documentation_anchor: guide/high-level/obs/station#os-014
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+- case_id: OS-014-time-list
+  family: obs_station
+  query_features:
+  - region_rect
+  - time
+  interface_id: getSurfEleInRectByTime
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_time_list
+    region:
+      profile: region
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+    coordinates_within:
+      profile: region
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-014-time-list]
+  documentation_anchor: guide/high-level/obs/station#os-014-time-list
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  legacy_tests:
+  - station/test_getSurfEleInRectByTime.py::test_hourly
+- case_id: OS-015
+  family: obs_station
+  query_features:
+  - region_rect
+  - time_range
+  interface_id: getSurfEleInRectByTimeRange
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_hour_left_time_range
+    region:
+      profile: region
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+    coordinates_within:
+      profile: region
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-015]
+  documentation_anchor: guide/high-level/obs/station#os-015
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  legacy_tests:
+  - station/test_getSurfEleInRectByTimeRange.py::test_hourly
+- case_id: OS-017
+  family: obs_station
+  query_features:
+  - region_region
+  - time
+  interface_id: getSurfEleInRegionByTime
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_base_time
+    region:
+      profile: admin_region
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-017]
+  documentation_anchor: guide/high-level/obs/station#os-017
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+- case_id: OS-017-time-list
+  family: obs_station
+  query_features:
+  - region_region
+  - time
+  interface_id: getSurfEleInRegionByTime
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_time_list
+    region:
+      profile: admin_region
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-017-time-list]
+  documentation_anchor: guide/high-level/obs/station#os-017-time-list
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  legacy_tests:
+  - station/test_getSurfEleInRegionByTime.py::test_hourly
+- case_id: OS-018
+  family: obs_station
+  query_features:
+  - region_region
+  - time_range
+  interface_id: getSurfEleInRegionByTimeRange
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_day_time_range
+    region:
+      profile: admin_region
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-018]
+  documentation_anchor: guide/high-level/obs/station#os-018
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  legacy_tests:
+  - station/test_getSurfEleInRegionByTimeRange.py::test_hourly
+- case_id: OS-020
+  family: obs_station
+  query_features:
+  - region_basin
+  - time
+  interface_id: getSurfEleInBasinByTime
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_base_time
+    region:
+      profile: basin_region
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-020]
+  documentation_anchor: guide/high-level/obs/station#os-020
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+- case_id: OS-020-time-list
+  family: obs_station
+  query_features:
+  - region_basin
+  - time
+  interface_id: getSurfEleInBasinByTime
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_time_list
+    region:
+      profile: basin_region
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-020-time-list]
+  documentation_anchor: guide/high-level/obs/station#os-020-time-list
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  legacy_tests:
+  - station/test_getSurfEleInBasinByTime.py::test_hourly
+- case_id: OS-021
+  family: obs_station
+  query_features:
+  - region_basin
+  - time_range
+  interface_id: getSurfEleInBasinByTimeRange
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    time:
+      fixture: station_six_hour_time_range
+    region:
+      profile: basin_region
+    count:
+      profile: max_rows
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+  profile_key: obs_station_hourly
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OS-021]
+  documentation_anchor: guide/high-level/obs/station#os-021
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  legacy_tests:
+  - station/test_getSurfEleInBasinByTimeRange.py::test_hourly
+- case_id: OSL-001
+  family: obs_station_latest
+  query_features: []
+  interface_id: getSurfLatestTime
+  public_function: retrieve_obs_station
+  public_kwargs:
+    data_code:
+      profile: data_code
+    time:
+      fixture: latest_delta
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: true
+  profile_key: obs_station_latest
+  tier: extended
+  enabled: true
+  test_node: tests/integration/obs/station/test_station.py::test_registered_case[OSL-001]
+  documentation_anchor: guide/high-level/obs/station#osl-001
+  implemented: true
+  online_status: "passed"
+  reason: "Live service returned expected table schema and met all case assertions"
+  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR_N; previous-day station fixtures, bounded opt-in profile"
+  legacy_tests:
+  - station/test_getSurfLatestTime.py::test_hourly

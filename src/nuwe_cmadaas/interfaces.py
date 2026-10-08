@@ -116,6 +116,25 @@ _MODEL_FILE_DECLARATIONS = {
 
 
 _OBS_STATION_SUFFIXES = {
+    # Exact station interfaces from the CMADaaS SURF_API catalog.
+    _features("time"): "ByTime",
+    _features("time_range"): "ByTimeRange",
+    _features("station"): "ByStaID",
+    _features("time", "station"): "ByTimeAndStaID",
+    _features("time", "station_range"): "ByTimeAndStaIdRange",
+    _features("time_range", "station"): "ByTimeRangeAndStaID",
+    _features("time_range", "station_range"): "ByTimeRangeAndStaIDRange",
+    _features("time_range", "station_level"): "ByTimeRangeAndStaLevels",
+    _features("region_rect", "time"): "InRectByTime",
+    _features("region_rect", "time_range"): "InRectByTimeRange",
+    _features("region_region", "time"): "InRegionByTime",
+    _features("region_region", "time_range"): "InRegionByTimeRange",
+    _features("region_basin", "time"): "InBasinByTime",
+    _features("region_basin", "time_range"): "InBasinByTimeRange",
+}
+
+
+_OBS_FILE_SUFFIXES = {
     _features(): "",
     _features("time"): "ByTime",
     _features("time_range"): "ByTimeRange",
@@ -148,13 +167,14 @@ _OBS_STATION_SUFFIXES = {
 
 def _obs_station_declarations(base: str) -> dict[frozenset[str], tuple[str, frozenset[str]]]:
     result = {}
-    for feature_set, suffix in _OBS_STATION_SUFFIXES.items():
+    suffixes = _OBS_STATION_SUFFIXES if base == "getSurfEle" else _OBS_FILE_SUFFIXES
+    for feature_set, suffix in suffixes.items():
         if any(name.startswith("region_") for name in feature_set):
             region_name = next(name for name in feature_set if name.startswith("region_"))
             condition_features = feature_set - {region_name}
             prefix = base + {"region_rect": "InRect", "region_region": "InRegion", "region_basin": "InBasin"}[region_name]
             if condition_features:
-                condition_suffix = _OBS_STATION_SUFFIXES[condition_features].removeprefix("By")
+                condition_suffix = suffixes[condition_features].removeprefix("By")
                 interface_id = prefix + "By" + condition_suffix
             else:
                 interface_id = prefix

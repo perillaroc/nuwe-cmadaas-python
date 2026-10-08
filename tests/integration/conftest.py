@@ -23,6 +23,54 @@ def base_time(start_date):
 
 
 @pytest.fixture
+def station_base_time():
+    """Station queries retain the original previous-day schedule."""
+    return (pd.Timestamp.now() - pd.offsets.Day()).normalize()
+
+
+@pytest.fixture
+def station_short_time_range(station_base_time):
+    return pd.Interval(
+        station_base_time,
+        station_base_time + pd.Timedelta(hours=1),
+        closed="both",
+    )
+
+
+@pytest.fixture
+def station_hour_left_time_range(station_base_time):
+    return pd.Interval(
+        station_base_time,
+        station_base_time + pd.Timedelta(hours=1),
+        closed="left",
+    )
+
+
+@pytest.fixture
+def station_six_hour_time_range(station_base_time):
+    return pd.Interval(
+        station_base_time,
+        station_base_time + pd.Timedelta(hours=6),
+        closed="left",
+    )
+
+
+@pytest.fixture
+def station_day_time_range(station_base_time):
+    return pd.Interval(
+        station_base_time,
+        station_base_time + pd.Timedelta(days=1),
+        closed="left",
+    )
+
+
+@pytest.fixture
+def station_time_list(station_base_time):
+    """Preserve the old station tests' previous-day/today list."""
+    return [station_base_time, station_base_time + pd.Timedelta(days=1)]
+
+
+@pytest.fixture
 def short_time_range(base_time):
     return pd.Interval(base_time, base_time + pd.Timedelta(hours=1), closed="both")
 

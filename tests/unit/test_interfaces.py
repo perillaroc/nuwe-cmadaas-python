@@ -47,6 +47,12 @@ pytestmark = pytest.mark.unit
             "array_2d",
         ),
         (
+            "obs_station",
+            {"time", "station_range"},
+            "getSurfEleByTimeAndStaIdRange",
+            "array_2d",
+        ),
+        (
             "obs_grid",
             {"region", "time_range"},
             "getSurfEleGridInRectByTimeRange",

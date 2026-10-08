@@ -1,4 +1,4 @@
-"""Static integration-case manifest and simple runtime value references."""
+"""Load category manifests and resolve simple runtime value references."""
 
 from pathlib import Path
 
@@ -6,13 +6,35 @@ import pytest
 import yaml
 
 
-CASES_PATH = Path(__file__).with_name("cases.yaml")
+CASES_ROOT = Path(__file__).parent
 
 
 def load_cases(family=None, *, implemented_only=False):
-    """Read the public case mapping without loading credentials or a profile."""
-    with CASES_PATH.open(encoding="utf-8") as stream:
-        cases = yaml.safe_load(stream)["cases"]
+    """Aggregate manifests in path order and reject globally duplicate IDs.
+
+    Discovery and validation run before filtering, without reading credentials
+    or a service profile. Adding a category needs no loader registration.
+    """
+    paths = sorted(CASES_ROOT.rglob("cases.yaml"))
+    if not paths:
+        raise ValueError(f"No integration case manifests found under {CASES_ROOT}")
+    cases = []
+    sources = {}
+    for path in paths:
+        with path.open(encoding="utf-8") as stream:
+            manifest = yaml.safe_load(stream)
+        if not isinstance(manifest, dict) or not isinstance(manifest.get("cases"), list):
+            raise ValueError(f"Invalid case manifest at {path}: expected a cases list")
+        for case in manifest["cases"]:
+            if not isinstance(case, dict) or not isinstance(case.get("case_id"), str):
+                raise ValueError(f"Invalid case record at {path}: expected a string case_id")
+            case_id = case["case_id"]
+            if case_id in sources:
+                raise ValueError(
+                    f"Duplicate case_id {case_id!r} in {sources[case_id]} and {path}"
+                )
+            sources[case_id] = path
+            cases.append(case)
     if family is not None:
         cases = [case for case in cases if case["family"] == family]
     if implemented_only:
@@ -38,6 +60,8 @@ def resolve_case_value(value, dataset, request):
     if isinstance(value, dict):
         if set(value) == {"profile"}:
             return dataset[value["profile"]]
+        if set(value) == {"tuple"}:
+            return tuple(resolve_case_value(value["tuple"], dataset, request))
         if set(value) == {"fixture"}:
             return request.getfixturevalue(value["fixture"])
         return {key: resolve_case_value(item, dataset, request) for key, item in value.items()}

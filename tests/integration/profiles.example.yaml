@@ -5,18 +5,43 @@ datasets:
   obs_station_hourly:
     enabled: false
     data_code: EXAMPLE_STATION_CODE
-    elements: Station_Id_C,TEM
-    station_id: EXAMPLE_ID
-    station_ids: [EXAMPLE_ID]
-    station_range: [EXAMPLE_MIN, EXAMPLE_MAX]
+    elements: Station_Id_C,Lat,Lon,TEM
+    station_id: "54533"
+    station_ids: ["53592", "54511"]
+    station_range: ["53592", "54511"]
+    rect_station_id: EXAMPLE_RECT_ID
+    admin_station_id: EXAMPLE_ADMIN_ID
+    basin_station_id: EXAMPLE_BASIN_ID
     region:
       type: rect
-      start_longitude: 110.0
-      end_longitude: 110.2
-      start_latitude: 30.0
-      end_latitude: 30.2
+      start_longitude: 115.7
+      end_longitude: 117.4
+      start_latitude: 41.6
+      end_latitude: 39.4
     station_level: "011"
-    expected_columns: [Station_Id_C, TEM]
+    admin_region: {type: region, admin_codes: "110000"}
+    basin_region: {type: basin, basin_codes: CJLY}
+    expected_columns: [Station_Id_C, Lat, Lon, TEM]
+    max_rows: 20
+  obs_station_climate_hourly:
+    enabled: false
+    # Climate normals for the 1991-2020 reference period, queried without time.
+    data_code: SURF_CLI_CHN_HOR_TEM_1991_2020
+    elements: Station_Id_C,Lat,Lon,TEM
+    expected_columns: [Station_Id_C, Lat, Lon, TEM]
+    station_id: "54511"
+    order: Station_Id_C:asc
+    max_rows: 20
+  obs_station_latest:
+    enabled: false
+    data_code: EXAMPLE_LATEST_STATION_CODE
+    expected_columns: [Datetime]
+  obs_station_level_range:
+    enabled: false
+    data_code: EXAMPLE_LEVEL_RANGE_CODE
+    elements: Station_Id_C,Lat,Lon,TEM
+    station_level: "011"
+    expected_columns: [Station_Id_C, Lat, Lon, TEM]
     max_rows: 20
   obs_grid:
     enabled: false

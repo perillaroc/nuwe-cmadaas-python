@@ -1,6 +1,7 @@
 import pandas as pd
 import pytest
 
+from nuwe_cmadaas.interfaces import UnsupportedQueryError
 from nuwe_cmadaas.music import MusicError
 from nuwe_cmadaas.obs import retrieve_obs_station
 from tests.fixtures import FakeCMADaaSClient, make_array2d_response
@@ -87,18 +88,20 @@ def make_client(result=None):
             },
         ),
         (
-            {"station": ("FAKE001", "FAKE999")},
-            "getSurfEleByStaIDRange",
+            {"time": TIME, "station": ("FAKE001", "FAKE999")},
+            "getSurfEleByTimeAndStaIdRange",
             {
                 "dataCode": DATA_CODE,
                 "elements": ELEMENTS,
                 "orderby": "Station_ID_d:asc",
                 "minStaId": "FAKE001",
                 "maxStaId": "FAKE999",
+                "times": "20260102000000",
             },
         ),
         (
             {
+                "time": TIME,
                 "region": {
                     "type": "rect",
                     "start_longitude": 112.0,
@@ -107,7 +110,7 @@ def make_client(result=None):
                     "end_latitude": 30.0,
                 },
             },
-            "getSurfEleInRect",
+            "getSurfEleInRectByTime",
             {
                 "dataCode": DATA_CODE,
                 "elements": ELEMENTS,
@@ -116,45 +119,48 @@ def make_client(result=None):
                 "minLon": "110.0",
                 "maxLat": "32.0",
                 "maxLon": "112.0",
+                "times": "20260102000000",
             },
         ),
         (
-            {"region": {"type": "region", "admin_codes": "110000"}},
-            "getSurfEleInRegion",
+            {"time": TIME, "region": {"type": "region", "admin_codes": "110000"}},
+            "getSurfEleInRegionByTime",
             {
                 "dataCode": DATA_CODE,
                 "elements": ELEMENTS,
                 "orderby": "Station_ID_d:asc",
                 "adminCodes": "110000",
+                "times": "20260102000000",
             },
         ),
         (
-            {"region": {"type": "basin", "basin_codes": "SYNTHETIC_BASIN"}},
-            "getSurfEleInBasin",
+            {"time": TIME, "region": {"type": "basin", "basin_codes": "SYNTHETIC_BASIN"}},
+            "getSurfEleInBasinByTime",
             {
                 "dataCode": DATA_CODE,
                 "elements": ELEMENTS,
                 "orderby": "Station_ID_d:asc",
                 "basinCodes": "SYNTHETIC_BASIN",
+                "times": "20260102000000",
             },
         ),
         (
-            {"station_level": "011", "time": TIME},
-            "getSurfEleByTimeAndStaLevels",
+            {"station_level": "011", "time": pd.Interval(TIME, LATER_TIME, closed="both")},
+            "getSurfEleByTimeRangeAndStaLevels",
             {
                 "dataCode": DATA_CODE,
                 "elements": ELEMENTS,
-                "times": "20260102000000",
+                "timeRange": "[20260102000000,20260102060000]",
                 "staLevels": "011",
             },
         ),
         (
-            {"station_level": ["011", "012"], "time": TIME},
-            "getSurfEleByTimeAndStaLevels",
+            {"station_level": ["011", "012"], "time": pd.Interval(TIME, LATER_TIME, closed="both")},
+            "getSurfEleByTimeRangeAndStaLevels",
             {
                 "dataCode": DATA_CODE,
                 "elements": ELEMENTS,
-                "times": "20260102000000",
+                "timeRange": "[20260102000000,20260102060000]",
                 "staLevels": "011,012",
             },
         ),
@@ -240,5 +246,39 @@ def test_retrieve_obs_station_rejects_invalid_count_without_request(count):
             count=count,
             client=client,
         )
+
+    assert client.calls == []
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        pytest.param({}, id="getSurfEle"),
+        pytest.param({"station": ("FAKE001", "FAKE999")}, id="getSurfEleByStaIDRange"),
+        pytest.param({"station_level": "011"}, id="getSurfEleByStaLevels"),
+        pytest.param({"time": TIME, "station_level": "011"}, id="getSurfEleByTimeAndStaLevels"),
+        *[
+            pytest.param(kwargs, id=interface_id)
+            for region, prefix in [
+                ({"type": "rect", "start_longitude": 110, "end_longitude": 111,
+                  "start_latitude": 30, "end_latitude": 31}, "getSurfEleInRect"),
+                ({"type": "region", "admin_codes": "110000"}, "getSurfEleInRegion"),
+                ({"type": "basin", "basin_codes": "CJLY"}, "getSurfEleInBasin"),
+            ]
+            for kwargs, interface_id in [
+                ({"region": region}, prefix),
+                ({"region": region, "time": TIME, "station": "FAKE001"},
+                 prefix + "ByTimeAndStaID"),
+                ({"region": region, "time": pd.Interval(TIME, LATER_TIME, closed="both"),
+                  "station": "FAKE001"}, prefix + "ByTimeRangeAndStaID"),
+            ]
+        ],
+    ],
+)
+def test_removed_station_queries_fail_before_request(kwargs):
+    client = make_client()
+
+    with pytest.raises(UnsupportedQueryError, match="unsupported query features"):
+        retrieve_obs_station(DATA_CODE, elements=ELEMENTS, client=client, **kwargs)
 
     assert client.calls == []

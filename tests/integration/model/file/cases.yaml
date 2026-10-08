@@ -1,0 +1,360 @@
+# Case definitions for model/file.
+# Case IDs are unique across all integration manifests.
+cases:
+- case_id: MF-001
+  family: model_file
+  query_features: []
+  interface_id: getNafpFile
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-001
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MF-002
+  family: model_file
+  query_features:
+  - element
+  interface_id: getNafpFileByElement
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-002
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MF-003
+  family: model_file
+  query_features:
+  - time
+  interface_id: getNafpFileByTime
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-003
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MF-004
+  family: model_file
+  query_features:
+  - time_range
+  interface_id: getNafpFileByTimeRange
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-004
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MF-005
+  family: model_file
+  query_features:
+  - level
+  interface_id: getNafpFileByLevel
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-005
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MF-006
+  family: model_file
+  query_features:
+  - level
+  - time
+  interface_id: getNafpFileByTimeAndLevel
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-006
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MF-007
+  family: model_file
+  query_features:
+  - level
+  - time_range
+  interface_id: getNafpFileByTimeRangeAndLevel
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-007
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MF-008
+  family: model_file
+  query_features:
+  - element
+  - time
+  interface_id: getNafpFileByElementAndTime
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-008
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MF-009
+  family: model_file
+  query_features:
+  - element
+  - time_range
+  interface_id: getNafpFileByElementAndTimeRange
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-009
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MF-010
+  family: model_file
+  query_features:
+  - element
+  - level
+  - time
+  interface_id: getNafpFileByElementAndTime
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-010
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MF-011
+  family: model_file
+  query_features:
+  - element
+  - level
+  - time_range
+  interface_id: getNafpFileByElementAndTimeRange
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-011
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MF-012
+  family: model_file
+  query_features:
+  - element
+  - time
+  - valid_time
+  interface_id: getNafpFileByElementAndTimeAndValidtime
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-012
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MF-013
+  family: model_file
+  query_features:
+  - element
+  - time_range
+  - valid_time
+  interface_id: getNafpFileByElementAndTimeRangeAndValidtime
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-013
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MF-014
+  family: model_file
+  query_features:
+  - region
+  interface_id: getNafpFileInRect
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-014
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MF-015
+  family: model_file
+  query_features:
+  - region
+  - time
+  interface_id: getNafpFileInRectByTime
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-015
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MF-016
+  family: model_file
+  query_features:
+  - region
+  - time_range
+  interface_id: getNafpFileInRectByTimeRange
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-016
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MF-017
+  family: model_file
+  query_features:
+  - element
+  - region
+  - time
+  interface_id: getNafpFileInRectByElementAndTime
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-017
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MF-018
+  family: model_file
+  query_features:
+  - element
+  - region
+  - time_range
+  interface_id: getNafpFileInRectByElementAndTimeRange
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mf-018
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null
+- case_id: MFL-001
+  family: model_file_latest
+  query_features: []
+  interface_id: getNafpLatestTime
+  public_function: download_model_file
+  public_kwargs: null
+  expected_return_contract: null
+  profile_key: model_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/files#mfl-001
+  implemented: false
+  online_status: planned
+  reason: Awaiting B11 case implementation
+  last_verified_environment_and_time: null

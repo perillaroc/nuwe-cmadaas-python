@@ -1,0 +1,512 @@
+# Case definitions for obs/upper/file.
+# Case IDs are unique across all integration manifests.
+cases:
+- case_id: OUF-001
+  family: obs_upper_file
+  query_features: []
+  interface_id: getUparFile
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-001
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-002
+  family: obs_upper_file
+  query_features:
+  - time
+  interface_id: getUparFileByTime
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-002
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-003
+  family: obs_upper_file
+  query_features:
+  - time_range
+  interface_id: getUparFileByTimeRange
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-003
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-004
+  family: obs_upper_file
+  query_features:
+  - station
+  interface_id: getUparFileByStaID
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-004
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-005
+  family: obs_upper_file
+  query_features:
+  - station_range
+  interface_id: getUparFileByStaIDRange
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-005
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-006
+  family: obs_upper_file
+  query_features:
+  - station_level
+  interface_id: getUparFileByStaLevels
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-006
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-007
+  family: obs_upper_file
+  query_features:
+  - station
+  - time
+  interface_id: getUparFileByTimeAndStaID
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-007
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-008
+  family: obs_upper_file
+  query_features:
+  - station_range
+  - time
+  interface_id: getUparFileByTimeAndStaIDRange
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-008
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-009
+  family: obs_upper_file
+  query_features:
+  - station
+  - time_range
+  interface_id: getUparFileByTimeRangeAndStaID
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-009
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-010
+  family: obs_upper_file
+  query_features:
+  - station_range
+  - time_range
+  interface_id: getUparFileByTimeRangeAndStaIDRange
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-010
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-011
+  family: obs_upper_file
+  query_features:
+  - station_level
+  - time
+  interface_id: getUparFileByTimeAndStaLevels
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-011
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-012
+  family: obs_upper_file
+  query_features:
+  - station_level
+  - time_range
+  interface_id: getUparFileByTimeRangeAndStaLevels
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-012
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-013
+  family: obs_upper_file
+  query_features:
+  - region_rect
+  interface_id: getUparFileInRect
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-013
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-014
+  family: obs_upper_file
+  query_features:
+  - region_rect
+  - time
+  interface_id: getUparFileInRectByTime
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-014
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-015
+  family: obs_upper_file
+  query_features:
+  - region_rect
+  - time_range
+  interface_id: getUparFileInRectByTimeRange
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-015
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-016
+  family: obs_upper_file
+  query_features:
+  - region_region
+  interface_id: getUparFileInRegion
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-016
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-017
+  family: obs_upper_file
+  query_features:
+  - region_region
+  - time
+  interface_id: getUparFileInRegionByTime
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-017
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-018
+  family: obs_upper_file
+  query_features:
+  - region_region
+  - time_range
+  interface_id: getUparFileInRegionByTimeRange
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-018
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-019
+  family: obs_upper_file
+  query_features:
+  - region_basin
+  interface_id: getUparFileInBasin
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-019
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-020
+  family: obs_upper_file
+  query_features:
+  - region_basin
+  - time
+  interface_id: getUparFileInBasinByTime
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-020
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-021
+  family: obs_upper_file
+  query_features:
+  - region_basin
+  - time_range
+  interface_id: getUparFileInBasinByTimeRange
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-021
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-022
+  family: obs_upper_file
+  query_features:
+  - region_rect
+  - station
+  - time
+  interface_id: getUparFileInRectByTimeAndStaID
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-022
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-023
+  family: obs_upper_file
+  query_features:
+  - region_rect
+  - station
+  - time_range
+  interface_id: getUparFileInRectByTimeRangeAndStaID
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-023
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-024
+  family: obs_upper_file
+  query_features:
+  - region_region
+  - station
+  - time
+  interface_id: getUparFileInRegionByTimeAndStaID
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-024
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-025
+  family: obs_upper_file
+  query_features:
+  - region_region
+  - station
+  - time_range
+  interface_id: getUparFileInRegionByTimeRangeAndStaID
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-025
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-026
+  family: obs_upper_file
+  query_features:
+  - region_basin
+  - station
+  - time
+  interface_id: getUparFileInBasinByTimeAndStaID
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-026
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null
+- case_id: OUF-027
+  family: obs_upper_file
+  query_features:
+  - region_basin
+  - station
+  - time_range
+  interface_id: getUparFileInBasinByTimeRangeAndStaID
+  public_function: download_obs_upper_air_file
+  public_kwargs: null
+  expected_return_contract:
+    kind: paths
+  profile_key: obs_upper_file
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/obs/upper-air-files#ouf-027
+  implemented: false
+  online_status: planned
+  reason: Awaiting B08 case implementation
+  last_verified_environment_and_time: null

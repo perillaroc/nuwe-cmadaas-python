@@ -1,0 +1,87 @@
+# Case definitions for model/point.
+# Case IDs are unique across all integration manifests.
+cases:
+- case_id: MP-001
+  family: model_point
+  query_features:
+  - level
+  - point
+  - time
+  - valid_time
+  interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+  public_function: retrieve_model_point
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataframe
+  profile_key: model_point
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/point#mp-001
+  implemented: false
+  online_status: planned
+  reason: Awaiting B10 case implementation
+  last_verified_environment_and_time: null
+- case_id: MP-002
+  family: model_point
+  query_features:
+  - level
+  - point
+  - time
+  - valid_time_range
+  interface_id: getNafpEleAtPointByTimeAndLevelAndValidtimeRange
+  public_function: retrieve_model_point
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataframe
+  profile_key: model_point
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/point#mp-002
+  implemented: false
+  online_status: planned
+  reason: Awaiting B10 case implementation
+  last_verified_environment_and_time: null
+- case_id: MP-003
+  family: model_point
+  query_features:
+  - level
+  - station
+  - time
+  - valid_time
+  interface_id: getNafpEleByTimeAndLevelAndValidtimeAndStaID
+  public_function: retrieve_model_point
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataframe
+  profile_key: model_point
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/point#mp-003
+  implemented: false
+  online_status: planned
+  reason: Awaiting B10 case implementation
+  last_verified_environment_and_time: null
+- case_id: MP-004
+  family: model_point
+  query_features:
+  - level
+  - station
+  - time
+  - valid_time_range
+  interface_id: getNafpEleByTimeAndLevelAndValidtimeRangeAndStaID
+  public_function: retrieve_model_point
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataframe
+  profile_key: model_point
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/point#mp-004
+  implemented: false
+  online_status: planned
+  reason: Awaiting B10 case implementation
+  last_verified_environment_and_time: null

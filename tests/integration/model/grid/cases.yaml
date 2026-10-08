@@ -1,0 +1,697 @@
+# Case definitions for model/grid.
+# Case IDs are unique across all integration manifests.
+cases:
+- case_id: MGF-001
+  family: model_grid_forecast
+  query_features: []
+  interface_id: getNafpEleGrid
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-001
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGF-002
+  family: model_grid_forecast
+  query_features:
+  - time
+  interface_id: getNafpEleGridByTime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-002
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGF-003
+  family: model_grid_forecast
+  query_features:
+  - level
+  interface_id: getNafpEleGridByLevel
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-003
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGF-004
+  family: model_grid_forecast
+  query_features:
+  - valid_time
+  interface_id: getNafpEleGridByValidtime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-004
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGF-005
+  family: model_grid_forecast
+  query_features:
+  - level
+  - time
+  interface_id: getNafpEleGridByTimeAndLevel
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-005
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGF-006
+  family: model_grid_forecast
+  query_features:
+  - time
+  - valid_time
+  interface_id: getNafpEleGridByTimeAndValidtime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-006
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGF-007
+  family: model_grid_forecast
+  query_features:
+  - level
+  - valid_time
+  interface_id: getNafpEleGridByLevelAndValidtime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-007
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGF-008
+  family: model_grid_forecast
+  query_features:
+  - level
+  - time
+  - valid_time
+  interface_id: getNafpEleGridByTimeAndLevelAndValidtime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-008
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGF-009
+  family: model_grid_forecast
+  query_features:
+  - region
+  interface_id: getNafpEleGridInRect
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-009
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGF-010
+  family: model_grid_forecast
+  query_features:
+  - region
+  - time
+  interface_id: getNafpEleGridInRectByTime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-010
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGF-011
+  family: model_grid_forecast
+  query_features:
+  - level
+  - region
+  interface_id: getNafpEleGridInRectByLevel
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-011
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGF-012
+  family: model_grid_forecast
+  query_features:
+  - region
+  - valid_time
+  interface_id: getNafpEleGridInRectByValidtime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-012
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGF-013
+  family: model_grid_forecast
+  query_features:
+  - level
+  - region
+  - time
+  interface_id: getNafpEleGridInRectByTimeAndLevel
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-013
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGF-014
+  family: model_grid_forecast
+  query_features:
+  - region
+  - time
+  - valid_time
+  interface_id: getNafpEleGridInRectByTimeAndValidtime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-014
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGF-015
+  family: model_grid_forecast
+  query_features:
+  - level
+  - region
+  - valid_time
+  interface_id: getNafpEleGridInRectByLevelAndValidtime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-015
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGF-016
+  family: model_grid_forecast
+  query_features:
+  - level
+  - region
+  - time
+  - valid_time
+  interface_id: getNafpEleGridInRectByTimeAndLevelAndValidtime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-016
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGF-017
+  family: model_grid_forecast
+  query_features:
+  - level
+  - number
+  - time
+  - valid_time
+  interface_id: getNafpEleGridByTimeAndLevelAndValidtimeAndFcstMember
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-017
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGF-018
+  family: model_grid_forecast
+  query_features:
+  - level
+  - number
+  - region
+  - time
+  - valid_time
+  interface_id: getNafpEleGridInRectByTimeAndLevelAndValidtimeAndFcstMember
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_forecast
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mgf-018
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-001
+  family: model_grid_analysis
+  query_features: []
+  interface_id: getNafpAnaEleGrid
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-001
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-002
+  family: model_grid_analysis
+  query_features:
+  - time
+  interface_id: getNafpAnaEleGridByTime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-002
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-003
+  family: model_grid_analysis
+  query_features:
+  - level
+  interface_id: getNafpAnaEleGridByLevel
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-003
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-004
+  family: model_grid_analysis
+  query_features:
+  - valid_time
+  interface_id: getNafpAnaEleGridByValidtime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-004
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-005
+  family: model_grid_analysis
+  query_features:
+  - level
+  - time
+  interface_id: getNafpAnaEleGridByTimeAndLevel
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-005
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-006
+  family: model_grid_analysis
+  query_features:
+  - time
+  - valid_time
+  interface_id: getNafpAnaEleGridByTimeAndValidtime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-006
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-007
+  family: model_grid_analysis
+  query_features:
+  - level
+  - valid_time
+  interface_id: getNafpAnaEleGridByLevelAndValidtime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-007
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-008
+  family: model_grid_analysis
+  query_features:
+  - level
+  - time
+  - valid_time
+  interface_id: getNafpAnaEleGridByTimeAndLevelAndValidtime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-008
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-009
+  family: model_grid_analysis
+  query_features:
+  - region
+  interface_id: getNafpAnaEleGridInRect
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-009
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-010
+  family: model_grid_analysis
+  query_features:
+  - region
+  - time
+  interface_id: getNafpAnaEleGridInRectByTime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-010
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-011
+  family: model_grid_analysis
+  query_features:
+  - level
+  - region
+  interface_id: getNafpAnaEleGridInRectByLevel
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-011
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-012
+  family: model_grid_analysis
+  query_features:
+  - region
+  - valid_time
+  interface_id: getNafpAnaEleGridInRectByValidtime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-012
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-013
+  family: model_grid_analysis
+  query_features:
+  - level
+  - region
+  - time
+  interface_id: getNafpAnaEleGridInRectByTimeAndLevel
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-013
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-014
+  family: model_grid_analysis
+  query_features:
+  - region
+  - time
+  - valid_time
+  interface_id: getNafpAnaEleGridInRectByTimeAndValidtime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-014
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-015
+  family: model_grid_analysis
+  query_features:
+  - level
+  - region
+  - valid_time
+  interface_id: getNafpAnaEleGridInRectByLevelAndValidtime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-015
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-016
+  family: model_grid_analysis
+  query_features:
+  - level
+  - region
+  - time
+  - valid_time
+  interface_id: getNafpAnaEleGridInRectByTimeAndLevelAndValidtime
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-016
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-017
+  family: model_grid_analysis
+  query_features:
+  - level
+  - number
+  - time
+  - valid_time
+  interface_id: getNafpAnaEleGridByTimeAndLevelAndValidtimeAndFcstMember
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-017
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null
+- case_id: MGA-018
+  family: model_grid_analysis
+  query_features:
+  - level
+  - number
+  - region
+  - time
+  - valid_time
+  interface_id: getNafpAnaEleGridInRectByTimeAndLevelAndValidtimeAndFcstMember
+  public_function: retrieve_model_grid
+  public_kwargs: null
+  expected_return_contract:
+    kind: dataarray
+  profile_key: model_analysis
+  tier: extended
+  enabled: false
+  test_node: null
+  documentation_anchor: guide/high-level/model/grid#mga-018
+  implemented: false
+  online_status: planned
+  reason: Awaiting B09 case implementation
+  last_verified_environment_and_time: null

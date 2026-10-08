@@ -1,6 +1,5 @@
 from typing import TypedDict, Optional
 
-from nuwe_cmadaas._log import logger
 from nuwe_cmadaas.interfaces import resolve_interface
 
 
@@ -57,11 +56,10 @@ def _features_from_config(interface_config: InterfaceConfig) -> frozenset[str]:
 
 
 def _fix_params(interface_id, params):
-    if interface_id in (
+    """Two GPS interfaces reject dataCode despite listing it as type D."""
+    if interface_id in {
         "getUparGpsEleByTimeAndStaID",
         "getUparGpsEleInRectByTime",
-        "not_getUparGpsEleInRegionByTime"
-    ):
-        logger.warning("UparGps don't use dataCode!")
+    }:
         params.pop("dataCode", None)
     return params

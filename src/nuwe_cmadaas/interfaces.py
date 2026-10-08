@@ -277,11 +277,40 @@ _DECLARATIONS = {
     "obs_file": _OBS_FILE_DECLARATIONS,
     "obs_upper_file": _OBS_UPPER_FILE_DECLARATIONS,
     "obs_grid": _OBS_GRID_DECLARATIONS,
-    "obs_upper": _upper_declarations("getUparEle"),
-    "obs_upper_gps": _upper_declarations("getUparGpsEle"),
-    "obs_upper_light": _upper_declarations("getUparLightEle"),
+    # Exact IDs from the 2026-10-07 UPAR_API catalog. Other suffixes are not
+    # service interfaces and must fail before a client request is made.
+    "obs_upper": {
+        features: spec for features, spec in _upper_declarations("getUparEle").items()
+        if spec[0] in {
+            "getUparEleByTime", "getUparEleByTimeRange",
+            "getUparEleInRectByTime", "getUparEleInRectByTimeRange",
+            "getUparEleByTimeAndStaID", "getUparEleByTimeRangeAndStaID",
+            "getUparEleByTimeAndPress", "getUparEleByTimeAndHeight",
+            "getUparEleByTimeAndVertical", "getUparEleByTimeAndStaIDAndPress",
+        }
+    },
+    "obs_upper_gps": {
+        features: spec for features, spec in _upper_declarations("getUparGpsEle").items()
+        if spec[0] in {
+            "getUparGpsEleInRectByTime", "getUparGpsEleByTimeAndStaID",
+            "getUparGpsEleByTimeRangeAndStaID",
+        }
+    },
+    "obs_upper_light": {
+        _features("region", "time_range"): (
+            "getUparLightEleInRectByTimeRange",
+            _features("dataCode", "elements", "timeRange", "minLat", "minLon", "maxLat", "maxLon"),
+        ),
+    },
     "obs_upper_ard": {
-        _features("time", "level_height"): ("getUparArdEleByTimeAndHeight", _features("dataCode", "elements", "times", "fLayer")),
+        _features("time_range", "level_height_range"): (
+            "getUparArdEleByTimeRangeAndHeightRange",
+            _features("dataCode", "elements", "timeRange", "minFLayer", "maxFLayer"),
+        ),
+        _features("region", "time_range", "level_height_range"): (
+            "getUparArdEleInRectByTimeRangeAndHeightRange",
+            _features("dataCode", "elements", "timeRange", "minFLayer", "maxFLayer", "minLat", "minLon", "maxLat", "maxLon"),
+        ),
     },
     "obs_station_latest": {
         _features(): ("getSurfLatestTime", _features("dataCode", "latestTime")),
@@ -290,7 +319,7 @@ _DECLARATIONS = {
         _features(): ("getSurfLatestTime", _features("dataCode", "latestTime")),
     },
     "obs_upper_latest": {
-        _features(): ("getSurfLatestTime", _features("dataCode", "latestTime")),
+        _features(): ("getUparLatestTime", _features("dataCode", "latestTime")),
     },
     "model_file_latest": {
         _features(): ("getNafpLatestTime", _features("dataCode", "latestTime")),

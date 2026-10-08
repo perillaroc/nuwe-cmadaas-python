@@ -89,7 +89,7 @@ def retrieve_obs_upper_air(
         - 时间对象：``pd.Timestamp`` 或 ``datetime.datetime`` 类型，单个时间点，对应接口的 times 参数
         - 时间列表：``list`` 或 ``tuple`` 类型，元素为 pandas 或标准库 datetime，对应接口的 times 参数
         - 时间段：``pd.Interval`` 类型，起止时间，定义区间端点是否闭合，对应接口的 timeRange 参数
-        - 时间间隔：``pd.Timedelta`` 或 ``datetime.timedelta`` 类型，用于获取地面资料最新时次 (getSurfLatestTime)，忽略其余筛选条件
+        - 时间间隔：``pd.Timedelta`` 或 ``datetime.timedelta`` 类型，用于获取高空资料最新时次 (getUparLatestTime)，忽略其余筛选条件
     level_type:
         层次类型
 
@@ -181,7 +181,7 @@ def retrieve_obs_upper_air(
     elif normalized_time is not None and normalized_time.kind in ("single", "multiple"):
         interface_config["time"] = "Time"
     elif normalized_time is not None and normalized_time.kind == "latest":
-        interface_config["name"] = "getSurfLatestTime"
+        interface_config["name"] = "getUparLatestTime"
         params.pop("orderby", None)
         params.pop("elements", None)
     params.update(time_params)
@@ -230,7 +230,7 @@ def retrieve_obs_upper_air(
         "getUparGpsEle": "obs_upper_gps",
         "getUparLightEle": "obs_upper_light",
         "getUparArdEle": "obs_upper_ard",
-        "getSurfLatestTime": "obs_upper_latest",
+        "getUparLatestTime": "obs_upper_latest",
     }.get(interface_config["name"])
     if family is None:
         raise ValueError(
@@ -287,6 +287,8 @@ def _features_from_config(interface_config: InterfaceConfig) -> frozenset[str]:
         features.add("level_height")
     elif level == "Vertical":
         features.add("level_vertical")
+    elif level == "HeightRange":
+        features.add("level_height_range")
     elif level is not None:
         features.add("level")
     return frozenset(features)
@@ -354,8 +356,12 @@ def _get_level_params(
         if isinstance(level, (list, tuple)):
             level_params[level_params_name] = ",".join(str(item) for item in level)
         elif isinstance(level, pd.Interval):
-            level_params[f"min{level_params_name.upper()}"] = level.left
-            level_params[f"max{level_params_name.upper()}"] = level.right
+            if level_params_name == "fLayer":
+                level_params["minFLayer"] = level.left
+                level_params["maxFLayer"] = level.right
+            else:
+                level_params[f"min{level_params_name.upper()}"] = level.left
+                level_params[f"max{level_params_name.upper()}"] = level.right
             interface_level_config += "Range"
         else:
             level_params[level_params_name] = str(level)

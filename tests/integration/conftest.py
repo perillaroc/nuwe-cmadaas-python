@@ -76,6 +76,12 @@ def short_time_range(base_time):
 
 
 @pytest.fixture
+def flight_height_range(dataset_profile):
+    lower, upper = dataset_profile("obs_upper_ard")["flight_height_bounds"]
+    return pd.Interval(lower, upper, closed="both")
+
+
+@pytest.fixture
 def time_list(base_time):
     return [base_time, base_time + pd.Timedelta(hours=1)]
 

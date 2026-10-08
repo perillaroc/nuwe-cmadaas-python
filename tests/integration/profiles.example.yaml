@@ -61,28 +61,44 @@ datasets:
     station_id: EXAMPLE_ID
   obs_upper_regular:
     enabled: false
-    data_code: EXAMPLE_UPPER_CODE
-    elements: Station_Id_C,TEM
-    station_id: EXAMPLE_ID
-    level_type: "100"
-    level: 850
-    expected_columns: [Station_Id_C, TEM]
+    data_code: UPAR_CHN_MUL_FTM
+    elements: Station_Id_d,Lat,Lon,PRS_HWC,GPH,EVSS,TEM
+    station_id: "54511"
+    region: {type: rect, start_longitude: 115.7, end_longitude: 117.4, start_latitude: 41.6, end_latitude: 39.4}
+    pressure_level: 850
+    height_level: 1500
+    vertical_level: 4096
+    expected_columns: [Station_Id_d, Lat, Lon, PRS_HWC, GPH, EVSS, TEM]
     max_rows: 20
   obs_upper_gps:
     enabled: false
-    data_code: EXAMPLE_GPS_CODE
-    elements: Station_Id_C
+    # Directory lists these interfaces; the reference account has no confirmed access.
+    data_code: UPAR_CHN_GPSMET_MUL
+    elements: Station_Id_C,Lat,Lon,TEM
+    station_id: "54511"
+    region: {type: rect, start_longitude: 115.7, end_longitude: 117.4, start_latitude: 41.6, end_latitude: 39.4}
+    expected_columns: [Station_Id_C, Lat, Lon, TEM]
     max_rows: 20
   obs_upper_light:
     enabled: false
-    data_code: EXAMPLE_LIGHT_CODE
-    elements: Station_Id_C
+    # Replace with a light-data code granted to this account before enabling.
+    data_code: UPAR_ADTD_CHN_LIS
+    elements: Datetime,Lat,Lon
+    region: {type: rect, start_longitude: 115.7, end_longitude: 117.4, start_latitude: 41.6, end_latitude: 39.4}
+    expected_columns: [Datetime, Lat, Lon]
     max_rows: 20
   obs_upper_ard:
     enabled: false
-    data_code: EXAMPLE_ARD_CODE
-    elements: Station_Id_C
+    data_code: UPAR_ARD_G_MUT_AMD
+    elements: Lat,Lon,Flight_Heigh,TEM
+    region: {type: rect, start_longitude: 115.7, end_longitude: 117.4, start_latitude: 41.6, end_latitude: 39.4}
+    flight_height_bounds: [0, 15000]
+    expected_columns: [Lat, Lon, Flight_Heigh, TEM]
     max_rows: 20
+  obs_upper_latest:
+    enabled: false
+    data_code: UPAR_CHN_MUL_FTM
+    expected_columns: [Datetime]
   obs_upper_file:
     enabled: false
     data_code: EXAMPLE_UPPER_FILE_CODE
@@ -141,6 +157,7 @@ cases:
   OS-007: {enabled: false}
   OG-002: {enabled: false}  # full national grid; enable separately
   OG-005: {enabled: false}  # small rectangle smoke case
+  OU-010: {enabled: false}  # regular upper-air smoke case
 download_limits:
   max_files: 2
   max_total_bytes: 10485760

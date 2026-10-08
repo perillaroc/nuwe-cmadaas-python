@@ -1,131 +1,70 @@
-# Case definitions for obs/upper.
-# Case IDs are unique across all integration manifests.
+# Case definitions for cataloged obs/upper interfaces.
+# Removed IDs are documented in the B06 contract record.
 cases:
-- case_id: OU-001
-  family: obs_upper
-  query_features: []
-  interface_id: getUparEle
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_regular
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#ou-001
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
 - case_id: OU-002
   family: obs_upper
   query_features:
   - time
   interface_id: getUparEleByTime
   public_function: retrieve_obs_upper_air
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    count:
+      profile: max_rows
+    time:
+      fixture: base_time
   expected_return_contract:
     kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: false
   profile_key: obs_upper_regular
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-002]
   documentation_anchor: guide/high-level/obs/upper-air#ou-002
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live service returned the configured columns and met row, station, region
+    or level assertions
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
+    three-day runtime date; direct CMADaaS connection
 - case_id: OU-003
   family: obs_upper
   query_features:
   - time_range
   interface_id: getUparEleByTimeRange
   public_function: retrieve_obs_upper_air
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    count:
+      profile: max_rows
+    time:
+      fixture: short_time_range
   expected_return_contract:
     kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: false
   profile_key: obs_upper_regular
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-003]
   documentation_anchor: guide/high-level/obs/upper-air#ou-003
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OU-004
-  family: obs_upper
-  query_features:
-  - station
-  interface_id: getUparEleByStaID
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_regular
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#ou-004
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OU-005
-  family: obs_upper
-  query_features:
-  - station_range
-  interface_id: getUparEleByStaIDRange
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_regular
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#ou-005
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OU-006
-  family: obs_upper
-  query_features:
-  - station_level
-  interface_id: getUparEleByStaLevels
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_regular
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#ou-006
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OU-007
-  family: obs_upper
-  query_features:
-  - region
-  interface_id: getUparEleInRect
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_regular
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#ou-007
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live service returned the configured columns and met row, station, region
+    or level assertions
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
+    three-day runtime date; direct CMADaaS connection
 - case_id: OU-008
   family: obs_upper
   query_features:
@@ -133,18 +72,36 @@ cases:
   - time
   interface_id: getUparEleInRectByTime
   public_function: retrieve_obs_upper_air
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    count:
+      profile: max_rows
+    time:
+      fixture: base_time
+    region:
+      profile: region
   expected_return_contract:
     kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: false
+    coordinates_within:
+      profile: region
   profile_key: obs_upper_regular
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-008]
   documentation_anchor: guide/high-level/obs/upper-air#ou-008
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live service returned the configured columns and met row, station, region
+    or level assertions
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
+    three-day runtime date; direct CMADaaS connection
 - case_id: OU-009
   family: obs_upper
   query_features:
@@ -152,18 +109,36 @@ cases:
   - time_range
   interface_id: getUparEleInRectByTimeRange
   public_function: retrieve_obs_upper_air
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    count:
+      profile: max_rows
+    time:
+      fixture: short_time_range
+    region:
+      profile: region
   expected_return_contract:
     kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: false
+    coordinates_within:
+      profile: region
   profile_key: obs_upper_regular
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-009]
   documentation_anchor: guide/high-level/obs/upper-air#ou-009
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live service returned the configured columns and met row, station, region
+    or level assertions
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
+    three-day runtime date; direct CMADaaS connection
 - case_id: OU-010
   family: obs_upper
   query_features:
@@ -171,18 +146,36 @@ cases:
   - time
   interface_id: getUparEleByTimeAndStaID
   public_function: retrieve_obs_upper_air
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    count:
+      profile: max_rows
+    time:
+      fixture: base_time
+    station:
+      profile: station_id
   expected_return_contract:
     kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: false
+    station_matches:
+      profile: station_id
   profile_key: obs_upper_regular
-  tier: extended
-  enabled: false
-  test_node: null
+  tier: smoke
+  enabled: true
+  test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-010]
   documentation_anchor: guide/high-level/obs/upper-air#ou-010
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live service returned the configured columns and met row, station, region
+    or level assertions
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
+    three-day runtime date; direct CMADaaS connection
 - case_id: OU-011
   family: obs_upper
   query_features:
@@ -190,56 +183,36 @@ cases:
   - time_range
   interface_id: getUparEleByTimeRangeAndStaID
   public_function: retrieve_obs_upper_air
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    count:
+      profile: max_rows
+    time:
+      fixture: short_time_range
+    station:
+      profile: station_id
   expected_return_contract:
     kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: false
+    station_matches:
+      profile: station_id
   profile_key: obs_upper_regular
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-011]
   documentation_anchor: guide/high-level/obs/upper-air#ou-011
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OU-012
-  family: obs_upper
-  query_features:
-  - station_level
-  - time
-  interface_id: getUparEleByTimeAndStaLevels
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_regular
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#ou-012
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OU-013
-  family: obs_upper
-  query_features:
-  - station_level
-  - time_range
-  interface_id: getUparEleByTimeRangeAndStaLevels
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_regular
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#ou-013
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live service returned the configured columns and met row, station, region
+    or level assertions
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
+    three-day runtime date; direct CMADaaS connection
 - case_id: OU-014
   family: obs_upper
   query_features:
@@ -247,18 +220,37 @@ cases:
   - time
   interface_id: getUparEleByTimeAndPress
   public_function: retrieve_obs_upper_air
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    count:
+      profile: max_rows
+    time:
+      fixture: base_time
+    level_type: pl
+    level:
+      profile: pressure_level
   expected_return_contract:
     kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: false
+    pressure_matches:
+      profile: pressure_level
   profile_key: obs_upper_regular
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-014]
   documentation_anchor: guide/high-level/obs/upper-air#ou-014
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live service returned the configured columns and met row, station, region
+    or level assertions
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
+    three-day runtime date; direct CMADaaS connection
 - case_id: OU-015
   family: obs_upper
   query_features:
@@ -266,18 +258,37 @@ cases:
   - time
   interface_id: getUparEleByTimeAndHeight
   public_function: retrieve_obs_upper_air
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    count:
+      profile: max_rows
+    time:
+      fixture: base_time
+    level_type: hgt
+    level:
+      profile: height_level
   expected_return_contract:
     kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: false
+    height_matches:
+      profile: height_level
   profile_key: obs_upper_regular
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-015]
   documentation_anchor: guide/high-level/obs/upper-air#ou-015
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live service returned the configured columns and met row, station, region
+    or level assertions
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
+    three-day runtime date; direct CMADaaS connection
 - case_id: OU-016
   family: obs_upper
   query_features:
@@ -285,18 +296,37 @@ cases:
   - time
   interface_id: getUparEleByTimeAndVertical
   public_function: retrieve_obs_upper_air
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    count:
+      profile: max_rows
+    time:
+      fixture: base_time
+    level_type: vertical
+    level:
+      profile: vertical_level
   expected_return_contract:
     kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: false
+    vertical_matches:
+      profile: vertical_level
   profile_key: obs_upper_regular
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-016]
   documentation_anchor: guide/high-level/obs/upper-air#ou-016
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live service returned the configured columns and met row, station, region
+    or level assertions
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
+    three-day runtime date; direct CMADaaS connection
 - case_id: OU-017
   family: obs_upper
   query_features:
@@ -305,143 +335,41 @@ cases:
   - time
   interface_id: getUparEleByTimeAndStaIDAndPress
   public_function: retrieve_obs_upper_air
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    count:
+      profile: max_rows
+    time:
+      fixture: base_time
+    station:
+      profile: station_id
+    level_type: pl
+    level:
+      profile: pressure_level
   expected_return_contract:
     kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: false
+    station_matches:
+      profile: station_id
+    pressure_matches:
+      profile: pressure_level
   profile_key: obs_upper_regular
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-017]
   documentation_anchor: guide/high-level/obs/upper-air#ou-017
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUG-001
-  family: obs_upper_gps
-  query_features: []
-  interface_id: getUparGpsEle
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_gps
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oug-001
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUG-002
-  family: obs_upper_gps
-  query_features:
-  - time
-  interface_id: getUparGpsEleByTime
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_gps
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oug-002
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUG-003
-  family: obs_upper_gps
-  query_features:
-  - time_range
-  interface_id: getUparGpsEleByTimeRange
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_gps
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oug-003
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUG-004
-  family: obs_upper_gps
-  query_features:
-  - station
-  interface_id: getUparGpsEleByStaID
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_gps
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oug-004
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUG-005
-  family: obs_upper_gps
-  query_features:
-  - station_range
-  interface_id: getUparGpsEleByStaIDRange
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_gps
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oug-005
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUG-006
-  family: obs_upper_gps
-  query_features:
-  - station_level
-  interface_id: getUparGpsEleByStaLevels
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_gps
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oug-006
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUG-007
-  family: obs_upper_gps
-  query_features:
-  - region
-  interface_id: getUparGpsEleInRect
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_gps
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oug-007
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live service returned the configured columns and met row, station, region
+    or level assertions
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
+    three-day runtime date; direct CMADaaS connection
 - case_id: OUG-008
   family: obs_upper_gps
   query_features:
@@ -449,37 +377,38 @@ cases:
   - time
   interface_id: getUparGpsEleInRectByTime
   public_function: retrieve_obs_upper_air
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    count:
+      profile: max_rows
+    interface_data_type: UparGps
+    time:
+      fixture: base_time
+    region:
+      profile: region
   expected_return_contract:
     kind: dataframe
+    nonempty: false
+    columns:
+      profile: expected_columns
+    metadata_interface_id: false
+    coordinates_within:
+      profile: region
   profile_key: obs_upper_gps
   tier: extended
   enabled: false
-  test_node: null
+  test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OUG-008]
   documentation_anchor: guide/high-level/obs/upper-air#oug-008
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUG-009
-  family: obs_upper_gps
-  query_features:
-  - region
-  - time_range
-  interface_id: getUparGpsEleInRectByTimeRange
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_gps
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oug-009
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: failed
+  reason: 'Live service returned -4001: account lacks access to UPAR_CHN_GPSMET_MUL'
+  recommended_data_code: UPAR_CHN_GPSMET_MUL
+  run_prerequisite: Grant the current account access to UPAR_CHN_GPSMET_MUL before enabling this case.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; direct CMADaaS
+    connection
 - case_id: OUG-010
   family: obs_upper_gps
   query_features:
@@ -487,18 +416,38 @@ cases:
   - time
   interface_id: getUparGpsEleByTimeAndStaID
   public_function: retrieve_obs_upper_air
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    count:
+      profile: max_rows
+    interface_data_type: UparGps
+    time:
+      fixture: base_time
+    station:
+      profile: station_id
   expected_return_contract:
     kind: dataframe
+    nonempty: false
+    columns:
+      profile: expected_columns
+    metadata_interface_id: false
+    station_matches:
+      profile: station_id
   profile_key: obs_upper_gps
   tier: extended
   enabled: false
-  test_node: null
+  test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OUG-010]
   documentation_anchor: guide/high-level/obs/upper-air#oug-010
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: failed
+  reason: 'Live service returned -4001: account lacks access to UPAR_CHN_GPSMET_MUL'
+  recommended_data_code: UPAR_CHN_GPSMET_MUL
+  run_prerequisite: Grant the current account access to UPAR_CHN_GPSMET_MUL before enabling this case.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; direct CMADaaS
+    connection
 - case_id: OUG-011
   family: obs_upper_gps
   query_features:
@@ -506,277 +455,38 @@ cases:
   - time_range
   interface_id: getUparGpsEleByTimeRangeAndStaID
   public_function: retrieve_obs_upper_air
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    count:
+      profile: max_rows
+    interface_data_type: UparGps
+    time:
+      fixture: short_time_range
+    station:
+      profile: station_id
   expected_return_contract:
     kind: dataframe
+    nonempty: false
+    columns:
+      profile: expected_columns
+    metadata_interface_id: false
+    station_matches:
+      profile: station_id
   profile_key: obs_upper_gps
   tier: extended
   enabled: false
-  test_node: null
+  test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OUG-011]
   documentation_anchor: guide/high-level/obs/upper-air#oug-011
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUG-012
-  family: obs_upper_gps
-  query_features:
-  - station_level
-  - time
-  interface_id: getUparGpsEleByTimeAndStaLevels
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_gps
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oug-012
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUG-013
-  family: obs_upper_gps
-  query_features:
-  - station_level
-  - time_range
-  interface_id: getUparGpsEleByTimeRangeAndStaLevels
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_gps
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oug-013
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUG-014
-  family: obs_upper_gps
-  query_features:
-  - level_press
-  - time
-  interface_id: getUparGpsEleByTimeAndPress
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_gps
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oug-014
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUG-015
-  family: obs_upper_gps
-  query_features:
-  - level_height
-  - time
-  interface_id: getUparGpsEleByTimeAndHeight
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_gps
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oug-015
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUG-016
-  family: obs_upper_gps
-  query_features:
-  - level_vertical
-  - time
-  interface_id: getUparGpsEleByTimeAndVertical
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_gps
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oug-016
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUG-017
-  family: obs_upper_gps
-  query_features:
-  - level_press
-  - station
-  - time
-  interface_id: getUparGpsEleByTimeAndStaIDAndPress
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_gps
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oug-017
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUL-001
-  family: obs_upper_light
-  query_features: []
-  interface_id: getUparLightEle
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_light
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oul-001
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUL-002
-  family: obs_upper_light
-  query_features:
-  - time
-  interface_id: getUparLightEleByTime
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_light
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oul-002
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUL-003
-  family: obs_upper_light
-  query_features:
-  - time_range
-  interface_id: getUparLightEleByTimeRange
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_light
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oul-003
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUL-004
-  family: obs_upper_light
-  query_features:
-  - station
-  interface_id: getUparLightEleByStaID
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_light
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oul-004
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUL-005
-  family: obs_upper_light
-  query_features:
-  - station_range
-  interface_id: getUparLightEleByStaIDRange
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_light
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oul-005
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUL-006
-  family: obs_upper_light
-  query_features:
-  - station_level
-  interface_id: getUparLightEleByStaLevels
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_light
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oul-006
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUL-007
-  family: obs_upper_light
-  query_features:
-  - region
-  interface_id: getUparLightEleInRect
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_light
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oul-007
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUL-008
-  family: obs_upper_light
-  query_features:
-  - region
-  - time
-  interface_id: getUparLightEleInRectByTime
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_light
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oul-008
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: failed
+  reason: 'Live service returned -4001: account lacks access to UPAR_CHN_GPSMET_MUL'
+  recommended_data_code: UPAR_CHN_GPSMET_MUL
+  run_prerequisite: Grant the current account access to UPAR_CHN_GPSMET_MUL before enabling this case.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; direct CMADaaS
+    connection
 - case_id: OUL-009
   family: obs_upper_light
   query_features:
@@ -784,203 +494,140 @@ cases:
   - time_range
   interface_id: getUparLightEleInRectByTimeRange
   public_function: retrieve_obs_upper_air
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    elements:
+      profile: elements
+    count:
+      profile: max_rows
+    interface_data_type: UparLight
+    time:
+      fixture: short_time_range
+    region:
+      profile: region
   expected_return_contract:
     kind: dataframe
+    nonempty: false
+    columns:
+      profile: expected_columns
+    metadata_interface_id: false
+    coordinates_within:
+      profile: region
   profile_key: obs_upper_light
   tier: extended
   enabled: false
-  test_node: null
+  test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OUL-009]
   documentation_anchor: guide/high-level/obs/upper-air#oul-009
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUL-010
-  family: obs_upper_light
-  query_features:
-  - station
-  - time
-  interface_id: getUparLightEleByTimeAndStaID
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_light
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oul-010
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUL-011
-  family: obs_upper_light
-  query_features:
-  - station
-  - time_range
-  interface_id: getUparLightEleByTimeRangeAndStaID
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_light
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oul-011
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUL-012
-  family: obs_upper_light
-  query_features:
-  - station_level
-  - time
-  interface_id: getUparLightEleByTimeAndStaLevels
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_light
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oul-012
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUL-013
-  family: obs_upper_light
-  query_features:
-  - station_level
-  - time_range
-  interface_id: getUparLightEleByTimeRangeAndStaLevels
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_light
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oul-013
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUL-014
-  family: obs_upper_light
-  query_features:
-  - level_press
-  - time
-  interface_id: getUparLightEleByTimeAndPress
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_light
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oul-014
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUL-015
-  family: obs_upper_light
-  query_features:
-  - level_height
-  - time
-  interface_id: getUparLightEleByTimeAndHeight
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_light
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oul-015
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUL-016
-  family: obs_upper_light
-  query_features:
-  - level_vertical
-  - time
-  interface_id: getUparLightEleByTimeAndVertical
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_light
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oul-016
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
-- case_id: OUL-017
-  family: obs_upper_light
-  query_features:
-  - level_press
-  - station
-  - time
-  interface_id: getUparLightEleByTimeAndStaIDAndPress
-  public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataframe
-  profile_key: obs_upper_light
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/upper-air#oul-017
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: failed
+  reason: 'Live service returned -4001: account lacks access to the configured data
+    code'
+  recommended_data_code: UPAR_ADTD_CHN_LIS
+  run_prerequisite: Grant the current account access to UPAR_ADTD_CHN_LIS before enabling this case.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; direct CMADaaS
+    connection
 - case_id: OUA-001
   family: obs_upper_ard
   query_features:
-  - level_height
-  - time
-  interface_id: getUparArdEleByTimeAndHeight
+  - level_height_range
+  - time_range
+  interface_id: getUparArdEleByTimeRangeAndHeightRange
   public_function: retrieve_obs_upper_air
-  public_kwargs: null
+  public_kwargs:
+    data_code: &id001
+      profile: data_code
+    elements: &id002
+      profile: elements
+    count: &id003
+      profile: max_rows
+    time: &id004
+      fixture: short_time_range
+    level_type: fl
+    level: &id005
+      fixture: flight_height_range
   expected_return_contract:
     kind: dataframe
+    nonempty: false
+    columns: &id006
+      profile: expected_columns
+    metadata_interface_id: false
+    flight_height_between: &id007
+      profile: flight_height_bounds
   profile_key: obs_upper_ard
   tier: extended
   enabled: false
-  test_node: null
+  test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OUA-001]
   documentation_anchor: guide/high-level/obs/upper-air#oua-001
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: failed
+  reason: Live response rows had Flight_Heigh=999999 (missing sentinel), outside requested
+    0..15000 range
+  recommended_data_code: UPAR_ARD_G_MUT_AMD
+  run_prerequisite: Find a time window with valid Flight_Heigh values within 0..15000 before enabling this case.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_ARD_G_MUT_AMD;
+    direct CMADaaS connection
+- case_id: OUA-002
+  family: obs_upper_ard
+  query_features:
+  - level_height_range
+  - region
+  - time_range
+  interface_id: getUparArdEleInRectByTimeRangeAndHeightRange
+  public_function: retrieve_obs_upper_air
+  public_kwargs:
+    data_code: *id001
+    elements: *id002
+    count: *id003
+    time: *id004
+    level_type: fl
+    level: *id005
+    region:
+      profile: region
+  expected_return_contract:
+    kind: dataframe
+    nonempty: false
+    columns: *id006
+    metadata_interface_id: false
+    flight_height_between: *id007
+    coordinates_within:
+      profile: region
+  profile_key: obs_upper_ard
+  tier: extended
+  enabled: false
+  test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OUA-002]
+  documentation_anchor: guide/high-level/obs/upper-air#oua-002
+  implemented: true
+  online_status: failed
+  reason: 'Live service returned code -1: no record in the configured rectangle and
+    time range'
+  recommended_data_code: UPAR_ARD_G_MUT_AMD
+  run_prerequisite: Find a rectangle and time window with records before enabling this case.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_ARD_G_MUT_AMD;
+    direct CMADaaS connection
 - case_id: OULAT-001
   family: obs_upper_latest
   query_features: []
-  interface_id: getSurfLatestTime
+  interface_id: getUparLatestTime
   public_function: retrieve_obs_upper_air
-  public_kwargs: null
-  expected_return_contract: null
-  profile_key: obs_upper_regular
+  public_kwargs:
+    data_code:
+      profile: data_code
+    time:
+      fixture: latest_delta
+  expected_return_contract:
+    kind: dataframe
+    nonempty: true
+    columns:
+      profile: expected_columns
+    metadata_interface_id: false
+  profile_key: obs_upper_latest
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OULAT-001]
   documentation_anchor: guide/high-level/obs/upper-air#oulat-001
-  implemented: false
-  online_status: planned
-  reason: Awaiting B06 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live getUparLatestTime returned the expected Datetime table schema
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
+    direct CMADaaS connection

@@ -1,6 +1,6 @@
-from typing import TypedDict, Optional
+from typing import Mapping, TypedDict, Optional
 
-from nuwe_cmadaas.interfaces import resolve_interface
+from nuwe_cmadaas.interfaces import UnsupportedQueryError, resolve_interface
 
 
 class InterfaceConfig(TypedDict):
@@ -9,6 +9,16 @@ class InterfaceConfig(TypedDict):
     time: Optional[str]
     station: Optional[str]
     level: Optional[str]
+
+
+def reject_latest_filters(family: str, filters: Mapping[str, object]) -> None:
+    """Reject high-level latest-time filters outside dataCode/latestTime."""
+    unsupported = sorted(name for name, value in filters.items() if value is not None)
+    if unsupported:
+        raise UnsupportedQueryError(
+            f"{family} latest-time query does not support filters: "
+            f"{', '.join(unsupported)}; use only data_code and relative time"
+        )
 
 
 def _get_interface_id(interface_config: InterfaceConfig) -> str:

@@ -25,6 +25,28 @@ def test_retrieve_obs_upper_air_latest_time_does_not_delete_missing_keys():
     ]
 
 
+@pytest.mark.parametrize("extra", [
+    {"elements": "Datetime"},
+    {"level_type": "pl"},
+    {"level": 850},
+    {"station": "54511"},
+    {"region": {"type": "region", "admin_codes": "110000"}},
+    {"station_level": "011"},
+    {"order": "Datetime:desc"},
+    {"count": 1},
+    {"interface_data_type": "UparGps"},
+    {"dataProvinceId": "BABJ"},
+    {"family": None},
+])
+def test_latest_time_rejects_extra_filters_before_request(extra):
+    client = FakeCMADaaSClient(make_array2d_response())
+
+    with pytest.raises(UnsupportedQueryError, match="latest-time query does not support filters"):
+        retrieve_obs_upper_air(time=pd.Timedelta(hours=6), client=client, **extra)
+
+    assert client.calls == []
+
+
 @pytest.mark.parametrize(
     "kwargs",
     [{"level_type": "pl"}, {"level": 850}],

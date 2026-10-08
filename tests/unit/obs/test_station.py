@@ -19,6 +19,25 @@ def make_client(result=None):
     return FakeCMADaaSClient(result or make_array2d_response())
 
 
+@pytest.mark.parametrize("extra", [
+    {"elements": "Datetime"},
+    {"station": "54511"},
+    {"region": {"type": "region", "admin_codes": "110000"}},
+    {"station_level": "011"},
+    {"order": "Datetime:desc"},
+    {"count": 1},
+    {"dataProvinceId": "BABJ"},
+    {"family": None},
+])
+def test_latest_time_rejects_extra_filters_before_request(extra):
+    client = make_client()
+
+    with pytest.raises(UnsupportedQueryError, match="latest-time query does not support filters"):
+        retrieve_obs_station(data_code=DATA_CODE, time=pd.Timedelta(hours=6), client=client, **extra)
+
+    assert client.calls == []
+
+
 @pytest.mark.parametrize(
     ("kwargs", "interface_id", "expected_params"),
     [
@@ -184,7 +203,7 @@ def test_retrieve_obs_station_builds_request(
 
     result = retrieve_obs_station(
         DATA_CODE,
-        elements=ELEMENTS,
+        elements=None if interface_id == "getSurfLatestTime" else ELEMENTS,
         client=client,
         **kwargs,
     )

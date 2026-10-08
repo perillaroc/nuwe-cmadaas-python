@@ -117,11 +117,11 @@ cases:
     max_rows: 1
   profile_key: obs_station_latest
   tier: extended
-  enabled: false
+  enabled: true
   test_node: tests/integration/obs/file/test_latest_time.py::test_registered_case[OFL-001]
   documentation_anchor: guide/high-level/obs/files#ofl-001
   implemented: true
-  online_status: implemented-unverified
-  reason: The catalog declares RetArray2D and OSL-001 previously verified the same service ID;
-    this distinct case has not been run online.
-  last_verified_environment_and_time: null
+  online_status: passed
+  reason: The catalog declares RetArray2D; the independent table case passed online with a recent surface code.
+  last_verified_environment_and_time: 2026-10-08 22:44 +0800; local WSL, Python 3.14;
+    SURF_CHN_MUL_HOR_N, relative latestTime=24; one Datetime row within the query window.

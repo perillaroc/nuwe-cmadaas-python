@@ -17,7 +17,7 @@ from nuwe_cmadaas.music.errors import handle_response_error
 from nuwe_cmadaas.dataset import load_dataset_config
 from nuwe_cmadaas.interfaces import resolve_interface
 
-from .util import InterfaceConfig
+from .util import InterfaceConfig, reject_latest_filters
 
 
 def retrieve_obs_station(
@@ -87,7 +87,7 @@ def retrieve_obs_station(
         - 时间对象：``pd.Timestamp`` 或 ``datetime.datetime`` 类型，单个时间点，对应接口的 times 参数
         - 时间列表：``list`` 或 ``tuple`` 类型，元素为 pandas 或标准库 datetime，对应接口的 times 参数
         - 时间段：``pd.Interval`` 类型，起止时间，定义区间端点是否闭合，对应接口的 timeRange 参数
-        - 时间间隔：``pd.Timedelta`` 或 ``datetime.timedelta`` 类型，用于获取地面资料最新时次 (getSurfLatestTime)，忽略其余筛选条件
+        - 时间间隔：``pd.Timedelta`` 或 ``datetime.timedelta`` 类型，用于获取地面资料最新时次 (getSurfLatestTime)；仅支持资料代码和相对时长，附加筛选条件会抛出 ``UnsupportedQueryError``
     station
         站点筛选条件，支持字符串，列表和元组
 
@@ -124,10 +124,25 @@ def retrieve_obs_station(
     pd.DataFrame
         站点观测资料表格数据，列名为 ``elements`` 中的值
     """
+    normalized_time, time_params = time_filter_params(time, single_key="times")
+    is_latest = normalized_time is not None and normalized_time.kind == "latest"
+    if is_latest:
+        reject_latest_filters(
+            "obs_station",
+            {
+                "elements": elements,
+                "station": station,
+                "region": region,
+                "station_level": station_level,
+                "order": order if order != "Station_ID_d:asc" else None,
+                "count": count,
+                **{key: True for key in kwargs},
+            },
+        )
     validate_count(count)
 
-    station_dataset_config = load_dataset_config("station")
-    if elements is None:
+    if elements is None and not is_latest:
+        station_dataset_config = load_dataset_config("station")
         elements = station_dataset_config[data_code]["elements"]
 
     interface_config = InterfaceConfig(
@@ -147,7 +162,6 @@ def retrieve_obs_station(
     if count is not None:
         params["limitCnt"] = count
 
-    normalized_time, time_params = time_filter_params(time, single_key="times")
     if normalized_time is not None and normalized_time.kind == "range":
         interface_config["time"] = "TimeRange"
     elif normalized_time is not None and normalized_time.kind in ("single", "multiple"):

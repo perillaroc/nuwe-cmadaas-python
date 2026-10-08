@@ -47,7 +47,7 @@ export NUWE_CMADAAS_TEST_PROFILE=/tmp/nuwe-cmadaas-test-profile.yaml
 | 地面格点、常规/GPS/Light/Ard 高空表格 | 本机日期的三天前 00 时及由此生成的短区间。 |
 | 地面与高空文件 | 本机日期的两天前 00 时，或从该时次起一小时的区间。 |
 | 模式格点、模式点、模式文件及底层 MUSIC | 本机日期的三天前 06 时；模式文件的时间段案例使用 06～07 时。 |
-| latest-time | `OSL-001`、高空 latest 使用相对 1 小时；`OFL-001` 和 `MFL-001` 分别使用 profile 中的 `latest_hours`（示例为 24 和 72 小时）。它们返回时间表格，不能作为文件下载。 |
+| latest-time | `OSL-001`、高空 latest 使用相对 1 小时；`OFL-001` 和 `MFL-001` 分别使用 profile 中的 `latest_hours`（示例为 24 和 72 小时）。它们返回时间表格，不能作为文件下载。地面与高空高层 latest 查询仅接受资料代码和相对时长；附加筛选参数在发请求前报 `UnsupportedQueryError`。 |
 | REPS 错误码专项 | 负向案例按运行时日期构造未来时次或无效参数，预期得到指定错误码。 |
 
 这些 fixture 使用测试主机的本地时钟。若所选资料在该动态时次没有记录，应核对资料周期、账号可见窗口和清单中的 `profile_key`，再调整测试资料或日期规则并记录原因；不能把无记录当作通过。
@@ -102,6 +102,6 @@ uv run pytest tests/integration -m 'integration and extended' -ra --strict-marke
 | `failed` | 曾联网失败；查看 `reason`、`verification_blocker`、`recommended_data_code` 和 `run_prerequisite`。 |
 | `implemented-unverified` | 有可收集案例或离线实现，但该案例尚无可确认的在线成功。 |
 
-2026-10-08 B15 基线为 88 条清单案例（历史 `passed` 77、`failed` 8、`implemented-unverified` 3），另有 6 个 REPS 错误码专项节点。`OF-009` 需要获授权的站号文件资料 `SURF_PRODUCT_PART2_FILE_TAB`；`OFL-001` 已按表格契约实现，但尚未单独在线验证。`LLB-001` 的 DataBlock 转换有离线回归，仍缺目录明确声明 `RetDataBlock` 的接口、已授权资料及近期样本。高空 GPS、Light、Ard 与两个模式格点失败案例的具体前置条件见各自 `cases.yaml`。跳过、未验证和历史失败均不计为当前成功。
+2026-10-08 B07-fix-01 后为 88 条清单案例（历史在线 `passed` 78、`failed` 8、`implemented-unverified` 2），另有 6 个 REPS 错误码专项节点。`OFL-001` 已用 `SURF_CHN_MUL_HOR_N` 和相对 24 小时窗口单独在线验证 `Datetime` 表格。`OF-009` 需要获授权的站号文件资料 `SURF_PRODUCT_PART2_FILE_TAB`；`LLB-001` 的 DataBlock 转换有离线回归，仍缺目录明确声明 `RetDataBlock` 的接口、已授权资料及近期样本。高空 GPS、Light、Ard 与两个模式格点失败案例的具体前置条件见各自 `cases.yaml`。跳过、未验证和历史失败均不计为当前成功。
 
 在线复测后，应在对应 `cases.yaml` 中按**单个案例**记录状态、资料代码、执行环境和时间、实际结果或失败原因；不可把一个接口或资料的成功推及整组。B16 只提供运行说明；全量实时服务验收由 E02 另行执行。

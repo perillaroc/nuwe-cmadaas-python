@@ -216,13 +216,34 @@ datasets:
 low_level:
   callAPI_to_array2D:
     enabled: false
-    interface_id: EXAMPLE_TABLE_INTERFACE
-    data_code: EXAMPLE_TABLE_CODE
-    params: {elements: Station_Id_C,TEM}
-    formats: []
-  callAPI_to_gridArray2D: {enabled: false}
-  callAPI_to_gridScalar2D: {enabled: false}
-  callAPI_to_gridVector2D: {enabled: false}
+    data_code: NAFP_FOR_FTM_GRAPES_CFSV2_NEHE
+    element: TEM
+    level_type: "103"
+    level: "2"
+    valid_time: "24"
+    lat_lons: "39.9/116.4"
+    expected_value_bounds: [150, 350]
+  callAPI_to_gridArray2D: &gfs_grid
+    enabled: false
+    data_code: NAFP_FOR_FTM_GRAPES_CFSV2_NEHE
+    element: TEM
+    level_type: "103"
+    level: "2"
+    valid_time: "24"
+    min_lon: "115"
+    max_lon: "116"
+    min_lat: "39"
+    max_lat: "40"
+    expected_value_bounds: [150, 350]
+  callAPI_to_gridScalar2D: *gfs_grid
+  callAPI_to_gridVector2D:
+    enabled: false
+    data_code: NAFP_ANA_FTM_GRAPES_GFS_NEHE
+    u_element: WIU
+    v_element: WIV
+    level_type: "100"
+    level: "850"
+    valid_time: "0"
   callAPI_to_fileList: {enabled: false}
   callAPI_to_downFile: {enabled: false}
   callAPI_to_saveAsFile: {enabled: false}
@@ -262,6 +283,10 @@ cases:
   MF-012: {enabled: false}  # requires an explicit extended download cap
   MF-019: {enabled: false}  # requires an explicit extended download cap
   MFL-001: {enabled: false}  # metadata query; no download
+  LLT-001: {enabled: false}  # GFS point table
+  LLG-001: {enabled: false}  # one-degree GFS forecast grid
+  LLG-002: {enabled: false}  # one-degree scalar grid
+  LLG-003: {enabled: false}  # full Northeast Hemisphere U/V grid
 download_limits:
   max_files: 2
   max_total_bytes: 67108864

@@ -362,7 +362,6 @@ class CMADaaSClient:
             params: Dict,
             server_id: str = None
     ) -> GridScalar2D:
-        warnings.warn("callAPI_to_gridScalar2D is not tested")
         data = GridScalar2D()
 
         method = self.callAPI_to_gridScalar2D.__name__

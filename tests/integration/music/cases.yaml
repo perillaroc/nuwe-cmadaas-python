@@ -1,0 +1,121 @@
+# B12 low-level table/grid cases. B13 and B14 add their cases to this manifest.
+cases:
+- case_id: LLT-001
+  family: music_array2d
+  query_features: []
+  interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+  public_function: CMADaaSClient.callAPI_to_array2D
+  public_kwargs:
+    interface_id: getNafpEleAtPointByTimeAndLevelAndValidtime
+    params:
+      dataCode: {profile: data_code}
+      time: {fixture: music_cycle_time}
+      fcstEle: {profile: element}
+      levelType: {profile: level_type}
+      fcstLevel: {profile: level}
+      validTime: {profile: valid_time}
+      latLons: {profile: lat_lons}
+  expected_return_contract:
+    kind: Array2D
+    columns: [lat, lon, datetime, level, validtime, TEM_103]
+    max_rows: 1
+  profile_key: callAPI_to_array2D
+  tier: smoke
+  enabled: true
+  test_node: tests/integration/music/test_tables.py::test_registered_case[LLT-001]
+  documentation_anchor: guide/low-level/tables#llt-001
+  implemented: true
+  online_status: passed
+  reason: GFS point query returned a one-row Array2D with matching time, location, level and lead.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+- case_id: LLG-001
+  family: music_grid_array2d
+  query_features: []
+  interface_id: getNafpEleGridInRectByTimeAndLevelAndValidtime
+  public_function: CMADaaSClient.callAPI_to_gridArray2D
+  public_kwargs:
+    interface_id: getNafpEleGridInRectByTimeAndLevelAndValidtime
+    params:
+      dataCode: {profile: data_code}
+      time: {fixture: music_cycle_time}
+      fcstEle: {profile: element}
+      levelType: {profile: level_type}
+      fcstLevel: {profile: level}
+      validTime: {profile: valid_time}
+      minLon: {profile: min_lon}
+      maxLon: {profile: max_lon}
+      minLat: {profile: min_lat}
+      maxLat: {profile: max_lat}
+  expected_return_contract:
+    kind: GridArray2D
+    dims: [latitude, longitude]
+    max_cells: 10000
+  profile_key: callAPI_to_gridArray2D
+  tier: smoke
+  enabled: true
+  test_node: tests/integration/music/test_grids.py::test_registered_case[LLG-001]
+  documentation_anchor: guide/low-level/grids#llg-001
+  implemented: true
+  online_status: passed
+  reason: GFS forecast returned a 9 by 9 grid for the one-degree rectangle.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+- case_id: LLG-002
+  family: music_grid_scalar2d
+  query_features: []
+  interface_id: getNafpEleGridInRectByTimeAndLevelAndValidtime
+  public_function: CMADaaSClient.callAPI_to_gridScalar2D
+  public_kwargs:
+    interface_id: getNafpEleGridInRectByTimeAndLevelAndValidtime
+    params:
+      dataCode: {profile: data_code}
+      time: {fixture: music_cycle_time}
+      fcstEle: {profile: element}
+      levelType: {profile: level_type}
+      fcstLevel: {profile: level}
+      validTime: {profile: valid_time}
+      minLon: {profile: min_lon}
+      maxLon: {profile: max_lon}
+      minLat: {profile: min_lat}
+      maxLat: {profile: max_lat}
+  expected_return_contract:
+    kind: GridScalar2D
+    dims: [latitude, longitude]
+    max_cells: 10000
+  profile_key: callAPI_to_gridScalar2D
+  tier: extended
+  enabled: true
+  test_node: tests/integration/music/test_grids.py::test_registered_case[LLG-002]
+  documentation_anchor: guide/low-level/grids#llg-002
+  implemented: true
+  online_status: passed
+  reason: GFS forecast returned a 9 by 9 scalar grid via the low-level method.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+- case_id: LLG-003
+  family: music_grid_vector2d
+  query_features: []
+  interface_id: getNafpVectorEleGridByTimeAndLevelAndValidtime
+  public_function: CMADaaSClient.callAPI_to_gridVector2D
+  public_kwargs:
+    interface_id: getNafpVectorEleGridByTimeAndLevelAndValidtime
+    params:
+      dataCode: {profile: data_code}
+      time: {fixture: music_cycle_time}
+      fcstuele: {profile: u_element}
+      fcstvele: {profile: v_element}
+      levelType: {profile: level_type}
+      fcstLevel: {profile: level}
+      validTime: {profile: valid_time}
+  expected_return_contract:
+    kind: GridVector2D
+    dims: [latitude, longitude]
+    components: [WIU_100, WIV_100]
+    max_cells: 2000000
+  profile_key: callAPI_to_gridVector2D
+  tier: extended
+  enabled: true
+  test_node: tests/integration/music/test_grids.py::test_registered_case[LLG-003]
+  documentation_anchor: guide/low-level/grids#llg-003
+  implemented: true
+  online_status: passed
+  reason: GFS analysis returned a 720 by 1441 U/V grid at validTime zero.
+  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS

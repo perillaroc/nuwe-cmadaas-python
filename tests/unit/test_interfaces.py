@@ -54,8 +54,8 @@ pytestmark = pytest.mark.unit
         ),
         (
             "obs_grid",
-            {"region", "time_range"},
-            "getSurfEleGridInRectByTimeRange",
+            {"region", "time"},
+            "getSurfEleGridInRectByTime",
             "grid_array_2d",
         ),
         (

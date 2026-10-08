@@ -45,15 +45,16 @@ datasets:
     max_rows: 20
   obs_grid:
     enabled: false
-    data_code: EXAMPLE_OBS_GRID_CODE
-    parameter: TEM
+    # The two cataloged grid cases use this hourly precipitation product.
+    # OG-005 is a small rectangle; OG-002 requests the full national grid.
+    data_code: SURF_CMPAS_CHN_1KM_RT
+    parameter: PRE
     region:
       type: rect
-      start_longitude: 110.0
-      end_longitude: 110.2
-      start_latitude: 30.0
-      end_latitude: 30.2
-    expected_units: K
+      start_longitude: 115.7
+      end_longitude: 115.9
+      start_latitude: 39.6
+      end_latitude: 39.4
   obs_file:
     enabled: false
     data_code: EXAMPLE_OBS_FILE_CODE
@@ -138,6 +139,8 @@ low_level:
   callAPI_to_serializedStr: {enabled: false, formats: []}
 cases:
   OS-007: {enabled: false}
+  OG-002: {enabled: false}  # full national grid; enable separately
+  OG-005: {enabled: false}  # small rectangle smoke case
 download_limits:
   max_files: 2
   max_total_bytes: 10485760

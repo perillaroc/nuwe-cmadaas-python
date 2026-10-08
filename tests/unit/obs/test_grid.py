@@ -2,6 +2,7 @@ import pandas as pd
 import pytest
 import xarray as xr
 
+from nuwe_cmadaas.interfaces import UnsupportedQueryError
 from nuwe_cmadaas.music import MusicError
 from nuwe_cmadaas.obs import retrieve_obs_grid
 from tests.fixtures import FakeCMADaaSClient, make_grid_array2d_response
@@ -30,11 +31,6 @@ RECTANGLE = {
             [TIME, LATER_TIME],
             "getSurfEleGridByTime",
             {"times": "20260102000000,20260102060000"},
-        ),
-        (
-            pd.Interval(TIME, LATER_TIME, closed="right"),
-            "getSurfEleGridByTimeRange",
-            {"timeRange": ")20260102000000,20260102060000]"},
         ),
     ],
 )
@@ -103,3 +99,21 @@ def test_retrieve_obs_grid_returns_synthetic_music_error():
     )
 
     assert result == MusicError(-2234, "Synthetic grid query failure")
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {},
+        {"time": pd.Interval(TIME, LATER_TIME, closed="right")},
+        {"region": RECTANGLE},
+        {"time": pd.Interval(TIME, LATER_TIME, closed="right"), "region": RECTANGLE},
+    ],
+)
+def test_catalog_absent_grid_combinations_fail_before_request(kwargs):
+    client = FakeCMADaaSClient(make_grid_array2d_response())
+
+    with pytest.raises(UnsupportedQueryError, match="unsupported query features"):
+        retrieve_obs_grid(DATA_CODE, parameter=PARAMETER, client=client, **kwargs)
+
+    assert client.calls == []

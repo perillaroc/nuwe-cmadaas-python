@@ -201,12 +201,9 @@ def _obs_station_declarations(base: str) -> dict[frozenset[str], tuple[str, froz
 
 
 _OBS_GRID_DECLARATIONS = {
-    _features(): ("getSurfEleGrid", _features("dataCode")),
+    # Only these two IDs exist in the 2026-10-07 SURF_API catalog.
     _features("time"): ("getSurfEleGridByTime", _features("dataCode", "time")),
-    _features("time_range"): ("getSurfEleGridByTimeRange", _features("dataCode", "timeRange")),
-    _features("region"): ("getSurfEleGridInRect", _features("dataCode", "minLat", "minLon", "maxLat", "maxLon")),
     _features("region", "time"): ("getSurfEleGridInRectByTime", _features("dataCode", "time", "minLat", "minLon", "maxLat", "maxLon")),
-    _features("region", "time_range"): ("getSurfEleGridInRectByTimeRange", _features("dataCode", "timeRange", "minLat", "minLon", "maxLat", "maxLon")),
 }
 
 

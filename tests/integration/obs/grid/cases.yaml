@@ -1,77 +1,29 @@
 # Case definitions for obs/grid.
 # Case IDs are unique across all integration manifests.
 cases:
-- case_id: OG-001
-  family: obs_grid
-  query_features: []
-  interface_id: getSurfEleGrid
-  public_function: retrieve_obs_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: obs_grid
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/grid#og-001
-  implemented: false
-  online_status: planned
-  reason: Awaiting B05 case implementation
-  last_verified_environment_and_time: null
 - case_id: OG-002
   family: obs_grid
   query_features:
   - time
   interface_id: getSurfEleGridByTime
   public_function: retrieve_obs_grid
-  public_kwargs: null
+  public_kwargs:
+    data_code: {profile: data_code}
+    parameter: {profile: parameter}
+    time: {fixture: base_time}
   expected_return_contract:
     kind: dataarray
   profile_key: obs_grid
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/obs/grid/test_grid.py::test_registered_case[OG-002]
   documentation_anchor: guide/high-level/obs/grid#og-002
-  implemented: false
-  online_status: planned
-  reason: Awaiting B05 case implementation
-  last_verified_environment_and_time: null
-- case_id: OG-003
-  family: obs_grid
-  query_features:
-  - time_range
-  interface_id: getSurfEleGridByTimeRange
-  public_function: retrieve_obs_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: obs_grid
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/grid#og-003
-  implemented: false
-  online_status: planned
-  reason: Awaiting B05 case implementation
-  last_verified_environment_and_time: null
-- case_id: OG-004
-  family: obs_grid
-  query_features:
-  - region
-  interface_id: getSurfEleGridInRect
-  public_function: retrieve_obs_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: obs_grid
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/grid#og-004
-  implemented: false
-  online_status: planned
-  reason: Awaiting B05 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live full-domain grid met dimension, coordinate and metadata assertions
+  last_verified_environment_and_time: "2026-10-08T14:18:58+08:00; local WSL, Python 3.14; SURF_CMPAS_CHN_1KM_RT, PRE; direct CMADaaS connection; three-day grid fixture"
+  legacy_tests:
+  - grid/test_getSurfEleGridByTime.py::test_cmpas_chn_1km_rt
 - case_id: OG-005
   family: obs_grid
   query_features:
@@ -79,34 +31,21 @@ cases:
   - time
   interface_id: getSurfEleGridInRectByTime
   public_function: retrieve_obs_grid
-  public_kwargs: null
+  public_kwargs:
+    data_code: {profile: data_code}
+    parameter: {profile: parameter}
+    time: {fixture: base_time}
+    region: {profile: region}
   expected_return_contract:
     kind: dataarray
   profile_key: obs_grid
-  tier: extended
-  enabled: false
-  test_node: null
+  tier: smoke
+  enabled: true
+  test_node: tests/integration/obs/grid/test_grid.py::test_registered_case[OG-005]
   documentation_anchor: guide/high-level/obs/grid#og-005
-  implemented: false
-  online_status: planned
-  reason: Awaiting B05 case implementation
-  last_verified_environment_and_time: null
-- case_id: OG-006
-  family: obs_grid
-  query_features:
-  - region
-  - time_range
-  interface_id: getSurfEleGridInRectByTimeRange
-  public_function: retrieve_obs_grid
-  public_kwargs: null
-  expected_return_contract:
-    kind: dataarray
-  profile_key: obs_grid
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/grid#og-006
-  implemented: false
-  online_status: planned
-  reason: Awaiting B05 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Live small-rectangle grid met dimension, coordinate, region and metadata assertions
+  last_verified_environment_and_time: "2026-10-08T14:18:58+08:00; local WSL, Python 3.14; SURF_CMPAS_CHN_1KM_RT, PRE; direct CMADaaS connection; three-day grid fixture"
+  legacy_tests:
+  - grid/test_getSurfEleGridByTimeAndRect.py::test_cmpas_chn_1km_rt

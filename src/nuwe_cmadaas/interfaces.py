@@ -207,9 +207,15 @@ _OBS_GRID_DECLARATIONS = {
 }
 
 
-_OBS_FILE_DECLARATIONS = {}
-for _feature_set, (_interface_id, _required) in _obs_station_declarations("getSurfFile").items():
-    _OBS_FILE_DECLARATIONS[_feature_set] = (_interface_id.replace("getSurfEle", "getSurfFile"), _required)
+_OBS_FILE_DECLARATIONS = {
+    # Only these IDs exist in the 2026-10-07 SURF_API catalog.
+    _features("time"): ("getSurfFileByTime", _features("dataCode", "times")),
+    _features("time_range"): ("getSurfFileByTimeRange", _features("dataCode", "timeRange")),
+    _features("station", "time_range"): (
+        "getSurfFileByTimeRangeAndStaID",
+        _features("dataCode", "timeRange", "staIds"),
+    ),
+}
 
 _OBS_UPPER_FILE_DECLARATIONS = {}
 for _feature_set, (_interface_id, _required) in _obs_station_declarations("getUparFile").items():

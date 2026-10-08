@@ -76,6 +76,21 @@ def short_time_range(base_time):
 
 
 @pytest.fixture
+def recent_file_time():
+    """Surface file queries use a date within the account's recent access window."""
+    return (pd.Timestamp.now() - pd.Timedelta(days=2)).normalize()
+
+
+@pytest.fixture
+def recent_file_short_time_range(recent_file_time):
+    return pd.Interval(
+        recent_file_time,
+        recent_file_time + pd.Timedelta(hours=1),
+        closed="both",
+    )
+
+
+@pytest.fixture
 def flight_height_range(dataset_profile):
     lower, upper = dataset_profile("obs_upper_ard")["flight_height_bounds"]
     return pd.Interval(lower, upper, closed="both")

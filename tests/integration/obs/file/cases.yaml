@@ -1,151 +1,70 @@
-# Case definitions for obs/file.
-# Case IDs are unique across all integration manifests.
+# Catalog-backed surface file cases; absent IDs require UnsupportedQueryError.
+# The latest-time file route is blocked pending B07-fix-01.
 cases:
-- case_id: OF-001
-  family: obs_file
-  query_features: []
-  interface_id: getSurfFile
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-001
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
 - case_id: OF-002
   family: obs_file
   query_features:
   - time
   interface_id: getSurfFileByTime
   public_function: download_obs_file
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    count:
+      profile: max_files
+    time:
+      fixture: recent_file_time
+    output_dir:
+      fixture: online_output_dir
   expected_return_contract:
     kind: paths
+    nonempty: true
+    within_output_dir: true
+    files_exist: true
   profile_key: obs_file
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/obs/file/test_file.py::test_registered_case[OF-002]
   documentation_anchor: guide/high-level/obs/files#of-002
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Preflight confirmed one file within 10 MiB; live download returned an existing file in the temporary output directory.
+  last_verified_environment_and_time: 2026-10-08 15:41 +0800; local WSL, Python 3.14; SURF_CMPA_FRT_5KM_10MIN; dynamic two-day date; direct CMADaaS connection
+  alternative_data_code_probe:
+    data_code: SURF_CMPAS_CHN_1KM_RT
+    historical_query_rule: three-days-before-run-at-01
+    preflight_file_size_bytes: 141794058
+    max_total_bytes: 10485760
+    outcome: blocked-before-download
 - case_id: OF-003
   family: obs_file
   query_features:
   - time_range
   interface_id: getSurfFileByTimeRange
   public_function: download_obs_file
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    count:
+      profile: max_files
+    time:
+      fixture: recent_file_short_time_range
+    output_dir:
+      fixture: online_output_dir
   expected_return_contract:
     kind: paths
+    nonempty: true
+    within_output_dir: true
+    files_exist: true
   profile_key: obs_file
   tier: extended
-  enabled: false
-  test_node: null
+  enabled: true
+  test_node: tests/integration/obs/file/test_file.py::test_registered_case[OF-003]
   documentation_anchor: guide/high-level/obs/files#of-003
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-004
-  family: obs_file
-  query_features:
-  - station
-  interface_id: getSurfFileByStaID
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-004
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-005
-  family: obs_file
-  query_features:
-  - station_range
-  interface_id: getSurfFileByStaIDRange
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-005
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-006
-  family: obs_file
-  query_features:
-  - station_level
-  interface_id: getSurfFileByStaLevels
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-006
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-007
-  family: obs_file
-  query_features:
-  - station
-  - time
-  interface_id: getSurfFileByTimeAndStaID
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-007
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-008
-  family: obs_file
-  query_features:
-  - station_range
-  - time
-  interface_id: getSurfFileByTimeAndStaIDRange
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-008
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
+  implemented: true
+  online_status: passed
+  reason: Preflight confirmed one file within 10 MiB; live download returned an existing file in the temporary output directory.
+  last_verified_environment_and_time: 2026-10-08 15:41 +0800; local WSL, Python 3.14; SURF_CMPA_FRT_5KM_10MIN; dynamic two-day date; direct CMADaaS connection
 - case_id: OF-009
   family: obs_file
   query_features:
@@ -153,363 +72,34 @@ cases:
   - time_range
   interface_id: getSurfFileByTimeRangeAndStaID
   public_function: download_obs_file
-  public_kwargs: null
+  public_kwargs:
+    data_code:
+      profile: data_code
+    count:
+      profile: max_files
+    time:
+      fixture: recent_file_short_time_range
+    output_dir:
+      fixture: online_output_dir
+    station:
+      profile: station_id
   expected_return_contract:
     kind: paths
-  profile_key: obs_file
+    nonempty: true
+    within_output_dir: true
+    files_exist: true
+  profile_key: obs_file_station
   tier: extended
   enabled: false
-  test_node: null
+  test_node: tests/integration/obs/file/test_file.py::test_registered_case[OF-009]
   documentation_anchor: guide/high-level/obs/files#of-009
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
+  implemented: true
+  online_status: implemented-unverified
+  reason: Current account has no catalog-supported code for this interface.
   last_verified_environment_and_time: null
-- case_id: OF-010
-  family: obs_file
-  query_features:
-  - station_range
-  - time_range
-  interface_id: getSurfFileByTimeRangeAndStaIDRange
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-010
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-011
-  family: obs_file
-  query_features:
-  - station_level
-  - time
-  interface_id: getSurfFileByTimeAndStaLevels
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-011
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-012
-  family: obs_file
-  query_features:
-  - station_level
-  - time_range
-  interface_id: getSurfFileByTimeRangeAndStaLevels
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-012
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-013
-  family: obs_file
-  query_features:
-  - region_rect
-  interface_id: getSurfFileInRect
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-013
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-014
-  family: obs_file
-  query_features:
-  - region_rect
-  - time
-  interface_id: getSurfFileInRectByTime
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-014
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-015
-  family: obs_file
-  query_features:
-  - region_rect
-  - time_range
-  interface_id: getSurfFileInRectByTimeRange
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-015
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-016
-  family: obs_file
-  query_features:
-  - region_region
-  interface_id: getSurfFileInRegion
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-016
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-017
-  family: obs_file
-  query_features:
-  - region_region
-  - time
-  interface_id: getSurfFileInRegionByTime
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-017
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-018
-  family: obs_file
-  query_features:
-  - region_region
-  - time_range
-  interface_id: getSurfFileInRegionByTimeRange
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-018
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-019
-  family: obs_file
-  query_features:
-  - region_basin
-  interface_id: getSurfFileInBasin
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-019
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-020
-  family: obs_file
-  query_features:
-  - region_basin
-  - time
-  interface_id: getSurfFileInBasinByTime
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-020
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-021
-  family: obs_file
-  query_features:
-  - region_basin
-  - time_range
-  interface_id: getSurfFileInBasinByTimeRange
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-021
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-022
-  family: obs_file
-  query_features:
-  - region_rect
-  - station
-  - time
-  interface_id: getSurfFileInRectByTimeAndStaID
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-022
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-023
-  family: obs_file
-  query_features:
-  - region_rect
-  - station
-  - time_range
-  interface_id: getSurfFileInRectByTimeRangeAndStaID
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-023
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-024
-  family: obs_file
-  query_features:
-  - region_region
-  - station
-  - time
-  interface_id: getSurfFileInRegionByTimeAndStaID
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-024
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-025
-  family: obs_file
-  query_features:
-  - region_region
-  - station
-  - time_range
-  interface_id: getSurfFileInRegionByTimeRangeAndStaID
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-025
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-026
-  family: obs_file
-  query_features:
-  - region_basin
-  - station
-  - time
-  interface_id: getSurfFileInBasinByTimeAndStaID
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-026
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
-- case_id: OF-027
-  family: obs_file
-  query_features:
-  - region_basin
-  - station
-  - time_range
-  interface_id: getSurfFileInBasinByTimeRangeAndStaID
-  public_function: download_obs_file
-  public_kwargs: null
-  expected_return_contract:
-    kind: paths
-  profile_key: obs_file
-  tier: extended
-  enabled: false
-  test_node: null
-  documentation_anchor: guide/high-level/obs/files#of-027
-  implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
-  last_verified_environment_and_time: null
+  recommended_data_code: SURF_PRODUCT_PART2_FILE_TAB
+  run_prerequisite: Grant access to a catalog-supported station file code and select
+    a verified station and time window before enabling this case.
 - case_id: OFL-001
   family: obs_file_latest
   query_features: []
@@ -523,6 +113,7 @@ cases:
   test_node: null
   documentation_anchor: guide/high-level/obs/files#ofl-001
   implemented: false
-  online_status: planned
-  reason: Awaiting B07 case implementation
+  online_status: blocked-contract
+  reason: The 2026-10-07 SURF_API catalog declares getSurfLatestTime as RetArray2D;
+    a downloadable RetFilesInfo response is not established (B07-fix-01).
   last_verified_environment_and_time: null

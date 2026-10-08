@@ -139,5 +139,5 @@ def test_strict_file_downloads_raise_and_legacy_path_warns(tmp_path):
 
     legacy_client = FakeCMADaaSClient(error_result)
     with pytest.warns(DeprecationWarning, match="MusicError"):
-        result = download_obs_file("SYNTHETIC_STATION", output_dir=Path(tmp_path), client=legacy_client)
+        result = download_obs_file("SYNTHETIC_STATION", time=pd.Timestamp("2026-01-02"), output_dir=Path(tmp_path), client=legacy_client)
     assert result == MusicError(-3005, "file failure")

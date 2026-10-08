@@ -57,8 +57,15 @@ datasets:
       end_latitude: 39.4
   obs_file:
     enabled: false
-    data_code: EXAMPLE_OBS_FILE_CODE
-    station_id: EXAMPLE_ID
+    # OF-002/OF-003 were verified with this bounded 5 km product.
+    data_code: SURF_CMPA_FRT_5KM_10MIN
+    max_files: 1
+  obs_file_station:
+    enabled: false
+    # Catalog-supported for OF-009, but absent from the reference account rights.
+    data_code: SURF_PRODUCT_PART2_FILE_TAB
+    station_id: "54511"
+    max_files: 2
   obs_upper_regular:
     enabled: false
     data_code: UPAR_CHN_MUL_FTM
@@ -158,6 +165,9 @@ cases:
   OG-002: {enabled: false}  # full national grid; enable separately
   OG-005: {enabled: false}  # small rectangle smoke case
   OU-010: {enabled: false}  # regular upper-air smoke case
+  OF-002: {enabled: false}
+  OF-003: {enabled: false}
+  OF-009: {enabled: false}  # requires a station file data code granted to this account
 download_limits:
   max_files: 2
   max_total_bytes: 10485760

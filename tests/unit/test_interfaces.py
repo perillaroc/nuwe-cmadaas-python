@@ -60,8 +60,8 @@ pytestmark = pytest.mark.unit
         ),
         (
             "obs_file",
-            {"station_range"},
-            "getSurfFileByStaIDRange",
+            {"station", "time_range"},
+            "getSurfFileByTimeRangeAndStaID",
             "file_list",
         ),
     ],

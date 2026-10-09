@@ -85,4 +85,16 @@ latest 单独查询 Datetime 表格，空清单、严格服务异常和本地请
 :doc:`模式文件指南 <../guide/high-level/model/files>` 说明要素/层次、count 限制、
 data_type 当前行为及真实下载前的清单规模检查。
 
+底层表格示例位于 ``examples/music/tables.py``：
+
+.. code-block:: bash
+
+   uv run python -m examples.music.tables
+
+脚本通过真实 MUSIC 客户端和人工 protobuf 验证原生参数、Array2D 的 request/ok、
+列名、字符串数组与 DataFrame 的 dtype/attrs，以及副本上的显式数值转换。
+成功空结果、服务错误和解码错误分别验证，失败转换抛异常，四次响应均关闭。
+:doc:`底层表格指南 <../guide/low-level/tables>` 复用同一准备工厂和独立断言，
+提供只供手动执行的真实服务替换。
+
 完整的高层/MUSIC 示例集及旧包迁移索引将在 D20 整合。

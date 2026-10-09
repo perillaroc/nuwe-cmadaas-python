@@ -148,6 +148,38 @@ class CMADaaSClient:
             params: Dict,
             server_id: str = None
     ) -> Array2D:
+        """Request a MUSIC table and return its raw ``Array2D`` response.
+
+        Parameters
+        ----------
+        interface_id : str
+            Service interface supporting the RetArray2D protobuf format.
+            Availability depends on the service, dataset and user permissions.
+        params : dict
+            Native MUSIC parameters, for example ``dataCode``, ``time``,
+            ``fcstEle`` and ``latLons``. Supply service-formatted values; this
+            method does not translate high-level selectors or modify the dict.
+            Authentication and request-envelope fields are built by the client.
+        server_id : str, optional
+            Service node for this request; defaults to the client's server_id.
+
+        Returns
+        -------
+        Array2D
+            Response with ``request``, ``ok``, ``element_names`` and ``data``.
+            Service, transport or decode failures handled by the connection
+            are recorded in ``request``; successful empty results remain valid.
+
+        Notes
+        -----
+        There is no ``strict`` argument. Check ``ok`` or call
+        ``raise_for_error(interface_id=interface_id, params=params)`` before
+        ``to_pandas()`` to preserve error context. Failed responses cannot be
+        converted; local configuration or argument errors may propagate.
+        Table values and column names come from the service. Conversion keeps
+        strings and adds available metadata to DataFrame.attrs; numeric/date
+        conversion and missing-value handling are the caller's responsibility.
+        """
         array_2d = Array2D()
 
         method = self.callAPI_to_array2D.__name__

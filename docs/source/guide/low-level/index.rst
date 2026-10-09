@@ -8,11 +8,17 @@
 INI 文件、连接参数及字典配置的优先级见
 :doc:`底层客户端配置 <../configuration/music-client>`。
 
+.. toctree::
+   :maxdepth: 1
+
+   tables
+
 按返回形式选择方法
 ------------------
 
-下面列出全部 9 个方法，方法名均链接客户端参考。独立的逐方法教程尚在编写，
-表格最小调用可先从接口选择页运行。
+下面列出全部 9 个方法，方法名均链接客户端参考。
+:doc:`底层表格指南 <tables>` 已展示原生参数、请求状态、字符串数组及 DataFrame 转换；
+其他返回形式的独立教程在后续任务补齐。
 
 .. list-table::
    :header-rows: 1
@@ -22,7 +28,8 @@ INI 文件、连接参数及字典配置的优先级见
      - 使用结果与文件副作用
    * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_array2D`
      - ``Array2D``
-     - 读取 ``element_names`` / ``data``，``to_pandas()`` 转为表格。
+     - 先检查 ``request`` / ``ok``，读取 ``element_names`` / ``data``，
+       见 :doc:`表格全流程 <tables>`。
    * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_gridArray2D`
      - ``GridArray2D``
      - ``to_xarray()`` 转为二维 ``DataArray``。

@@ -109,4 +109,17 @@ data_type 当前行为及真实下载前的清单规模检查。
 :doc:`底层格点指南 <../guide/low-level/grids>` 复用同一准备和独立断言，保留
 三个既有在线案例锚点，说明矢量单位和 GFS 预报/分析的真实替换边界。
 
+底层文件示例位于 ``examples/music/files.py``：
+
+.. code-block:: bash
+
+   uv run python -m examples.music.files
+
+脚本分别执行 metadata-only 的 fileList 和实际流式写入的 downFile，核对 FilesInfo、
+FileInfo 字段与磁盘大小/内容，展示已有目标拒绝、默认覆盖和批量部分完成；
+成功空清单、服务失败、响应关闭和临时目录清理分别验证。
+:doc:`文件清单指南 <../guide/low-level/file-list>` 与
+:doc:`文件下载指南 <../guide/low-level/downloads>` 独立复用准备和对应断言，
+保留 LLF 案例锚点，真实替换采用 GFS 动态日期及下载规模预查。
+
 完整的高层/MUSIC 示例集及旧包迁移索引将在 D20 整合。

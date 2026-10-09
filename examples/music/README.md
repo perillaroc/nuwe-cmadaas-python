@@ -23,3 +23,13 @@ request/ok、2×3 坐标/数值、名称、单位及实际 attrs，区分两个 
 三种成功空场、三种服务错误和坏矢量的解码错误分别验证，十次响应均关闭。
 指南 `docs/source/guide/low-level/grids.md` 复用同一准备和独立结果断言，真实替换
 采用已有 GFS 预报/分析组合；风分量单位不会由转换自动补齐。
+
+```bash
+uv run python -m examples.music.files
+```
+
+`files.py` 分别运行元数据查询和真实流式下载。清单部分核对三个 FilesInfo 及 FileInfo
+字段，并证明没有正文请求或磁盘写入；下载部分实际写入 first.bin/second.bin，
+验证已有目标拒绝、默认覆盖、批量部分写入、空清单/服务失败与全部响应关闭。
+所有输出目录临时创建，验证后清理。指南 `docs/source/guide/low-level/file-list.md`
+和 `downloads.md` 分别复用准备与对应断言；返回仍是 FilesInfo，不是 list[Path]。

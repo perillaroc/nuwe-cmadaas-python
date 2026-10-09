@@ -13,6 +13,8 @@ INI 文件、连接参数及字典配置的优先级见
 
    tables
    grids
+   file-list
+   downloads
 
 按返回形式选择方法
 ------------------
@@ -20,6 +22,8 @@ INI 文件、连接参数及字典配置的优先级见
 下面列出全部 9 个方法，方法名均链接客户端参考。
 :doc:`底层表格指南 <tables>` 已展示原生参数、请求状态、字符串数组及 DataFrame 转换；
 :doc:`底层格点指南 <grids>` 分别展示数组、标量和矢量的原始响应与 xarray 转换。
+:doc:`文件清单 <file-list>` 展示 FilesInfo 元数据；
+:doc:`文件下载 <downloads>` 实际写入文件并说明覆盖及批量失败。
 其他返回形式的独立教程在后续任务补齐。
 
 .. list-table::
@@ -43,10 +47,12 @@ INI 文件、连接参数及字典配置的优先级见
      - ``to_xarray()`` 转为包含 U/V 分量的 ``Dataset``，见 :doc:`矢量格点 <grids>`。
    * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_fileList`
      - ``FilesInfo``
-     - 只查询 ``files_info`` 清单，不下载；每项为 ``FileInfo``。
+     - 只查询 ``files_info`` 清单，不下载；每项为 ``FileInfo``，
+       见 :doc:`文件清单 <file-list>`。
    * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_downFile`
      - ``FilesInfo``
-     - 查询清单并下载到 ``file_dir``，可用 ``overwrite`` 控制已有文件覆盖。
+     - 查询清单并下载到 ``file_dir``，可用 ``overwrite`` 控制已有文件覆盖，
+       见 :doc:`文件下载 <downloads>`。
    * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_saveAsFile`
      - ``FilesInfo``
      - 按 ``data_format`` 保存并下载到 ``file_name``；会补充或修改 ``params``。

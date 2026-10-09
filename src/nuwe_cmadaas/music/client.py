@@ -252,6 +252,36 @@ class CMADaaSClient:
             params: Dict,
             server_id: str = None
     ) -> FilesInfo:
+        """Request native MUSIC file metadata without downloading file bodies.
+
+        Parameters
+        ----------
+        interface_id : str
+            Interface supporting the RetFilesInfo protobuf return format.
+        params : dict
+            Native service parameters for the selected dataset and query.
+            The dict is not modified and high-level selectors are not translated.
+            Authentication/envelope fields are built by the client.
+        server_id : str, optional
+            Service node for this request; defaults to the client's server_id.
+
+        Returns
+        -------
+        FilesInfo
+            Response with request status and a files_info list of FileInfo
+            objects. Names, URLs, suffixes, size strings, save_path and other
+            fields are response metadata, not verified local files or paths.
+
+        Notes
+        -----
+        No output directory or binary download is created. Successful empty
+        lists remain valid. Check ok or call raise_for_error with interface_id
+        and params before using the list; handled service/transport/decode
+        failures are recorded in request. There is no strict argument, and local
+        configuration/argument errors may propagate. FileInfo.size may be empty
+        or nonnumeric; callers must validate it before using it as a byte count.
+        Interface and dataset availability depend on the service and permissions.
+        """
         data = FilesInfo()
 
         method = self.callAPI_to_fileList.__name__
@@ -361,6 +391,44 @@ class CMADaaSClient:
         server_id: str = None,
         overwrite: bool = True,
     ) -> FilesInfo:
+        """Query a MUSIC file list and download its entries into file_dir.
+
+        Parameters
+        ----------
+        interface_id : str
+            Interface supporting a RetFilesInfo response and downloadable URLs.
+        params : dict
+            Native service query parameters. The dict is not modified and
+            high-level selectors are not translated.
+        file_dir : str or pathlib.Path
+            Local output directory. Each target is file_dir / FileInfo.file_name;
+            the service's save_path field is not rewritten to the local target.
+            Parent directories are created when a file download starts.
+        server_id : str, optional
+            Service node for the list request; defaults to the client's server_id.
+        overwrite : bool, default True
+            Replace existing targets. False reports a download error at the first
+            existing target and stops the batch; it does not silently skip files.
+
+        Returns
+        -------
+        FilesInfo
+            The queried metadata and request status, not a list of local Paths.
+            A failure can retain the full queried list and files already written.
+            Successful empty lists create no directory or file.
+
+        Notes
+        -----
+        This method makes a new callAPI_to_fileList request, then downloads files
+        sequentially. A separate preflight list is not reused and may change.
+        Check ok or use raise_for_error(interface_id=..., params=...) afterwards;
+        there is no strict argument. Handled failures are recorded in request,
+        while local configuration/argument errors may propagate. Unsafe response
+        file names are rejected. Each file is streamed to a temporary sibling
+        and replaced atomically; the batch has no rollback. Content-Length, when
+        present, is checked against transferred bytes, not against FileInfo.size.
+        No local total-byte or file-count limit is imposed by this method.
+        """
         file_dir_path = file_dir
         if isinstance(file_dir_path, str):
             file_dir_path = pathlib.Path(file_dir)

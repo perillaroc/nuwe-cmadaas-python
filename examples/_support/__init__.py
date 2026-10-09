@@ -1,5 +1,6 @@
 """Deterministic synthetic data shared by examples and offline tests."""
 
+from .clients import FakeClient
 from .synthetic import (
     SYNTHETIC_ELEMENT_NAME,
     SYNTHETIC_FILE_BYTES,
@@ -26,8 +27,12 @@ from .synthetic import (
     make_grid_vector2d_response,
     make_request_info,
 )
+from .transport import SyntheticResponse, SyntheticTransport, make_synthetic_music_client
 
 __all__ = [
+    "FakeClient",
+    "SyntheticResponse",
+    "SyntheticTransport",
     "SYNTHETIC_ELEMENT_NAME",
     "SYNTHETIC_FILE_BYTES",
     "SYNTHETIC_GRID_VALUES",
@@ -52,4 +57,5 @@ __all__ = [
     "make_grid_vector2d_content",
     "make_grid_vector2d_response",
     "make_request_info",
+    "make_synthetic_music_client",
 ]

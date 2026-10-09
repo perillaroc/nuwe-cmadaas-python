@@ -18,7 +18,7 @@
      - ``DataArray``；:doc:`地面格点 <grid>`
    * - :py:func:`~nuwe_cmadaas.obs.retrieve_obs_upper_air`：高空表格
      - ``elements``、``time``、``station``、``region``、``level_type``、``level``、``interface_data_type``
-     - ``DataFrame``；当前从函数参考查看常规、GPS、Light 和 Ard 分支
+     - ``DataFrame``；:doc:`高空观测 <upper-air>` 展示常规、GPS、Light 和 Ard 分支
    * - :py:func:`~nuwe_cmadaas.obs.download_obs_file`：地面文件
      - ``time``、``station``、``region``、``station_level``、``output_dir``、``count``
      - ``list[Path]``；:doc:`文件下载 <files>`
@@ -48,4 +48,5 @@
 
    station
    grid
+   upper-air
    files

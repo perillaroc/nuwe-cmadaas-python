@@ -60,14 +60,15 @@ def test_retrieve_obs_upper_air_requires_level_pair(kwargs):
     assert client.calls == []
 
 
-def test_retrieve_obs_upper_air_ard_uses_cataloged_range_parameters():
+@pytest.mark.parametrize("level_type", ["fl", "flight_height"])
+def test_retrieve_obs_upper_air_ard_uses_cataloged_range_parameters(level_type):
     client = FakeCMADaaSClient(make_array2d_response())
 
     retrieve_obs_upper_air(
         data_code="UPAR_ARD_G_MUT_AMD",
         elements="Lat,Lon,TEM",
         time=pd.Interval(pd.Timestamp("2026-01-02"), pd.Timestamp("2026-01-02 01:00"), closed="both"),
-        level_type="fl",
+        level_type=level_type,
         level=pd.Interval(5000, 10000),
         client=client,
     )

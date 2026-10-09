@@ -45,6 +45,9 @@ def retrieve_obs_upper_air(
 
     对应 CMADaaS 中以 `getUparEle` 开头的一系列数据接口
 
+    常规、GPS、Light 和 Ard 分支仅接受各自已登记的组合。区域仅登记矩形；
+    飞机观测使用时间段与飞行高度范围。参数类型可规范化不代表存在对应接口。
+
     **区域筛选条件**
 
     - 经纬度范围
@@ -57,24 +60,6 @@ def retrieve_obs_upper_air(
             "end_longitude": 117.4,
             "start_latitude": 41.6,
             "end_latitude": 39.4,
-        }
-
-    - 流域
-
-    .. code-block:: python
-
-        {
-            "type": "basin",
-            "basin_codes": "CJLY"
-        }
-
-    - 地区
-
-    .. code-block:: python
-
-        {
-            "type": "region",
-            "admin_codes": "110000"
         }
 
     Parameters
@@ -96,7 +81,7 @@ def retrieve_obs_upper_air(
         - pl: 气压层
         - gh/hgt: 位势高度
         - vertical: 垂直探测仪一，例如 4096 表示湿度特征层
-        - fl/flight_level: 飞行高度
+        - fl/flight_height: 飞行高度，自动选择 Ard 分支；需与时间段、高度区间一起使用
     level:
         层次
     station:
@@ -104,20 +89,18 @@ def retrieve_obs_upper_air(
 
         - 字符串：单个站点
         - 列表：多个站点
-        - 元组：站点范围，二元组，第一个元素是起止站号 (minStaId)，第二个元素是终止站号 (maxStaId)
+        - 元组：规范化为站点范围，但当前高空没有对应的登记组合，请求前拒绝
     region:
         区域筛选条件：
             - 经纬度范围 (rect)
-            - 流域 (basin)
-            - 地区 (region)
+
+        行政区和流域没有对应的高空登记组合。
 
     station_level:
-        台站级别：
-            - 011: 国家基准气候站
-            - 012: 基本气象站
-            - 013: 一般气象站
+        可规范化为 staLevels，但没有专用的高空等级查询登记；
+        不能据参数签名认定所选资料接口支持此筛选。
     order:
-        排序字段
+        排序字段。内置资料配置的 order_by 会覆盖显式 order。
     count:
         最大返回记录数，对应接口的 limitCnt 参数
     interface_data_type:
@@ -126,6 +109,8 @@ def retrieve_obs_upper_air(
         配置。配置文件路径或配置对象
     client:
         客户端对象，默认新建。如果设置则直接使用，忽略 config 参数
+    strict:
+        默认 False 时服务错误返回 MusicError；True 时抛出结构化 CMADaaSError。
     kwargs:
         其他需要传递给 MUSIC 接口的参数，例如：
             - eleValueRanges: 要素值范围

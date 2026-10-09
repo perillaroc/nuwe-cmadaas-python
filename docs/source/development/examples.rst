@@ -20,4 +20,14 @@
 脚本展示全域和矩形 DataArray 的坐标、数值、名称、单位与元数据，并验证不支持查询
 在请求前失败。:doc:`地面格点指南 <../guide/high-level/obs/grid>` 复用准备和结果断言。
 
+高空观测示例位于 ``examples/high_level/upper_air.py``：
+
+.. code-block:: bash
+
+   uv run python -m examples.high_level.upper_air
+
+脚本分别展示常规层次筛选、GPS、雷电、飞机和 latest 表格，断言分支字段与错误零请求。
+:doc:`高空观测指南 <../guide/high-level/obs/upper-air>` 复用准备与结果校验，并区分
+合成结果和已有在线权限/缺测状态。
+
 完整的高层/MUSIC 示例集及旧包迁移索引将在 D20 整合。

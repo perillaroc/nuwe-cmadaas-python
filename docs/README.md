@@ -29,8 +29,11 @@ RST 页面用于 API 参考，MyST-NB Markdown 页面用于可执行教程。配
 不得依赖别的页面执行顺序。所有模拟页面须在首个代码单元前，用可见的
 `{doc}` 交叉引用链接到“模拟数据与客户端注入”专章。
 
-高层教程在准备单元中用 `FakeClient.register()` 登记精确请求；调用单元保留
-公开函数的 `client=client`。底层教程在准备单元中登记 `SyntheticTransport`
+高层教程在准备单元中用 `FakeClient.register()` 登记精确请求，或使用注入
+`SyntheticTransport` 的真实 MUSIC 客户端；调用单元保留公开函数的 `client=client`。
+地面站点指南复用 `examples/high_level/station.py` 的客户端准备及结果断言，
+从仓库根目录可用 `uv run python -m examples.high_level.station` 独立运行。
+底层教程在准备单元中登记 `SyntheticTransport`
 的请求和下载 URL，并调用 `make_synthetic_music_client(transport)`；调用单元
 直接展示对应的 `callAPI_to_*` 方法及结果。下载页在页面内创建临时目录并
 展示相对文件名及大小，不展示随机的绝对路径。

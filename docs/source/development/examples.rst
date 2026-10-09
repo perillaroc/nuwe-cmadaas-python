@@ -63,4 +63,15 @@
 :doc:`模式格点指南 <../guide/high-level/model/grid>` 复用准备及结果断言，区分
 合成成功、既有在线通过和暂停的按时间查询案例。
 
+模式点示例位于 ``examples/high_level/model_point.py``：
+
+.. code-block:: bash
+
+   uv run python -m examples.high_level.model_point
+
+脚本展示单点、多点、坐标/站号与单时效/范围查询，核对表格字段、原始字符串与 attrs，
+并在副本上显式转换数值和有效时间；空表格、严格服务异常及本地零请求错误分别验证。
+:doc:`模式点指南 <../guide/high-level/model/point>` 复用准备和断言，说明坐标顺序、
+范围元数据边界及动态日期的真实服务替换。
+
 完整的高层/MUSIC 示例集及旧包迁移索引将在 D20 整合。

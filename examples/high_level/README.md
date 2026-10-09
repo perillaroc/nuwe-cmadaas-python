@@ -9,6 +9,7 @@ uv run python -m examples.high_level.upper_air
 uv run python -m examples.high_level.files
 uv run python -m examples.high_level.upper_air_files
 uv run python -m examples.high_level.model_grid
+uv run python -m examples.high_level.model_point
 ```
 
 `station.py` uses synthetic protobuf responses and a real MUSIC client with
@@ -46,6 +47,12 @@ It prints DataArrays, values and attrs for full fields, rectangles and members,
 checks coordinates, units and query metadata, and rejects invalid selectors
 before requests. Synthetic time-only fields do not change the historical failed
 and paused online status of the corresponding cases.
+
+`model_point.py` demonstrates coordinates and station IDs with a single lead
+or a lead range, including a multiple-point request. It checks fields, raw
+string values and attrs, converts a copy explicitly to calculate valid times,
+and distinguishes empty responses from strict service errors. Invalid positions,
+lead ranges and mutually exclusive selectors fail before any request.
 
 No credentials or external connections are needed. Unknown synthetic requests
 fail immediately. The values, dates and station IDs are fictional, and the

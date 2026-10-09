@@ -43,6 +43,49 @@ def retrieve_model_point(
         client: Optional[CMADaaSClient] = None,
         strict: bool = False,
 ) -> Union[pd.DataFrame, MusicError]:
+    """检索模式经纬度点或站点的单层预报表格。
+
+    Parameters
+    ----------
+    data_code:
+        与具体点/站号接口及账号权限匹配的资料代码。
+    parameter:
+        服务要素代码，映射为 fcstEle；返回列名以响应为准，不保证等于此参数。
+    start_time:
+        pandas 或标准库起报时次，生成 time，不是预报有效时间。
+    forecast_time:
+        单时效用非负整数小时的字符串、pandas/标准库 timedelta，生成 validTime。
+        范围用两个此类时效组成的元组，生成 minVT/maxVT；起点不得大于终点。
+        范围不是绝对日期区间，也不承诺每个整数小时都有数据。
+    level_type:
+        与 level 配对的服务层次类型代码，生成 levelType；不使用 pl/gh 等别名映射。
+    level:
+        与 level_type 配对的单层值，生成 fcstLevel，单位按资料和层次定义。
+    point:
+        (纬度, 经度) 元组，或非空坐标对列表，生成 latLons。
+        必须在 point/station 中选择一个，二者互斥；点值由服务返回，本地不插值。
+    station:
+        单站或非空站号列表，生成 staIds；元组表示站号范围，本入口不支持。
+    config:
+        CedarKit 配置对象或 YAML 路径。
+    client:
+        已有 MUSIC 客户端；显式设置时优先于 config。
+    strict:
+        默认 False 时服务错误返回 MusicError；True 时抛结构化 CMADaaSError。
+
+    Returns
+    -------
+    pandas.DataFrame or MusicError
+        成功返回响应列名及原始字符串值的表格；成功空响应可返回空表格。
+        默认模式服务错误返回 MusicError，严格模式抛异常；本地错误直接抛异常。
+
+    Notes
+    -----
+    登记点/站号各自与单时效/范围组成的四类查询，均需起报时次和层次。
+    实际请求 time、level_type、level 与单时效 valid_time 等记录于 attrs；
+    范围 minVT/maxVT 当前不自动写入 attrs，逐行时效以返回字段为准。
+    不自动解析日期、数值、缺测标记或转换单位，也不保证单位写在 attrs 中。
+    """
     validate_level_pair(level_type, level)
     if point is not None and station is not None:
         raise ValueError("point and station are mutually exclusive")

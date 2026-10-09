@@ -8,6 +8,7 @@
     "source/guide/high-level/obs/upper-air.md",
     "source/guide/high-level/obs/files.md",
     "source/guide/high-level/obs/upper-air-files.md",
-    "source/guide/high-level/model/grid.md"
+    "source/guide/high-level/model/grid.md",
+    "source/guide/high-level/model/point.md"
   ]
 }

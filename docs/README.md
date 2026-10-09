@@ -9,7 +9,7 @@ uv run --group docs sphinx-build -b html -E -a -W --keep-going docs/source docs/
 
 RST 页面用于 API 参考，MyST-NB Markdown 页面用于可执行教程。配置对 Notebook 使用
 `nb_execution_mode = "force"`；构建时需要允许 Jupyter 内核通过本机 socket 通信。
-无账号快速入门、两层接口对照、站点、格点、高空观测、地面及高空文件下载、模式格点已有可执行教程；其余逐接口内容在 D 阶段补齐。
+无账号快速入门、两层接口对照、站点、格点、高空观测、地面及高空文件下载、模式格点和模式点已有可执行教程；其余逐接口内容在 D 阶段补齐。
 
 ## 可执行模拟页面
 
@@ -43,6 +43,8 @@ RST 页面用于 API 参考，MyST-NB Markdown 页面用于可执行教程。配
 `uv run python -m examples.high_level.upper_air_files` 独立验证四种高空下载组合及实际文件清理。
 模式格点指南复用 `examples/high_level/model_grid.py`；
 `uv run python -m examples.high_level.model_grid` 独立验证八种预报/分析查询的数组、坐标和元数据。
+模式点指南复用 `examples/high_level/model_point.py`；
+`uv run python -m examples.high_level.model_point` 独立验证坐标/站号的单时效和范围表格及显式转换。
 底层教程在准备单元中登记 `SyntheticTransport`
 的请求和下载 URL，并调用 `make_synthetic_music_client(transport)`；调用单元
 直接展示对应的 `callAPI_to_*` 方法及结果。下载页在页面内创建临时目录并

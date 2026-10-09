@@ -2,7 +2,7 @@
 ========
 
 模式入口位于 ``nuwe_cmadaas.model``，按格点、点／站点和文件组织。
-下表的函数名链接完整 API 参考；模式格点指南提供独立可执行示例。
+下表的函数名链接完整 API 参考；模式格点及模式点指南提供独立可执行示例。
 
 .. list-table::
    :header-rows: 1
@@ -15,7 +15,7 @@
      - ``xarray.DataArray``；:doc:`模式格点 <grid>` 展示预报、分析、区域和成员
    * - :py:func:`~nuwe_cmadaas.model.retrieve_model_point`：经纬度点或站点预报
      - ``parameter``、``start_time``、``forecast_time``、``level_type``、``level``、``point`` 或 ``station``
-     - ``pandas.DataFrame``
+     - ``pandas.DataFrame``；:doc:`模式点与站点 <point>` 展示坐标/站号与单时效/范围
    * - :py:func:`~nuwe_cmadaas.model.download_model_file`：模式产品文件
      - ``parameter``、``start_time``、``forecast_time``、``level_type``、``level``、``region``、``output_dir``、``count``
      - ``list[Path]``
@@ -49,3 +49,4 @@
    :maxdepth: 1
 
    grid
+   point

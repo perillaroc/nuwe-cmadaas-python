@@ -1,6 +1,7 @@
 {
   "template": "templates/executable-page.md",
   "pages": [
+    "source/getting-started/quickstart.md",
     "source/guide/high-level/obs/station.md",
     "source/guide/high-level/obs/grid.md",
     "source/guide/high-level/obs/files.md"

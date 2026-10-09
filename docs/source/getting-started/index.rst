@@ -1,8 +1,9 @@
 开始使用
 ========
 
-先完成 :doc:`安装 <installation>`，再阅读 :doc:`快速入门 <quickstart>`。
-快速入门目前保留原有真实服务调用示例；无账号的合成数据示例将在后续任务中补齐。
+先完成 :doc:`安装 <installation>`，再运行 :doc:`无账号快速入门 <quickstart>`，
+用人工合成数据完成第一个高层站点查询并查看表格结果。
+随后进入 :doc:`指南 <../guide/index>`，了解配置、观测与模式资料的调用方式。
 
 .. toctree::
    :maxdepth: 1

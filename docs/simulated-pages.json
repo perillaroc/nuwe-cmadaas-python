@@ -6,6 +6,7 @@
     "source/guide/high-level/obs/station.md",
     "source/guide/high-level/obs/grid.md",
     "source/guide/high-level/obs/upper-air.md",
-    "source/guide/high-level/obs/files.md"
+    "source/guide/high-level/obs/files.md",
+    "source/guide/high-level/obs/upper-air-files.md"
   ]
 }

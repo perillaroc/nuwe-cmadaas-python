@@ -41,4 +41,15 @@
 :doc:`地面文件指南 <../guide/high-level/obs/files>` 复用准备与结果校验，说明已登记查询、
 覆盖行为和真实下载前的清单检查。
 
+高空文件下载示例位于 ``examples/high_level/upper_air_files.py``：
+
+.. code-block:: bash
+
+   uv run python -m examples.high_level.upper_air_files
+
+脚本独立调用高空包装函数，覆盖时次、时间段及两种站号组合，实际生成并验证四个文件，
+区分空清单、服务错误和本地拒绝，完成后清理临时目录。
+:doc:`高空文件指南 <../guide/high-level/obs/upper-air-files>` 展示参数与磁盘结果，
+并说明既有在线记录和受控真实服务替换方式。
+
 完整的高层/MUSIC 示例集及旧包迁移索引将在 D20 整合。

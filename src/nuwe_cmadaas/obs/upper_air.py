@@ -310,6 +310,48 @@ def download_obs_upper_air_file(
         strict: bool = False,
         **kwargs,
 ) -> Union[List, MusicError]:
+    """下载高空观测文件，固定使用 Upar 文件接口族。
+
+    Parameters
+    ----------
+    data_code:
+        有文件接口权限的资料代码；不会自动加载高空表格要素配置。
+    elements:
+        可选服务要素字段，映射为 elements，不控制本地文件格式。
+    time:
+        pandas 或标准库时次、非空时间列表生成 times；pd.Interval 生成
+        timeRange。相对 Timedelta 和未指定时间的查询在请求前拒绝。
+    station:
+        单站或非空站号列表生成 staIds，可与时次或时间段组合。
+        元组表示站号范围，当前无对应高空文件登记。
+    order:
+        可选服务排序字段，映射为 orderby。
+    count:
+        正整数文件清单记录上限，映射为 limitCnt，不限制本地下载字节数。
+    output_dir:
+        本地字符串或 Path 目录；实际写文件时创建父目录，同名文件默认覆盖。
+    config:
+        CedarKit 配置对象或 YAML 路径。
+    client:
+        已有 MUSIC 客户端；显式设置时优先于 config。
+    strict:
+        默认 False 时服务错误返回 MusicError；True 时抛结构化 CMADaaSError。
+    kwargs:
+        额外 MUSIC 服务参数。区域、站号范围和专用等级没有文件查询登记；
+        不支持以 interface_data_type 切换此包装函数的固定 Upar 接口族。
+
+    Returns
+    -------
+    list[pathlib.Path] or MusicError
+        成功返回已下载文件路径，成功空清单返回 []；默认模式服务错误返回
+        MusicError，严格模式抛异常。该结果不是 FilesInfo 或高空表格。
+
+    Notes
+    -----
+    已登记时次、时间段、时次加站号、时间段加站号四个组合。
+    高层没有本地 overwrite 开关，kwargs 中同名字段会成为服务参数。
+    单文件使用临时文件写入后替换；批量非事务，后续失败可能保留已成功文件。
+    """
     interface_data_type = "Upar"
     result = download_obs_file(
         data_code=data_code,

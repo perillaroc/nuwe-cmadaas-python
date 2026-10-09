@@ -7,6 +7,7 @@ uv run python -m examples.high_level.station
 uv run python -m examples.high_level.grid
 uv run python -m examples.high_level.upper_air
 uv run python -m examples.high_level.files
+uv run python -m examples.high_level.upper_air_files
 ```
 
 `station.py` uses synthetic protobuf responses and a real MUSIC client with
@@ -32,6 +33,12 @@ into a temporary directory. It demonstrates all three registered query shapes,
 checks Path results against names, sizes and disk contents, distinguishes empty
 lists from service errors, and rejects invalid selectors before any request.
 All temporary files are removed after validation.
+
+`upper_air_files.py` independently exercises the public upper-air file wrapper
+with all four registered query shapes, including a single time plus a station
+and a time interval plus a station list. It streams four tiny files, checks
+paths and disk contents, handles empty/error lists and local rejections, and
+removes the temporary directory. It does not re-run recorded online cases.
 
 No credentials or external connections are needed. Unknown synthetic requests
 fail immediately. The values, dates and station IDs are fictional, and the

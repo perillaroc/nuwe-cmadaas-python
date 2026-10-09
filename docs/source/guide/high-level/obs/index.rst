@@ -24,7 +24,7 @@
      - ``list[Path]``；:doc:`文件下载 <files>`
    * - :py:func:`~nuwe_cmadaas.obs.download_obs_upper_air_file`：高空文件
      - ``time``、``station``、``output_dir``、``count``
-     - ``list[Path]``；当前从函数参考查看高空文件包装入口
+     - ``list[Path]``；:doc:`高空文件下载 <upper-air-files>` 独立展示四种查询与生成文件
 
 观测时间与 latest 查询
 ------------------------------
@@ -50,3 +50,4 @@
    grid
    upper-air
    files
+   upper-air-files

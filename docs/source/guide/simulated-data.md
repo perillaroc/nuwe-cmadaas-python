@@ -180,4 +180,4 @@ table = retrieve_obs_station(
 )
 ```
 
-站点示例可继续看 {doc}`地面站点指南 </guide/high-level/obs/station>`；格点与下载场景从 {doc}`观测数据指南 </guide/high-level/obs/index>` 进入。两者在 C07 增加独立执行页后，本章将直接链接相应教程。
+三个最小业务示例分别见 {doc}`地面站点指南 </guide/high-level/obs/station>`、{doc}`地面格点指南 </guide/high-level/obs/grid>` 和 {doc}`地面文件下载指南 </guide/high-level/obs/files>`。每页独立准备客户端，并在构建时执行。

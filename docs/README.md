@@ -9,7 +9,7 @@ uv run --group docs sphinx-build -b html -E -a -W --keep-going docs/source docs/
 
 RST 页面用于 API 参考，MyST-NB Markdown 页面用于可执行教程。配置对 Notebook 使用
 `nb_execution_mode = "force"`；构建时需要允许 Jupyter 内核通过本机 socket 通信。
-正式逐接口执行教程将在 C07 和 D 阶段添加。
+站点、格点和文件下载已有最小可执行教程；其余逐接口内容在 D 阶段补齐。
 
 ## 可执行模拟页面
 

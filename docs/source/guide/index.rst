@@ -8,6 +8,7 @@
    :maxdepth: 2
 
    choosing-api
+   simulated-data
    configuration/index
    high-level/index
    low-level/index

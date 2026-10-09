@@ -9,15 +9,14 @@ uses captured service output.
 From the repository root, import factories such as
 `examples._support.make_array2d_response` or
 `examples._support.make_grid_vector2d_response`. The default
-`make_files_info_response()` reports the size of `make_file_bytes()`; C04 will
-use both when building the simulated download transport.
+`make_files_info_response()` reports the size of `make_file_bytes()`.
 
 The `tests.fixtures.protobuf` module re-exports the same functions for old
 offline tests. This helper package is outside `src/` and is not distributed
 with `nuwe_cmadaas`.
 
 `FakeClient` accepts exact high-level method/interface/parameter routes and
-returns real response objects. For bottom-level examples,
+returns real response objects. For low-level examples,
 `SyntheticTransport` accepts exact MUSIC request routes plus explicit
 `.invalid` download URLs; `make_synthetic_music_client(transport)` constructs
 a real `CMADaaSClient` using that transport. Unknown calls raise immediately.

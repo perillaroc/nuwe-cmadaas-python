@@ -11,6 +11,8 @@ RST 页面用于 API 参考，MyST-NB Markdown 页面用于可执行教程。配
 `nb_execution_mode = "force"`；构建时需要允许 Jupyter 内核通过本机 socket 通信。
 无账号快速入门、两层接口对照、全部八个高层入口及九个底层方法已有可执行教程。
 序列化与格式化保存展示四种格式；数据块展示名称、bytes 与读取方式，其真实服务能力仍待确认。
+`guide/results.md` 和 `guide/errors.md` 独立执行数值/缺测/单位/attrs、空结果、
+默认 MusicError/strict、底层错误上下文和本地参数/配置错误的处理示例。
 
 ## 可执行模拟页面
 

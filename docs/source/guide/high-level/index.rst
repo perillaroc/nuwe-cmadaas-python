@@ -83,6 +83,8 @@
 格点或路径。参数、配置及本地文件操作也可能产生异常，``strict=False`` 不会隐藏
 全部本地错误。
 
+可执行通用示例见 :doc:`使用返回结果 <../results>` 和 :doc:`错误处理 <../errors>`。
+
 .. toctree::
    :maxdepth: 2
 

@@ -148,7 +148,7 @@ assert all(item.closed for item in transport.responses)
 
 高层成功返回 DataFrame、DataArray 或 `list[Path]`，具体由入口决定。默认 `strict=False` 时，服务错误返回 `MusicError`；使用 `strict=True` 时抛出结构化 `CMADaaSError`。查询参数非法或组合未支持属于请求前的本地错误。
 
-底层 protobuf 方法返回响应对象，状态位于 `ok` 和 `request.error_code/error_message`。本例显式调用 `raise_for_error()` 采用异常控制流；也可先判断 `ok`。失败响应的 `to_pandas()` / `to_xarray()` 会抛异常，不能将转换失败当作空结果。`callAPI_to_serializedStr()` 返回字符串，错误字符串的兼容约定见 {doc}`MUSIC 兼容性清单 </reference/music-compatibility>`。
+底层 protobuf 方法返回响应对象，状态位于 `ok` 和 `request.error_code/error_message`。本例显式调用 `raise_for_error()` 采用异常控制流；也可先判断 `ok`。Array2D 与格点提供的转换会检查失败状态；DataBlock 的转换未实现，应显式检查状态，不能将转换失败当作空结果。`callAPI_to_serializedStr()` 返回字符串，错误字符串的兼容约定见 {doc}`MUSIC 兼容性清单 </reference/music-compatibility>`。
 
 未知或未登记的模拟请求会立即报 `AssertionError`，不会回退到网络。更换示例参数时须同步修改合成 transport 的登记内容。
 
@@ -163,3 +163,8 @@ assert all(item.closed for item in transport.responses)
 - {doc}`高层接口概览 <high-level/index>`：全部 8 个公开入口、通用参数及返回类型；按 {doc}`观测数据 <high-level/obs/index>` 或 {doc}`模式数据 <high-level/model/index>` 选择函数。
 - {doc}`底层 MUSIC 接口概览 <low-level/index>`：全部 9 个方法、响应类型、转换与文件副作用。
 - {doc}`高层 API 参考 </reference/high-level>` 与 {doc}`客户端参考 </reference/client>`：完整签名和参数说明。
+
+## 通用结果与错误指南
+
+字符串数值化、单位/缺测、attrs 与空结果见 {doc}`使用返回结果 </guide/results>`；
+默认 MusicError、strict、底层响应状态与本地异常见 {doc}`错误处理 </guide/errors>`。

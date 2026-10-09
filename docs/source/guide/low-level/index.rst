@@ -106,3 +106,5 @@ DataBlock 没有这些转换实现，继承方法抛 NotImplementedError，应�
 字符串方法没有上述响应对象属性，按兼容契约可能返回错误文本。
 完整签名见 :doc:`客户端参考 <../../reference/client>`，错误和参数约定见
 :doc:`MUSIC 兼容性清单 <../../reference/music-compatibility>`。
+字符串数值化、单位/缺测与 attrs 见 :doc:`使用返回结果 <../results>`；
+响应错误上下文及本地异常见 :doc:`错误处理 <../errors>`。

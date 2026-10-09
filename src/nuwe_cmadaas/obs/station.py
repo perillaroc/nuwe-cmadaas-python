@@ -113,6 +113,10 @@ def retrieve_obs_station(
         配置。配置文件路径或配置对象
     client
         客户端对象。默认新建，如果设置则直接使用，忽略 config 参数
+    strict
+        默认 False 时失败响应返回 MusicError 并发出兼容弃用警告；
+        True 时失败响应抛结构化 CMADaaSError。参数、配置和本地转换异常
+        仍可直接抛出，不由该开关统一转换。
     kwargs
         其他需要传递给 MUSIC 接口的参数，例如：
             - eleValueRanges: 要素值范围
@@ -121,8 +125,17 @@ def retrieve_obs_station(
 
     Returns
     -------
-    pd.DataFrame
-        站点观测资料表格数据，列名为 ``elements`` 中的值
+    pd.DataFrame or MusicError
+        成功表格保留原始字段名和字符串，成功空表仍含服务提供的列；
+        默认模式的失败响应返回 MusicError，严格模式抛异常。
+        latest 查询的 Datetime 表与普通要素表结构不同。
+
+    Notes
+    -----
+    不自动数值化、屏蔽缺测或转换单位；应按资料定义在副本上处理。
+    attrs 是已有请求/响应元数据，不创建时间维度，也不包含完整查询记录。
+    未支持查询组合在请求前抛 UnsupportedQueryError，非法参数和配置加载
+    也可能直接抛 TypeError、ValueError 或文件/解析异常，与 strict 无关。
     """
     normalized_time, time_params = time_filter_params(time, single_key="times")
     is_latest = normalized_time is not None and normalized_time.kind == "latest"

@@ -295,3 +295,8 @@ uv run python -m examples.high_level.station
 并验证全部结果；不读取账号配置。函数完整签名见
 {py:func}`nuwe_cmadaas.obs.retrieve_obs_station`，后续可阅读
 {doc}`地面格点 <grid>` 或 {doc}`文件下载 <files>`。
+
+## 通用结果与错误指南
+
+字符串数值化、单位/缺测、attrs 与空结果见 {doc}`使用返回结果 </guide/results>`；
+默认 MusicError、strict、底层响应状态与本地异常见 {doc}`错误处理 </guide/errors>`。

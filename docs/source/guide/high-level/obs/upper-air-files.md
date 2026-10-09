@@ -324,3 +324,8 @@ uv run python -m examples.high_level.upper_air_files
 打印相对名称、大小与内容后自动清理。辅助模块不随 wheel 分发，无需第二个示例安装包。
 完整签名见 {py:func}`nuwe_cmadaas.obs.download_obs_upper_air_file`；
 高空表格见 {doc}`高空观测 <upper-air>`，其他观测入口见 {doc}`观测目录 <index>`。
+
+## 通用结果与错误指南
+
+字符串数值化、单位/缺测、attrs 与空结果见 {doc}`使用返回结果 </guide/results>`；
+默认 MusicError、strict、底层响应状态与本地异常见 {doc}`错误处理 </guide/errors>`。

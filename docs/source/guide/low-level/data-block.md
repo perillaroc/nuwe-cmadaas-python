@@ -264,3 +264,8 @@ request/metadata、参数未修改、警告、错误上下文、响应关闭及�
 指南的教学代码默认可见，准备可展开，独立结果断言不显示在教程中。
 全部方法与兼容约定见 {doc}`底层 MUSIC 接口 <index>`、
 {doc}`客户端参考 </reference/client>` 和 {doc}`MUSIC 兼容性清单 </reference/music-compatibility>`。
+
+## 通用结果与错误指南
+
+字符串数值化、单位/缺测、attrs 与空结果见 {doc}`使用返回结果 </guide/results>`；
+默认 MusicError、strict、底层响应状态与本地异常见 {doc}`错误处理 </guide/errors>`。

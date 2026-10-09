@@ -417,3 +417,8 @@ uv run python -m examples.high_level.model_files
 展示独立 latest 表格、空清单、严格业务异常与九种本地错误，校验后自动清理。
 无需账号或第二个示例安装包，辅助模块不随 wheel 分发。完整签名见
 {py:func}`nuwe_cmadaas.model.download_model_file`；其他模式入口见 {doc}`模式目录 <index>`。
+
+## 通用结果与错误指南
+
+字符串数值化、单位/缺测、attrs 与空结果见 {doc}`使用返回结果 </guide/results>`；
+默认 MusicError、strict、底层响应状态与本地异常见 {doc}`错误处理 </guide/errors>`。

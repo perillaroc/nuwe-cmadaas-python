@@ -17,6 +17,8 @@
     "source/guide/low-level/downloads.md",
     "source/guide/low-level/serialization.md",
     "source/guide/low-level/save-as-file.md",
-    "source/guide/low-level/data-block.md"
+    "source/guide/low-level/data-block.md",
+    "source/guide/results.md",
+    "source/guide/errors.md"
   ]
 }

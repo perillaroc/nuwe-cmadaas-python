@@ -109,3 +109,8 @@ table = retrieve_obs_station(
 - 阅读 {doc}`接口选择 </guide/choosing-api>`，了解高层业务 API 与底层 MUSIC 客户端的使用方式。
 - 继续 {doc}`地面站点 </guide/high-level/obs/station>`、{doc}`地面格点 </guide/high-level/obs/grid>` 或 {doc}`文件下载 </guide/high-level/obs/files>` 的合成数据教程。
 - 查阅 {doc}`模拟数据与客户端注入 </guide/simulated-data>`，了解响应工厂、请求登记及真实解码路径。
+
+## 通用结果与错误指南
+
+字符串数值化、单位/缺测、attrs 与空结果见 {doc}`使用返回结果 </guide/results>`；
+默认 MusicError、strict、底层响应状态与本地异常见 {doc}`错误处理 </guide/errors>`。

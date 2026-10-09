@@ -325,3 +325,8 @@ uv run python -m examples.high_level.files
 辅助代码不随 wheel 分发，不需要第二个示例安装包。
 完整签名见 {py:func}`nuwe_cmadaas.obs.download_obs_file`；
 观测表格见 {doc}`地面站点 <station>`，二维场见 {doc}`地面格点 <grid>`。
+
+## 通用结果与错误指南
+
+字符串数值化、单位/缺测、attrs 与空结果见 {doc}`使用返回结果 </guide/results>`；
+默认 MusicError、strict、底层响应状态与本地异常见 {doc}`错误处理 </guide/errors>`。

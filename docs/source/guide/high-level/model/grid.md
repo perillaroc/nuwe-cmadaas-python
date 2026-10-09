@@ -413,3 +413,8 @@ uv run python -m examples.high_level.model_grid
 完整 attrs，并验证服务异常与八种零请求本地错误。无需账号或第二个示例安装包，
 辅助模块不随 wheel 分发。完整签名见 {py:func}`nuwe_cmadaas.model.retrieve_model_grid`，
 其他模式入口见 {doc}`模式目录 <index>`。
+
+## 通用结果与错误指南
+
+字符串数值化、单位/缺测、attrs 与空结果见 {doc}`使用返回结果 </guide/results>`；
+默认 MusicError、strict、底层响应状态与本地异常见 {doc}`错误处理 </guide/errors>`。

@@ -213,3 +213,8 @@ uv run python -m examples.music.files
 
 `examples/music/files.py` 的清单示例实际执行三次查询，验证无正文传输或磁盘写入，
 并清理用于检查的临时目录；无需配置或账号。
+
+## 通用结果与错误指南
+
+字符串数值化、单位/缺测、attrs 与空结果见 {doc}`使用返回结果 </guide/results>`；
+默认 MusicError、strict、底层响应状态与本地异常见 {doc}`错误处理 </guide/errors>`。

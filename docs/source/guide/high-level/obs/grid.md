@@ -259,3 +259,8 @@ uv run python -m examples.high_level.grid
 示例辅助代码不随主包 wheel 分发，也不需要安装第二个示例包。
 完整签名见 {py:func}`nuwe_cmadaas.obs.retrieve_obs_grid`；
 表格结构可对照 {doc}`地面站点 <station>`，文件需求见 {doc}`文件下载 <files>`。
+
+## 通用结果与错误指南
+
+字符串数值化、单位/缺测、attrs 与空结果见 {doc}`使用返回结果 </guide/results>`；
+默认 MusicError、strict、底层响应状态与本地异常见 {doc}`错误处理 </guide/errors>`。

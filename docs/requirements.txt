@@ -1,5 +1,5 @@
-sphinx>=7
-sphinx-book-theme>=1
+sphinx>=7.3
+pydata-sphinx-theme>=0.15
+myst-nb>=1.1
+ipykernel>=6.29
 ipython
-
--e .

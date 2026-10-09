@@ -8,6 +8,7 @@ authors = [
     {name="Wang Dapeng", email="perillaroc@gmail.com"}
 ]
 description = "A python API for CMADaaS MUSIC."
+requires-python = ">=3.11"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 readme = "README.md"
@@ -49,7 +50,9 @@ cov = [
 ]
 docs = [
     "sphinx>=7.3",
-    "sphinx-book-theme>=1.1",
+    "pydata-sphinx-theme>=0.15",
+    "myst-nb>=1.1",
+    "ipykernel>=6.29",
     "ipython",
 ]
 dev = [

@@ -6,6 +6,7 @@ Run from the repository root after installing the main project (Python 3.11+):
 uv run python -m examples.high_level.station
 uv run python -m examples.high_level.grid
 uv run python -m examples.high_level.upper_air
+uv run python -m examples.high_level.files
 ```
 
 `station.py` uses synthetic protobuf responses and a real MUSIC client with
@@ -26,12 +27,17 @@ string values and attrs separately, including GPS `dataCode` differences and
 rejection of invalid selectors before any request. Synthetic success does not
 resolve the recorded GPS/lightning permissions or aircraft missing-data cases.
 
+`files.py` streams four tiny files through the public surface download function
+into a temporary directory. It demonstrates all three registered query shapes,
+checks Path results against names, sizes and disk contents, distinguishes empty
+lists from service errors, and rejects invalid selectors before any request.
+All temporary files are removed after validation.
+
 No credentials or external connections are needed. Unknown synthetic requests
 fail immediately. The values, dates and station IDs are fictional, and the
 responses do not demonstrate real service permissions or dataset capabilities.
 
-The executable guides import `make_station_client()`, `make_grid_client()`
-or `make_upper_air_client()`
-and `check_results()` from their respective modules. Keep public calls in the
-script and guide consistent when changing the tutorial. These repository examples and their
+The executable guides reuse each module's client factory and `check_results()`.
+Keep public calls in the script and guide consistent when changing the tutorial.
+These repository examples and their
 `examples/_support/` helpers are not included in the main package's wheel.

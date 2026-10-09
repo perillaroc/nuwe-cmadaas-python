@@ -30,4 +30,15 @@
 :doc:`高空观测指南 <../guide/high-level/obs/upper-air>` 复用准备与结果校验，并区分
 合成结果和已有在线权限/缺测状态。
 
+地面文件下载示例位于 ``examples/high_level/files.py``：
+
+.. code-block:: bash
+
+   uv run python -m examples.high_level.files
+
+脚本通过公开函数下载四个人工小文件，验证路径、名称、大小与磁盘内容，以及空清单、
+严格服务错误和本地拒绝行为；验证后清理临时目录。
+:doc:`地面文件指南 <../guide/high-level/obs/files>` 复用准备与结果校验，说明已登记查询、
+覆盖行为和真实下载前的清单检查。
+
 完整的高层/MUSIC 示例集及旧包迁移索引将在 D20 整合。

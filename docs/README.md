@@ -37,6 +37,8 @@ RST 页面用于 API 参考，MyST-NB Markdown 页面用于可执行教程。配
 `uv run python -m examples.high_level.grid` 独立运行全域和矩形查询及结果断言。
 高空指南复用 `examples/high_level/upper_air.py`；
 `uv run python -m examples.high_level.upper_air` 独立运行常规、GPS、Light、Ard 和 latest 示例。
+地面文件指南复用 `examples/high_level/files.py`；
+`uv run python -m examples.high_level.files` 将四个小文件下载到临时目录，验证并自动清理。
 底层教程在准备单元中登记 `SyntheticTransport`
 的请求和下载 URL，并调用 `make_synthetic_music_client(transport)`；调用单元
 直接展示对应的 `callAPI_to_*` 方法及结果。下载页在页面内创建临时目录并

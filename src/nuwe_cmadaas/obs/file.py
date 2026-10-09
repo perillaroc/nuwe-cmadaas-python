@@ -40,37 +40,9 @@ def download_obs_file(
 
     默认对应 CMADaaS 中以 `getSurfFile` 开头的一系列数据接口
 
-    **区域筛选条件**
-
-    - 经纬度范围
-
-    .. code-block:: python
-
-        {
-            "type": "rect",
-            "start_longitude": 115.7,
-            "end_longitude": 117.4,
-            "start_latitude": 41.6,
-            "end_latitude": 39.4,
-        }
-
-    - 流域
-
-    .. code-block:: python
-
-        {
-            "type": "basin",
-            "basin_codes": "CJLY"
-        }
-
-    - 地区
-
-    .. code-block:: python
-
-        {
-            "type": "region",
-            "admin_codes": "110000"
-        }
+    默认地面文件仅登记时次、时间段、时间段加站号三个组合。
+    区域、站号范围及专用等级查询没有对应登记；相对时长查询在请求前拒绝，
+    最新时次表格不能用作文件清单。参数能规范化不代表资料接口支持。
 
     Parameters
     ----------
@@ -79,41 +51,39 @@ def download_obs_file(
     elements:
         要素字段代码，以逗号分隔
     time:
-        时间筛选条件，支持单个时间，时间列表，时间段和时间间隔
+        时间筛选条件，支持时次、时间列表和时间段，组合须匹配当前登记。
 
         - 时间对象：``pd.Timestamp`` 或 ``datetime.datetime`` 类型，单个时间点，对应接口的 times 参数
         - 时间列表：``list`` 或 ``tuple`` 类型，元素为 pandas 或标准库 datetime，对应接口的 times 参数
         - 时间段：``pd.Interval`` 类型，起止时间，定义区间端点是否闭合，对应接口的 timeRange 参数
-        - 时间间隔：不支持文件下载；最新时次应作为表格查询
+        - 时间间隔：不支持文件下载，请求前抛 UnsupportedQueryError；最新时次应作为表格查询
     station:
         站点筛选条件，支持字符串，列表和元组
 
         - 字符串：单个站点
         - 列表：多个站点
-        - 元组：站点范围，二元组，第一个元素是起止站号 (minStaId)，第二个元素是终止站号 (maxStaId)
+        - 元组：规范化为站点范围，但当前没有对应的文件下载登记组合
+
+        默认地面站号查询必须配合时间段，不能使用单时次加站号。
     region:
-        区域筛选条件：
-            - 经纬度范围 (rect)
-            - 流域 (basin)
-            - 地区 (region)
+        参数可规范化矩形、行政区和流域，但当前地面/高空文件均没有区域查询登记。
 
     station_level:
-        台站级别：
-            - 011: 国家基准气候站
-            - 012: 基本气象站
-            - 013: 一般气象站
+        可规范化为 staLevels，但没有专用等级文件接口登记；不能据签名认定支持。
     order:
         排序字段
     count:
-        最大返回记录数，对应接口的 limitCnt 参数
+        最大返回文件清单记录数，对应接口的 limitCnt 参数，不是本地下载字节上限。
     output_dir:
-        保存文件的目录
+        本地字符串或 Path 目录。实际写文件时创建父目录；同名文件默认覆盖。
     interface_data_type:
-        资料类型
+        默认 Surf；Upar 用于高空文件包装路径，其已登记组合与地面不同。
     config:
         配置。配置文件路径或配置对象
     client:
         客户端对象，默认新建。如果设置，忽略 config 参数
+    strict:
+        默认 False 时服务错误返回 MusicError；True 时抛出结构化 CMADaaSError。
     kwargs:
         其他需要传递给 MUSIC 接口的参数，例如：
             - eleValueRanges: 要素值范围
@@ -122,6 +92,15 @@ def download_obs_file(
 
     Returns
     -------
+    list[pathlib.Path] or MusicError
+        成功返回已下载文件的本地路径列表，成功空清单返回 []；
+        默认模式的服务错误返回 MusicError，严格模式抛异常。
+
+    Notes
+    -----
+    高层没有独立 overwrite 开关；该名称若通过 kwargs 传入，会成为服务参数。
+    需要禁止覆盖时使用底层 callAPI_to_downFile(..., overwrite=False)。
+    多文件下载不是事务，后续失败不会自动删除先前成功下载的文件。
     """
     validate_count(count)
 

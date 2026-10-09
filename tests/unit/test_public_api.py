@@ -51,8 +51,12 @@ def test_package_declares_pep561_type_information():
 
 def test_reference_docs_cover_all_high_level_functions():
     docs_root = Path(__file__).parents[1] / ".." / "docs" / "source"
-    reference = (docs_root / "reference.rst").resolve().read_text(encoding="utf-8")
-    matrix = (docs_root / "guide" / "support-matrix.rst").resolve().read_text(encoding="utf-8")
+    reference = (docs_root / "reference" / "high-level.rst").resolve().read_text(
+        encoding="utf-8"
+    )
+    matrix = (docs_root / "reference" / "support-matrix.rst").resolve().read_text(
+        encoding="utf-8"
+    )
 
     for function_name in (
             "retrieve_model_grid", "retrieve_model_point", "download_model_file",

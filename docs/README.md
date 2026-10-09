@@ -9,9 +9,8 @@ uv run --group docs sphinx-build -b html -E -a -W --keep-going docs/source docs/
 
 RST 页面用于 API 参考，MyST-NB Markdown 页面用于可执行教程。配置对 Notebook 使用
 `nb_execution_mode = "force"`；构建时需要允许 Jupyter 内核通过本机 socket 通信。
-无账号快速入门、两层接口对照、全部八个高层入口及底层表格/三种格点/清单和下载已有可执行教程；
-其他底层返回形式在 D 阶段补齐。
-底层序列化与格式化保存也已有四种格式的可执行教程，数据块章节仍待补齐。
+无账号快速入门、两层接口对照、全部八个高层入口及九个底层方法已有可执行教程。
+序列化与格式化保存展示四种格式；数据块展示名称、bytes 与读取方式，其真实服务能力仍待确认。
 
 ## 可执行模拟页面
 

@@ -545,6 +545,40 @@ class CMADaaSClient:
             params: Dict,
             server_id: str = None
     ) -> DataBlock:
+        """Request an opaque MUSIC binary block in the RetDataBlock format.
+
+        Parameters
+        ----------
+        interface_id : str
+            Interface confirmed to return RetDataBlock for the chosen dataset.
+            No live-service combination has currently been verified.
+        params : dict
+            Native parameters required by that interface. High-level selectors
+            are not translated and the dict is not modified; authentication
+            and request envelope fields are constructed by the client.
+        server_id : str, optional
+            Service node for this request; defaults to the client's server_id.
+
+        Returns
+        -------
+        DataBlock
+            Response with request status, a ``data_name`` string and opaque
+            ``data`` bytes. Check ``ok`` or call ``raise_for_error`` before
+            consuming the bytes. A nonzero service error can still carry a
+            name and bytes; a successful response can have empty content.
+
+        Notes
+        -----
+        Each call emits a UserWarning about the unverified live-service
+        capability. Synthetic protobuf decoding is not online verification.
+        No automatic text decoding, pandas/xarray conversion or disk writing
+        is provided; inherited conversion methods raise NotImplementedError.
+        The name is service metadata, not a local path. Select a reader only
+        after confirming the payload format. There is no local payload-size
+        limit; inspecting len(data) is a check after the response was received.
+        Service, transport and decode errors normally return failed responses;
+        raise_for_error accepts explicit interface/parameter error context.
+        """
         warnings.warn("callAPI_to_dataBlock has no verified live-service interface")
         data_block = DataBlock()
 

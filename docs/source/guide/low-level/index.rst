@@ -17,6 +17,7 @@ INI 文件、连接参数及字典配置的优先级见
    downloads
    serialization
    save-as-file
+   data-block
 
 按返回形式选择方法
 ------------------
@@ -28,7 +29,8 @@ INI 文件、连接参数及字典配置的优先级见
 :doc:`文件下载 <downloads>` 实际写入文件并说明覆盖及批量失败。
 :doc:`序列化 <serialization>` 返回原始格式字符串，
 :doc:`格式化保存 <save-as-file>` 展示生成文件、参数修改及实际正文。
-其他返回形式的独立教程在后续任务补齐。
+:doc:`数据块 <data-block>` 展示名称、原始 bytes 与已知格式的内存读取；
+其真实服务能力仍待确认。
 
 .. list-table::
    :header-rows: 1
@@ -63,7 +65,8 @@ INI 文件、连接参数及字典配置的优先级见
        见 :doc:`格式化保存 <save-as-file>`。
    * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_dataBlock`
      - ``DataBlock``
-     - 读取 ``data_name`` 与 ``data``，数据类型为 bytes，不会自动写成文件。
+     - 读取 ``data_name`` 与 ``data``，数据类型为 bytes，不会自动写成文件，
+       见 :doc:`数据块指南 <data-block>`。
    * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_serializedStr`
      - ``str``
      - 按服务支持的 ``data_format`` 返回原始字符串，也可能返回兼容错误字符串，
@@ -96,7 +99,9 @@ interface、参数与能力边界
 protobuf 方法把服务或传输错误放在响应的 ``request.error_code`` 和
 ``request.error_message`` 中，``ok`` 表示错误码为零。调用后应先判断状态，
 或用 ``raise_for_error(interface_id=..., params=...)`` 转成结构化异常，再进行转换。
-错误响应的 ``to_pandas()`` / ``to_xarray()`` 会抛出异常；成功空结果与错误响应不同。
+提供转换实现的响应在 ``to_pandas()`` / ``to_xarray()`` 时检查状态；
+DataBlock 没有这些转换实现，继承方法抛 NotImplementedError，应显式检查请求状态。
+成功空结果与错误响应不同。
 
 字符串方法没有上述响应对象属性，按兼容契约可能返回错误文本。
 完整签名见 :doc:`客户端参考 <../../reference/client>`，错误和参数约定见

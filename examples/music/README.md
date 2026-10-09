@@ -44,3 +44,14 @@ JSON/XML/text/HTML 结构与实际磁盘内容、参数修改和目标覆盖，�
 None 目标和成功空清单的现有 IndexError 分别验证；未知请求不回退网络。
 指南 `docs/source/guide/low-level/serialization.md` 与 `save-as-file.md` 独立复用准备
 与断言，保留八个 LLR/LLS 案例锚点，真实替换仅作手动代码展示。
+
+```bash
+uv run python -m examples.music.data_block
+```
+
+`data_block.py` 用虚构接口经真实客户端解码 RetDataBlock，核对名称、十个非文本字节、
+BytesIO/struct 读取结果、request/metadata、参数保留和每次调用的能力警告。
+空成功、含 bytes 的服务失败、坏 protobuf、文本解码与未实现的转换分别验证，
+四次响应全部关闭，不写文件，临时空目录清理。指南
+`docs/source/guide/low-level/data-block.md` 复用准备与断言，保留 LLB-001 待确认/默认关闭
+边界；真实替换要求先确认 RetDataBlock 接口、资料、近期受控样本和内容格式。

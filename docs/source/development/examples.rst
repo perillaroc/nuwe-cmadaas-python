@@ -136,4 +136,16 @@ None 目标和成功空保存清单的现有行为单独验证。
 :doc:`格式化保存指南 <../guide/low-level/save-as-file>` 各自复用准备和断言，
 保留八个 LLR/LLS 案例锚点和已有在线通过，真实替换不在构建中执行。
 
+底层数据块示例位于 ``examples/music/data_block.py``：
+
+.. code-block:: bash
+
+   uv run python -m examples.music.data_block
+
+脚本经真实客户端解码人工 RetDataBlock，核对名称、原始 bytes、BytesIO/struct
+读取、状态/metadata、参数未修改和能力警告；空成功、含内容的服务失败、解码失败及
+文本/表格/格点转换边界分别验证。四次响应关闭，不写文件，临时目录清理。
+:doc:`数据块指南 <../guide/low-level/data-block>` 复用准备和独立断言，
+保留 LLB-001 待确认及默认关闭状态，真实替换代码在确认接口/资料/样本后才可请求。
+
 完整的高层/MUSIC 示例集及旧包迁移索引将在 D20 整合。

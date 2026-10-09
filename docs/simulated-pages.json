@@ -16,6 +16,7 @@
     "source/guide/low-level/file-list.md",
     "source/guide/low-level/downloads.md",
     "source/guide/low-level/serialization.md",
-    "source/guide/low-level/save-as-file.md"
+    "source/guide/low-level/save-as-file.md",
+    "source/guide/low-level/data-block.md"
   ]
 }

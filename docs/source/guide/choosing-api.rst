@@ -32,10 +32,14 @@
        "SURF_CHN_MUL_HOR",
        elements="Station_Id_C,TEM",
        time=pd.Timestamp("2026-01-02"),
-       config="client.config",
+       config="/path/to/cedarkit.yaml",
    )
 
 高层入口的默认错误返回保持 ``MusicError``；需要异常控制流时使用
 ``strict=True``。完整的参数、返回值和支持范围见
 :doc:`高层 API 参考 <../reference/high-level>` 与
 :doc:`支持矩阵 <../reference/support-matrix>`。
+
+高层 ``config=`` 读取 CedarKit YAML，底层 ``config_file=`` 读取 MUSIC INI。
+查找规则与参数优先级分别见 :doc:`高层配置 <configuration/high-level>` 和
+:doc:`底层客户端配置 <configuration/music-client>`。

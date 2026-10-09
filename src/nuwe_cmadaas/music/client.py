@@ -71,11 +71,16 @@ class CMADaaSClient:
         """
         Notes
         -----
-        配置参数优先级从高到低，如果高优先级的某个参数没有设置，会从低优先级读取相应参数
+        连接字段只在当前值为 ``None`` 时从配置中补齐，优先级从高到低：
 
-        1. ``__init__``函数参数，例如``server_ip``, ``server_port``等
-        2. 配置对象``config``
-        3. MUSIC原生接口配置文件``config_file``
+        1. ``__init__`` 显式参数，例如 ``server_ip``、``server_port`` 等
+        2. MUSIC 原生 INI 文件 ``config_file``
+        3. 配置字典 ``config``
+
+        INI 不读取账号密码；认证字段优先使用显式 ``user``、``password``，
+        再从 ``config["auth"]`` 补齐。只有显式传入 ``config_file`` 才读取 INI，
+        不会自动查找当前目录的 ``client.config``。高层 YAML 查找由
+        ``load_cmadaas_config`` / ``create_client`` 完成。
 
         Parameters
         ----------

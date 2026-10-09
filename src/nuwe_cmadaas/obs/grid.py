@@ -55,11 +55,13 @@ def retrieve_obs_grid(
     parameter
         要素字段代码
     time
-        时间筛选条件，支持单个时间，时间列表，时间段和时间间隔
+        观测时次。当前登记支持时次查询及其矩形区域形式。
 
-        - 时间对象：``pd.Timestamp`` 或 ``datetime.datetime`` 类型，单个时间点，对应接口的 times 参数
-        - 时间列表：``list`` 或 ``tuple`` 类型，元素为 pandas 或标准库 datetime，对应接口的 times 参数
-        - 时间段：``pd.Interval`` 类型，起止时间，定义区间端点是否闭合，对应接口的 timeRange 参数
+        - ``pd.Timestamp`` 或 ``datetime.datetime``：单个时次，对应原生 ``time`` 参数。
+        - 非空时间列表或元组：本地映射为 ``times``，仍选择同一时次接口；
+          是否支持多时次由资料决定，返回值不会自动增加时间维度。
+        - ``pd.Interval`` 或省略时间：没有对应的登记组合，请求前抛 ``UnsupportedQueryError``。
+        - ``pd.Timedelta`` 或 ``datetime.timedelta``：请求前抛 ``TypeError``，不执行 latest 查询。
     region
         区域筛选条件：
             - 经纬度范围 (rect)

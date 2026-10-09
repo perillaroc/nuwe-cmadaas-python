@@ -33,6 +33,8 @@ RST 页面用于 API 参考，MyST-NB Markdown 页面用于可执行教程。配
 `SyntheticTransport` 的真实 MUSIC 客户端；调用单元保留公开函数的 `client=client`。
 地面站点指南复用 `examples/high_level/station.py` 的客户端准备及结果断言，
 从仓库根目录可用 `uv run python -m examples.high_level.station` 独立运行。
+地面格点指南同样复用 `examples/high_level/grid.py`，以
+`uv run python -m examples.high_level.grid` 独立运行全域和矩形查询及结果断言。
 底层教程在准备单元中登记 `SyntheticTransport`
 的请求和下载 URL，并调用 `make_synthetic_music_client(transport)`；调用单元
 直接展示对应的 `callAPI_to_*` 方法及结果。下载页在页面内创建临时目录并

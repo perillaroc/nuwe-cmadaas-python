@@ -10,7 +10,9 @@ DOCS_ROOT = Path(__file__).parents[2] / "docs" / "source"
 
 
 def test_station_guide_uses_the_high_level_config_argument():
-    content = (DOCS_ROOT / "guide" / "station.rst").read_text(encoding="utf-8")
+    content = (DOCS_ROOT / "guide" / "high-level" / "obs" / "station.rst").read_text(
+        encoding="utf-8"
+    )
 
     assert "config_file=" not in content
     assert "config=" in content

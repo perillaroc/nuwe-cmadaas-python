@@ -1,42 +1,26 @@
-.. nuwe-cmadaas-python documentation master file, created by
-   sphinx-quickstart on Wed Mar 31 15:51:42 2021.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 nuwe-cmadaas-python 文档
-==================================================
+========================
 
-为 CMADaaS 的 MUSIC 接口封装 Python API，支持 Python 3 和 Windows。
+nuwe-cmadaas-python 提供 CMADaaS MUSIC 客户端和常用气象资料的高层查询、下载接口。
 
+文档按阅读目的分为四部分：
 
-.. toctree::
-   :maxdepth: 2
-   :hidden:
-   :caption: 使用
-
-   usage/installation
-   usage/quickstart
-   usage/example
-   reference
-
+* :doc:`开始使用 <getting-started/index>`：安装并了解第一个调用。
+* :doc:`指南 <guide/index>`：选择高层或底层接口，查看观测与模式资料的使用方法。
+* :doc:`开发 <development/index>`：查阅示例维护与设计记录。
+* :doc:`参考 <reference/index>`：查询 API、支持矩阵和兼容性契约。
 
 .. toctree::
    :maxdepth: 2
    :hidden:
-   :caption: 指南
 
-   guide/station
-   guide/music-compatibility
-   guide/support-matrix
-   guide/api-usage
-   adr/0001-error-migration
-   adr/0002-transport-hardening
-   adr/0003-data-output-contract
-   adr/0004-public-api-compatibility
+   getting-started/index
+   guide/index
+   development/index
+   reference/index
 
-
-索引和表格
-==================
+索引
+----
 
 * :ref:`genindex`
 * :ref:`modindex`

@@ -1,13 +1,6 @@
-*********
-安装
-*********
+:orphan:
 
-从 Github 下载源码，项目地址
+安装页面已迁移
+==============
 
-https://github.com/perillaroc/nuwe-cmadaas-python
-
-使用如下命令安装 `nuwe_cmadaas` 包。
-
-.. code-block:: bash
-
-    pip install .
+请阅读 :doc:`安装 <../getting-started/installation>`。

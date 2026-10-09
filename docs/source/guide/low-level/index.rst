@@ -1,10 +1,82 @@
 底层 MUSIC 接口
 ===============
 
-底层 ``CMADaaSClient`` 直接接收 MUSIC interface id 和原生参数。
-方法列表见 :doc:`客户端参考 <../../reference/client>`，兼容性约定见
-:doc:`MUSIC 兼容性清单 <../../reference/music-compatibility>`。
-各调用形式的可执行教程将在 D 阶段补齐。
+底层 ``nuwe_cmadaas.music.CMADaaSClient`` 直接接收 MUSIC interface ID 和原生参数。
+同一个站点查询的两层调用对照见 :doc:`接口选择 <../choosing-api>`；
+不需要自己选择 interface 时，可使用 :doc:`高层业务入口 <../high-level/index>`。
 
 INI 文件、连接参数及字典配置的优先级见
 :doc:`底层客户端配置 <../configuration/music-client>`。
+
+按返回形式选择方法
+------------------
+
+下面列出全部 9 个方法，方法名均链接客户端参考。独立的逐方法教程尚在编写，
+表格最小调用可先从接口选择页运行。
+
+.. list-table::
+   :header-rows: 1
+
+   * - 方法
+     - 返回值
+     - 使用结果与文件副作用
+   * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_array2D`
+     - ``Array2D``
+     - 读取 ``element_names`` / ``data``，``to_pandas()`` 转为表格。
+   * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_gridArray2D`
+     - ``GridArray2D``
+     - ``to_xarray()`` 转为二维 ``DataArray``。
+   * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_gridScalar2D`
+     - ``GridScalar2D``
+     - ``to_xarray()`` 转为标量场 ``DataArray``。
+   * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_gridVector2D`
+     - ``GridVector2D``
+     - ``to_xarray()`` 转为包含 U/V 分量的 ``Dataset``。
+   * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_fileList`
+     - ``FilesInfo``
+     - 只查询 ``files_info`` 清单，不下载；每项为 ``FileInfo``。
+   * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_downFile`
+     - ``FilesInfo``
+     - 查询清单并下载到 ``file_dir``，可用 ``overwrite`` 控制已有文件覆盖。
+   * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_saveAsFile`
+     - ``FilesInfo``
+     - 按 ``data_format`` 保存并下载到 ``file_name``；会补充或修改 ``params``。
+   * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_dataBlock`
+     - ``DataBlock``
+     - 读取 ``data_name`` 与 ``data``，数据类型为 bytes，不会自动写成文件。
+   * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_serializedStr`
+     - ``str``
+     - 按服务支持的 ``data_format`` 返回原始字符串，也可能返回兼容错误字符串。
+
+格点转换使用 ``latitude/longitude`` 坐标，数组和标量场返回 ``DataArray``，
+矢量场返回 ``Dataset``。``FilesInfo`` 不能当成 DataFrame 或高层 ``list[Path]``；
+其 ``files_info`` 项包含 ``file_name``、``file_url``、``size`` 等文件信息。
+
+interface、参数与能力边界
+--------------------------------
+
+各方法使用 ``interface_id``、``params`` 和可选 ``server_id``；保存或序列化方法
+另有 ``data_format``，下载方法还需目标目录或文件名。``params`` 使用原生键名，
+例如 ``dataCode``、``times``、``timeRange``、``fcstEle``，不要直接放高层的
+``data_code``、``start_time`` 或 ``forecast_time``。
+
+方法与 interface 的返回格式必须匹配。客户端提供某个方法，不代表每个 interface
+和资料都支持它；需逐接口核对服务目录和权限。``callAPI_to_dataBlock`` 当前尚无
+已验证的真实服务接口，其本地解码能力有合成数据验证，不能据此宣称在线可用。
+
+``callAPI_to_serializedStr`` 会在缺少 ``dataFormat`` 时补入格式；
+``callAPI_to_saveAsFile`` 还会设置 ``savepath``。调用者提供的 ``dataFormat``
+不覆盖，重复使用参数字典前应留意这些修改。下载调用返回 ``FilesInfo`` 并可能写文件，
+只需查看清单时选择 ``callAPI_to_fileList``。
+
+响应状态与转换
+--------------
+
+protobuf 方法把服务或传输错误放在响应的 ``request.error_code`` 和
+``request.error_message`` 中，``ok`` 表示错误码为零。调用后应先判断状态，
+或用 ``raise_for_error(interface_id=..., params=...)`` 转成结构化异常，再进行转换。
+错误响应的 ``to_pandas()`` / ``to_xarray()`` 会抛出异常；成功空结果与错误响应不同。
+
+字符串方法没有上述响应对象属性，按兼容契约可能返回错误文本。
+完整签名见 :doc:`客户端参考 <../../reference/client>`，错误和参数约定见
+:doc:`MUSIC 兼容性清单 <../../reference/music-compatibility>`。

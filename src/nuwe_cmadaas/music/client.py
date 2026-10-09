@@ -303,6 +303,36 @@ class CMADaaSClient:
             data_format: str,
             server_id: str = None
     ) -> str:
+        """Request UTF-8 text in a service-supported serialization format.
+
+        Parameters
+        ----------
+        interface_id : str
+            Interface supporting the requested output format and dataset.
+        params : dict
+            Native MUSIC parameters. Mutated by adding dataFormat only when
+            that key is absent; an existing value takes precedence over data_format.
+        data_format : str
+            Service format, for example json, xml, text or html. No local format
+            validation or conversion is performed.
+        server_id : str, optional
+            Service node for this request; defaults to the client's server_id.
+
+        Returns
+        -------
+        str
+            UTF-8 response text, including compatible gateway/transport error
+            strings. This return has no request, ok, attrs or raise_for_error.
+
+        Notes
+        -----
+        Does not write files or parse the requested format. Recognized gateway
+        failures use the historical getway error prefix; handled request exceptions
+        return Error retrieving data. A normal formatted business-error body can
+        still be returned verbatim, so validate its status and structure. UTF-8
+        decoding or unexpected failure-body parsing errors may propagate. There
+        is no strict argument. Use a fresh params dict when changing formats.
+        """
         if "dataFormat" not in params:
             params["dataFormat"] = data_format
 
@@ -343,6 +373,43 @@ class CMADaaSClient:
         file_name: str,
         server_id: str = None,
     ) -> FilesInfo:
+        """Request formatted output and download the first returned file.
+
+        Parameters
+        ----------
+        interface_id : str
+            Interface supporting formatted output saved as a RetFilesInfo result.
+        params : dict
+            Native parameters. Adds dataFormat only if absent and replaces
+            savepath with file_name; both mutations remain after a failed request.
+        data_format : str
+            Requested service format, such as json, xml, text or html. An existing
+            params dataFormat takes precedence; no local format validation occurs.
+        file_name : str
+            Local target filename including its directory. Used verbatim for
+            savepath and downloading, independently of the returned FileInfo name.
+            None returns an error response before requesting, after dataFormat
+            has been added but before savepath is changed.
+        server_id : str, optional
+            Service node for this request; defaults to the client's server_id.
+
+        Returns
+        -------
+        FilesInfo
+            Response metadata and request status. Check ok or call raise_for_error
+            with query context, then verify the actual target file and its format.
+
+        Notes
+        -----
+        Only the first file URL is downloaded. Existing targets are replaced;
+        this method has no overwrite or strict argument and imposes no output-byte
+        limit. The save request disables read retries as it is not idempotent;
+        subsequent downloading uses the connection's download retry policy.
+        Handled service, decode, transport and download failures are recorded in
+        request, but unexpected local errors can propagate. In particular, a
+        successful empty file list currently raises IndexError. Formats, suffixes
+        and returned metadata do not prove a valid saved file; parse or inspect it.
+        """
         data = FilesInfo()
 
         if "dataFormat" not in params:

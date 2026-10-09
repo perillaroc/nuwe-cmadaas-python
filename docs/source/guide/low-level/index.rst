@@ -15,6 +15,8 @@ INI 文件、连接参数及字典配置的优先级见
    grids
    file-list
    downloads
+   serialization
+   save-as-file
 
 按返回形式选择方法
 ------------------
@@ -24,6 +26,8 @@ INI 文件、连接参数及字典配置的优先级见
 :doc:`底层格点指南 <grids>` 分别展示数组、标量和矢量的原始响应与 xarray 转换。
 :doc:`文件清单 <file-list>` 展示 FilesInfo 元数据；
 :doc:`文件下载 <downloads>` 实际写入文件并说明覆盖及批量失败。
+:doc:`序列化 <serialization>` 返回原始格式字符串，
+:doc:`格式化保存 <save-as-file>` 展示生成文件、参数修改及实际正文。
 其他返回形式的独立教程在后续任务补齐。
 
 .. list-table::
@@ -55,13 +59,15 @@ INI 文件、连接参数及字典配置的优先级见
        见 :doc:`文件下载 <downloads>`。
    * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_saveAsFile`
      - ``FilesInfo``
-     - 按 ``data_format`` 保存并下载到 ``file_name``；会补充或修改 ``params``。
+     - 按 ``data_format`` 保存并下载到 ``file_name``；会补充或修改 ``params``，
+       见 :doc:`格式化保存 <save-as-file>`。
    * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_dataBlock`
      - ``DataBlock``
      - 读取 ``data_name`` 与 ``data``，数据类型为 bytes，不会自动写成文件。
    * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_serializedStr`
      - ``str``
-     - 按服务支持的 ``data_format`` 返回原始字符串，也可能返回兼容错误字符串。
+     - 按服务支持的 ``data_format`` 返回原始字符串，也可能返回兼容错误字符串，
+       见 :doc:`序列化 <serialization>`。
 
 格点转换使用 ``latitude/longitude`` 坐标，数组和标量场返回 ``DataArray``，
 矢量场返回 ``Dataset``。``FilesInfo`` 不能当成 DataFrame 或高层 ``list[Path]``；

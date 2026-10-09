@@ -33,3 +33,14 @@ uv run python -m examples.music.files
 验证已有目标拒绝、默认覆盖、批量部分写入、空清单/服务失败与全部响应关闭。
 所有输出目录临时创建，验证后清理。指南 `docs/source/guide/low-level/file-list.md`
 和 `downloads.md` 分别复用准备与对应断言；返回仍是 FilesInfo，不是 list[Path]。
+
+```bash
+uv run python -m examples.music.serialization
+```
+
+`serialization.py` 实际执行四种格式的 serializedStr 和 saveAsFile，核对原始字符串、
+JSON/XML/text/HTML 结构与实际磁盘内容、参数修改和目标覆盖，完成后清理临时目录。
+字符串错误兼容文本、原始业务错误、无效 UTF-8，以及保存的服务/网关/解码失败、
+None 目标和成功空清单的现有 IndexError 分别验证；未知请求不回退网络。
+指南 `docs/source/guide/low-level/serialization.md` 与 `save-as-file.md` 独立复用准备
+与断言，保留八个 LLR/LLS 案例锚点，真实替换仅作手动代码展示。

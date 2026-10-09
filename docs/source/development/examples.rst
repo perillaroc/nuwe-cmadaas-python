@@ -122,4 +122,18 @@ FileInfo 字段与磁盘大小/内容，展示已有目标拒绝、默认覆盖�
 :doc:`文件下载指南 <../guide/low-level/downloads>` 独立复用准备和对应断言，
 保留 LLF 案例锚点，真实替换采用 GFS 动态日期及下载规模预查。
 
+底层格式化输出示例位于 ``examples/music/serialization.py``：
+
+.. code-block:: bash
+
+   uv run python -m examples.music.serialization
+
+脚本实际执行 JSON/XML/text/HTML 四种格式的字符串请求和文件保存，解析结构并
+核对实际磁盘正文，验证 dataFormat 保留、savepath 改写、目标覆盖和临时目录清理。
+兼容错误文本、原始业务错误、无效 UTF-8 和保存的服务/网关/解码错误分别展示，
+None 目标和成功空保存清单的现有行为单独验证。
+:doc:`序列化指南 <../guide/low-level/serialization>` 与
+:doc:`格式化保存指南 <../guide/low-level/save-as-file>` 各自复用准备和断言，
+保留八个 LLR/LLS 案例锚点和已有在线通过，真实替换不在构建中执行。
+
 完整的高层/MUSIC 示例集及旧包迁移索引将在 D20 整合。

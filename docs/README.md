@@ -11,6 +11,7 @@ RST 页面用于 API 参考，MyST-NB Markdown 页面用于可执行教程。配
 `nb_execution_mode = "force"`；构建时需要允许 Jupyter 内核通过本机 socket 通信。
 无账号快速入门、两层接口对照、全部八个高层入口及底层表格/三种格点/清单和下载已有可执行教程；
 其他底层返回形式在 D 阶段补齐。
+底层序列化与格式化保存也已有四种格式的可执行教程，数据块章节仍待补齐。
 
 ## 可执行模拟页面
 
@@ -57,6 +58,9 @@ DataArray 与 U/V Dataset 的实际 attrs、空场、服务失败及坏矢量的
 底层文件清单和下载指南复用 `examples/music/files.py`；
 `uv run python -m examples.music.files` 分别验证只查询元数据和实际流式下载，
 核对 FilesInfo/磁盘内容、默认覆盖、已有目标拒绝、批量部分完成及临时目录清理。
+底层序列化与格式化保存复用 `examples/music/serialization.py`；
+`uv run python -m examples.music.serialization` 验证 JSON/XML/text/HTML 字符串及
+实际保存文件、dataFormat/savepath 修改、兼容错误和异常边界，并清理临时目录。
 底层教程在准备单元中登记 `SyntheticTransport`
 的请求和下载 URL，并调用 `make_synthetic_music_client(transport)`；调用单元
 直接展示对应的 `callAPI_to_*` 方法及结果。下载页在页面内创建临时目录并

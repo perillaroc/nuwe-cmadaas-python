@@ -13,3 +13,13 @@ uv run python -m examples.music.tables
 解码错误分别验证，失败转换抛结构化异常。四次响应均核对关闭状态。
 指南 `docs/source/guide/low-level/tables.md` 复用同一客户端工厂与独立结果断言。
 真实服务替换仅作为手动代码展示，不在脚本或文档构建中执行。
+
+```bash
+uv run python -m examples.music.grids
+```
+
+`grids.py` 分别执行 gridArray2D、gridScalar2D 和 gridVector2D，核对原生参数、
+request/ok、2×3 坐标/数值、名称、单位及实际 attrs，区分两个 DataArray 与 U/V Dataset。
+三种成功空场、三种服务错误和坏矢量的解码错误分别验证，十次响应均关闭。
+指南 `docs/source/guide/low-level/grids.md` 复用同一准备和独立结果断言，真实替换
+采用已有 GFS 预报/分析组合；风分量单位不会由转换自动补齐。

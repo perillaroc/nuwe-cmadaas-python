@@ -11,6 +11,7 @@
     "source/guide/high-level/model/grid.md",
     "source/guide/high-level/model/point.md",
     "source/guide/high-level/model/files.md",
-    "source/guide/low-level/tables.md"
+    "source/guide/low-level/tables.md",
+    "source/guide/low-level/grids.md"
   ]
 }

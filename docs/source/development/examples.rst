@@ -97,4 +97,16 @@ data_type 当前行为及真实下载前的清单规模检查。
 :doc:`底层表格指南 <../guide/low-level/tables>` 复用同一准备工厂和独立断言，
 提供只供手动执行的真实服务替换。
 
+底层格点示例位于 ``examples/music/grids.py``：
+
+.. code-block:: bash
+
+   uv run python -m examples.music.grids
+
+脚本分别调用 gridArray2D、gridScalar2D 和 gridVector2D，核对原生参数、原始数组、
+2×3 坐标、数值、名称、单位及完整 attrs；两个方法返回 DataArray，矢量返回 U/V Dataset。
+三种空场和服务失败及一条坏矢量验证成功/错误边界，十次响应均关闭。
+:doc:`底层格点指南 <../guide/low-level/grids>` 复用同一准备和独立断言，保留
+三个既有在线案例锚点，说明矢量单位和 GFS 预报/分析的真实替换边界。
+
 完整的高层/MUSIC 示例集及旧包迁移索引将在 D20 整合。

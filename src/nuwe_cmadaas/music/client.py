@@ -200,6 +200,38 @@ class CMADaaSClient:
             params: Dict,
             server_id: str = None
     ) -> GridArray2D:
+        """Request a MUSIC grid in the RetGridArray2D protobuf format.
+
+        Parameters
+        ----------
+        interface_id : str
+            Interface supporting this return format for the chosen dataset.
+        params : dict
+            Native MUSIC parameters such as ``dataCode``, ``fcstEle``, ``time``
+            and, where supported, level, forecast-hour and rectangle fields.
+            Values are not translated from high-level selectors; the dict is
+            not modified. The client builds authentication/envelope fields.
+        server_id : str, optional
+            Service node for this request; defaults to the client's server_id.
+
+        Returns
+        -------
+        GridArray2D
+            Raw grid with request status, coordinates, numeric data, units
+            and user_element_name. ``to_xarray()`` produces a two-dimensional
+            DataArray with latitude/longitude coordinates and available attrs.
+
+        Notes
+        -----
+        Check ``ok`` or use ``raise_for_error(interface_id=..., params=...)``
+        before conversion. Handled service, transport and decode failures are
+        recorded in request; local configuration/argument errors may propagate.
+        There is no strict argument. Successful empty grids can be converted;
+        failed grids raise. Names, units and coordinate order come from the
+        response; conversion does not sort, interpolate or mask missing values,
+        and request time/level/forecast metadata does not add dimensions.
+        Interface availability and return-format support depend on the service.
+        """
         data = GridArray2D()
 
         method = self.callAPI_to_gridArray2D.__name__
@@ -399,6 +431,39 @@ class CMADaaSClient:
             params: Dict,
             server_id: str = None
     ) -> GridScalar2D:
+        """Request a MUSIC scalar grid in the RetGridScalar2D protobuf format.
+
+        Parameters
+        ----------
+        interface_id : str
+            Interface supporting this return format for the chosen dataset.
+        params : dict
+            Native service parameters, including dataset, element and time
+            fields required by the interface. High-level selectors are not
+            translated and the dict is not modified; authentication/envelope
+            fields are built by the client.
+        server_id : str, optional
+            Service node for this request; defaults to the client's server_id.
+
+        Returns
+        -------
+        GridScalar2D
+            Response whose protobuf datas field is decoded into numeric data.
+            ``to_xarray()`` produces a latitude/longitude DataArray, using the
+            response element name, units and available request metadata.
+
+        Notes
+        -----
+        Scalar denotes a scalar field, not a single numeric return value.
+        Check ``ok`` or use ``raise_for_error(interface_id=..., params=...)``
+        before conversion. Handled failures are recorded in request and cannot
+        be converted; successful empty grids remain valid. There is no strict
+        argument; local configuration/argument errors may propagate. Coordinate
+        arrays are used when supplied, otherwise inferred from the response
+        start/step/count (or start/end when step is zero). Conversion does not
+        sort, interpolate, mask missing values or add time/level dimensions.
+        Do not assume every gridArray2D interface also supports this format.
+        """
         data = GridScalar2D()
 
         method = self.callAPI_to_gridScalar2D.__name__
@@ -419,6 +484,39 @@ class CMADaaSClient:
             params: Dict,
             server_id: str = None
     ) -> GridVector2D:
+        """Request a MUSIC vector grid in the RetGridVector2D protobuf format.
+
+        Parameters
+        ----------
+        interface_id : str
+            Interface supporting this return format for the chosen dataset.
+        params : dict
+            Native parameters; supported vector interfaces may use case-sensitive
+            ``fcstuele``/``fcstvele`` for the U/V elements. Supply other required
+            fields in service format. The dict is not modified, high-level
+            selectors are not translated, and authentication is built by the client.
+        server_id : str, optional
+            Service node for this request; defaults to the client's server_id.
+
+        Returns
+        -------
+        GridVector2D
+            Response with numeric u_datas/v_datas and shared grid coordinates.
+            ``to_xarray()`` returns a Dataset containing two latitude/longitude
+            variables named by u_element_name/v_element_name (falling back to
+            u/v when empty), with available request metadata on Dataset.attrs.
+
+        Notes
+        -----
+        Conversion does not add component units, compute speed/direction,
+        interpolate, rotate vectors or mask missing values. Verify the dataset's
+        element definitions and units before calculations. Check ``ok`` or use
+        ``raise_for_error(interface_id=..., params=...)`` before conversion;
+        handled failures are recorded in request and failed conversion raises.
+        Successful empty grids remain valid. There is no strict argument;
+        local configuration/argument errors may propagate. Return-format support
+        depends on the service and dataset, not just the method's availability.
+        """
         # warnings.warn("callAPI_to_gridVector2D is not tested")
         data = GridVector2D()
 

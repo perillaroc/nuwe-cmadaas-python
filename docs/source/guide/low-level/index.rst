@@ -12,12 +12,14 @@ INI 文件、连接参数及字典配置的优先级见
    :maxdepth: 1
 
    tables
+   grids
 
 按返回形式选择方法
 ------------------
 
 下面列出全部 9 个方法，方法名均链接客户端参考。
 :doc:`底层表格指南 <tables>` 已展示原生参数、请求状态、字符串数组及 DataFrame 转换；
+:doc:`底层格点指南 <grids>` 分别展示数组、标量和矢量的原始响应与 xarray 转换。
 其他返回形式的独立教程在后续任务补齐。
 
 .. list-table::
@@ -32,13 +34,13 @@ INI 文件、连接参数及字典配置的优先级见
        见 :doc:`表格全流程 <tables>`。
    * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_gridArray2D`
      - ``GridArray2D``
-     - ``to_xarray()`` 转为二维 ``DataArray``。
+     - ``to_xarray()`` 转为二维 ``DataArray``，见 :doc:`数组格点 <grids>`。
    * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_gridScalar2D`
      - ``GridScalar2D``
-     - ``to_xarray()`` 转为标量场 ``DataArray``。
+     - ``to_xarray()`` 转为二维标量场 ``DataArray``，见 :doc:`标量格点 <grids>`。
    * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_gridVector2D`
      - ``GridVector2D``
-     - ``to_xarray()`` 转为包含 U/V 分量的 ``Dataset``。
+     - ``to_xarray()`` 转为包含 U/V 分量的 ``Dataset``，见 :doc:`矢量格点 <grids>`。
    * - :py:meth:`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_fileList`
      - ``FilesInfo``
      - 只查询 ``files_info`` 清单，不下载；每项为 ``FileInfo``。

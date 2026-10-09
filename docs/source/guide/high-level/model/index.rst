@@ -2,7 +2,7 @@
 ========
 
 模式入口位于 ``nuwe_cmadaas.model``，按格点、点／站点和文件组织。
-下表的函数名链接完整 API 参考；模式格点及模式点指南提供独立可执行示例。
+下表的函数名链接完整 API 参考；三个模式入口均有独立可执行指南。
 
 .. list-table::
    :header-rows: 1
@@ -18,7 +18,7 @@
      - ``pandas.DataFrame``；:doc:`模式点与站点 <point>` 展示坐标/站号与单时效/范围
    * - :py:func:`~nuwe_cmadaas.model.download_model_file`：模式产品文件
      - ``parameter``、``start_time``、``forecast_time``、``level_type``、``level``、``region``、``output_dir``、``count``
-     - ``list[Path]``
+     - ``list[Path]``；:doc:`模式文件 <files>` 展示筛选、下载规模及 latest 表格边界
 
 起报时间与时效
 --------------
@@ -50,3 +50,4 @@
 
    grid
    point
+   files

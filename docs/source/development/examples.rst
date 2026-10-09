@@ -74,4 +74,15 @@
 :doc:`模式点指南 <../guide/high-level/model/point>` 复用准备和断言，说明坐标顺序、
 范围元数据边界及动态日期的真实服务替换。
 
+模式文件示例位于 ``examples/high_level/model_files.py``：
+
+.. code-block:: bash
+
+   uv run python -m examples.high_level.model_files
+
+脚本通过七种模式文件组合及普通时效过滤生成八个小文件，检查路径、大小、内容并清理；
+latest 单独查询 Datetime 表格，空清单、严格服务异常和本地请求前拒绝分别验证。
+:doc:`模式文件指南 <../guide/high-level/model/files>` 说明要素/层次、count 限制、
+data_type 当前行为及真实下载前的清单规模检查。
+
 完整的高层/MUSIC 示例集及旧包迁移索引将在 D20 整合。

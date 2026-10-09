@@ -42,6 +42,56 @@ def download_model_file(
         strict: bool = False,
         count: Optional[int] = None,
 ) -> Union[List[Path], MusicError]:
+    """下载模式文件，成功返回实际写入磁盘的路径列表。
+
+    Parameters
+    ----------
+    data_code:
+        与具体文件接口和账号权限匹配的资料代码。
+    parameter:
+        字符串选择要素接口，生成 fcstEle，必须提供 level_type；可以不指定 level。
+        非空字符串列表仅以点号连接为 elements，不选择要素接口，不等同于单要素查询。
+    start_time:
+        pandas/标准库时次生成 time，pd.Interval 生成 timeRange。
+        时间列表生成 times，但当前接口必需 time，本地必需参数检查拒绝。
+        相对 Timedelta 请求前拒绝；getNafpLatestTime 是 Datetime 表格，不能下载文件。
+    forecast_time:
+        非负整数小时的字符串或 pandas/标准库 timedelta，单时效，不支持范围。
+        字符串要素查询生成 validTime；无要素、无层次时生成
+        eleValueRanges="Validtime_C:'024'" 等过滤，仍使用时次/时间段文件接口。
+    level_type:
+        服务层次类型代码。字符串要素查询必需，即使未指定具体 level。
+    level:
+        单层值，须与 level_type 配对；目前具体层次仅登记要素加单时次组合。
+    region:
+        保留参数，但当前没有矩形、行政区或流域模式文件登记，查询前拒绝。
+    data_type:
+        兼容参数，当前不影响接口选择；analysis 不会切换到分析文件接口。
+        必须通过具体 data_code 和接口能力区分资料，不能沿用格点的切换语义。
+    output_dir:
+        本地字符串或 Path 目录，None 使用当前目录；实际写文件时创建父目录。
+    config:
+        CedarKit 配置对象或 YAML 路径。
+    client:
+        已有 MUSIC 客户端，显式设置时优先于 config。
+    strict:
+        默认 False 时服务错误返回 MusicError；True 时抛结构化 CMADaaSError。
+    count:
+        正整数，仅时次/时间段非要素接口支持，生成字符串 limitCnt。
+        不限制单文件或总字节数，其他五个要素接口传入此参数会请求前拒绝。
+
+    Returns
+    -------
+    list[pathlib.Path] or MusicError
+        成功返回已下载文件的本地 Path 列表，成功空清单返回 []；
+        默认服务错误返回 MusicError，严格模式抛异常。本地参数错误直接抛异常。
+
+    Notes
+    -----
+    当前七个文件下载登记与 latest-time 表格分开。目录创建依赖实际写入，
+    已有同名文件默认覆盖；高层无本地 overwrite 或大小上限开关。
+    单文件临时写入后替换，批量非事务，后续失败可能保留先前成功文件。
+    """
     if level is not None or parameter is None:
         validate_level_pair(level_type, level)
 

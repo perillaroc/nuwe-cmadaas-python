@@ -10,6 +10,7 @@ uv run python -m examples.high_level.files
 uv run python -m examples.high_level.upper_air_files
 uv run python -m examples.high_level.model_grid
 uv run python -m examples.high_level.model_point
+uv run python -m examples.high_level.model_files
 ```
 
 `station.py` uses synthetic protobuf responses and a real MUSIC client with
@@ -53,6 +54,12 @@ or a lead range, including a multiple-point request. It checks fields, raw
 string values and attrs, converts a copy explicitly to calculate valid times,
 and distinguishes empty responses from strict service errors. Invalid positions,
 lead ranges and mutually exclusive selectors fail before any request.
+
+`model_files.py` streams eight tiny files through seven registered queries
+and a plain-file lead filter, validates paths and disk contents, then cleans
+its temporary directory. It separately queries the latest-time table and
+checks empty lists, strict errors and local rejections. It demonstrates the
+current count restrictions and that data_type does not change the file route.
 
 No credentials or external connections are needed. Unknown synthetic requests
 fail immediately. The values, dates and station IDs are fictional, and the

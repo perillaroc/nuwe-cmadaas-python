@@ -2,7 +2,7 @@
 ========
 
 模式入口位于 ``nuwe_cmadaas.model``，按格点、点／站点和文件组织。
-下表的函数名链接现有 API 参考；独立模式教程尚未编写。
+下表的函数名链接完整 API 参考；模式格点指南提供独立可执行示例。
 
 .. list-table::
    :header-rows: 1
@@ -12,7 +12,7 @@
      - 成功返回值
    * - :py:func:`~nuwe_cmadaas.model.retrieve_model_grid`：预报或分析二维格点
      - ``parameter``、``start_time``、``forecast_time``、``level_type``、``level``、``region``、``number``、``data_type``
-     - ``xarray.DataArray``
+     - ``xarray.DataArray``；:doc:`模式格点 <grid>` 展示预报、分析、区域和成员
    * - :py:func:`~nuwe_cmadaas.model.retrieve_model_point`：经纬度点或站点预报
      - ``parameter``、``start_time``、``forecast_time``、``level_type``、``level``、``point`` 或 ``station``
      - ``pandas.DataFrame``
@@ -44,3 +44,8 @@
 :doc:`高层接口概览 <../index>`。配置与动态日期分别见
 :doc:`高层配置 <../../configuration/high-level>` 和
 :doc:`测试与动态时间 <../../../development/testing>`。
+
+.. toctree::
+   :maxdepth: 1
+
+   grid

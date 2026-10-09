@@ -8,6 +8,7 @@ uv run python -m examples.high_level.grid
 uv run python -m examples.high_level.upper_air
 uv run python -m examples.high_level.files
 uv run python -m examples.high_level.upper_air_files
+uv run python -m examples.high_level.model_grid
 ```
 
 `station.py` uses synthetic protobuf responses and a real MUSIC client with
@@ -39,6 +40,12 @@ with all four registered query shapes, including a single time plus a station
 and a time interval plus a station list. It streams four tiny files, checks
 paths and disk contents, handles empty/error lists and local rejections, and
 removes the temporary directory. It does not re-run recorded online cases.
+
+`model_grid.py` exercises all eight registered forecast/analysis grid shapes.
+It prints DataArrays, values and attrs for full fields, rectangles and members,
+checks coordinates, units and query metadata, and rejects invalid selectors
+before requests. Synthetic time-only fields do not change the historical failed
+and paused online status of the corresponding cases.
 
 No credentials or external connections are needed. Unknown synthetic requests
 fail immediately. The values, dates and station IDs are fictional, and the

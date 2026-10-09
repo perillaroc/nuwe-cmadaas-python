@@ -52,4 +52,15 @@
 :doc:`高空文件指南 <../guide/high-level/obs/upper-air-files>` 展示参数与磁盘结果，
 并说明既有在线记录和受控真实服务替换方式。
 
+模式格点示例位于 ``examples/high_level/model_grid.py``：
+
+.. code-block:: bash
+
+   uv run python -m examples.high_level.model_grid
+
+脚本展示预报/分析、全域/矩形、控制/扰动成员等八种登记查询，验证二维坐标、数值、
+单位及实际 attrs，并复现本地零请求拒绝和严格服务异常。
+:doc:`模式格点指南 <../guide/high-level/model/grid>` 复用准备及结果断言，区分
+合成成功、既有在线通过和暂停的按时间查询案例。
+
 完整的高层/MUSIC 示例集及旧包迁移索引将在 D20 整合。

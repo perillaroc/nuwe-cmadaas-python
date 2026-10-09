@@ -53,28 +53,39 @@ def retrieve_model_grid(
     parameter
         要素名称
     start_time
-        起报时间
+        pandas 或标准库时次，生成原生 time；预报场为起报时间，分析场为分析时次。
+        当前登记均要求此参数，不支持时间范围或 latest 查询。
     forecast_time
-        预报时效，支持 ``pandas.Timedelta``、``datetime.timedelta`` 和可转换的字符串，例如 `"24h"`
+        单一预报时效，支持 pandas/标准库 timedelta 和可转换的字符串，如 "24h"；
+        必须为非负整数小时，生成 validTime。预报时效查询须配层次；
+        分析场须省略本参数，包括 "0h" 也不能作为省略的替代。
     level_type
-        层次类型
+        与 level 配对的服务层次类型代码，生成 levelType；例如 100 用于气压层。
+        不是高空表格的 pl/gh 等自动别名，须按资料定义选择。
     level
-        层次值
+        与 level_type 配对的单层值，生成 fcstLevel；850 的单位由所选层次定义。
+        不承诺多层拼接或额外层次维度。
     region
-        区域
+        None 表示全域；当前仅登记 type="rect" 的矩形，四端点归一化为 min/maxLat/Lon。
+        行政区、流域及未登记组合在请求前拒绝。
     number
-        集合预报成员编号
+        集合预报成员编号，生成 fcstMember；None 不筛成员，0 仍会传给服务。
+        仅预报场的时次/层次/时效组合登记成员查询，资料与编号须匹配。
     data_type
-        数据类型，预报场 (`forecast`) 或者分析场 (`analysis`)
+        数据类型，默认 forecast；analysis 为分析场，仅登记时次加层次及其矩形组合。
     config
         配置，配置对象或配置文件路径。默认自动查找配置文件
     client
         客户端对象，默认新建。如果设置，则直接使用该对象，会导致 config 参数被忽略
+    strict
+        默认 False 时服务错误返回 MusicError；True 时抛结构化 CMADaaSError。
 
     Returns
     -------
     Union[xr.DataArray, MusicError]
         检索成功返回 ``xarray.DataArray`` 格式的要素场，检索失败返回包含错误信息的 ``MusicError`` 对象。
+        成功场维度为 latitude/longitude，名称和单位来自响应；时间、层次、时效和
+        成员等实际请求信息记录于 attrs，不自动增加对应维度或完成单位/缺测转换。
     """
     if data_type is None:
         data_type = "forecast"

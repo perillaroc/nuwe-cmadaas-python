@@ -1,54 +1,46 @@
-高层 API 代表查询组合
+完整支持矩阵与案例追踪
 ======================
 
-下表只列出当前登记的代表性查询组合、MUSIC interface 和返回类型，不表示在线通过。
-组合解析使用精确注册表；未列出的组合不会动态拼接 interface 名称，而会在本地
-报告 ``UnsupportedQueryError``。底层 ``CMADaaSClient`` 仍可直接调用其他 MUSIC
-interface。
-完整逐案登记、实现与真实验证状态将在 D19 从案例清单整合；目前可按
-:doc:`高层参考 <high-level>` 的业务指南入口查看具体已验证/待验证边界。
+本页在构建时读取 ``tests/integration/**/cases.yaml``，并与运行代码的
+``INTERFACE_SPECS`` 核对。查询组合、interface、公开入口、返回类型、实现标记、
+测试节点、指南锚点和真实服务记录均来自对应案例，汇总数量随清单变化重新计算。
+同一注册键可有单时次/时次列表、站号列表、成员等多个独立案例。
 
-.. list-table::
-   :header-rows: 1
-   :widths: 24 34 36
+登记、实现与服务验证
+------------------------
 
-   * - 高层入口
-     - 查询组合
-     - interface / 返回类型
-   * - ``retrieve_model_grid``
-     - forecast，time + level + valid_time
-     - ``getNafpEleGridByTimeAndLevelAndValidtime`` / ``xarray.DataArray``
-   * - ``retrieve_model_grid``
-     - time + level + valid_time + rect + member
-     - ``getNafpEleGridInRectByTimeAndLevelAndValidtimeAndFcstMember`` / ``xarray.DataArray``
-   * - ``retrieve_model_point``
-     - time + level + valid_time + point
-     - ``getNafpEleAtPointByTimeAndLevelAndValidtime`` / ``pandas.DataFrame``
-   * - ``retrieve_model_point``
-     - time + level + valid_time_range + station
-     - ``getNafpEleByTimeAndLevelAndValidtimeRangeAndStaID`` / ``pandas.DataFrame``
-   * - ``download_model_file``
-     - time；time_range；element + level_type + time
-     - ``getNafpFileByTime``、``getNafpFileByTimeRange``、``getNafpFileByElementAndTime`` / ``list[Path]``
-   * - ``retrieve_obs_station``
-     - time；time_range + station；time + rect
-     - ``getSurfEleByTime`` 等登记接口 / ``pandas.DataFrame``
-   * - ``retrieve_obs_grid``
-     - time；time + rect
-     - ``getSurfEleGridByTime``、``getSurfEleGridInRectByTime`` / ``xarray.DataArray``
-   * - ``retrieve_obs_upper_air``
-     - time；time + press/height/vertical level；time + station
-     - ``getUparEleByTime`` 等登记接口 / ``pandas.DataFrame``
-   * - ``download_obs_file``
-     - time；time_range；time_range + station
-     - ``getSurfFileByTime``、``getSurfFileByTimeRange``、``getSurfFileByTimeRangeAndStaID`` / ``list[Path]``
-   * - ``download_obs_upper_air_file``
-     - time；time_range；time + station；time_range + station
-     - ``getUparFileByTime`` 等四个登记接口 / ``list[Path]``
+* **登记**：高层 family 与规范化 ``query_features`` 精确匹配注册键。
+  特征名是内部路由条件，实际公开参数见逐案 ``public_kwargs`` 和
+  :doc:`高层 API <high-level>`；``<none>`` 在 latest family 中表示仅资料代码与相对时长，
+  不是无参数请求。最新时次表可直接通过底层 Array2D 方法查询，不能当作文件下载。
+* **案例实现**：清单 ``implemented`` 标记说明测试代码已实现，测试节点同时检查
+  文件和函数是否存在。实际节点可按 :doc:`测试说明 <../development/testing>`
+  收集和运行；实现并不表示服务通过。
+* **真实服务验证**：``online_status`` 是清单中逐案记录的历史结果，构建和离线
+  模拟不会更新它。``passed`` 只证明所记环境、账号权限、资料、参数和时间窗的
+  那一次运行；``failed`` 和 ``implemented-unverified`` 均不计为在线通过。
+  最近日期、权限和可用样本仍须按集成测试操作说明重新核实。
 
-错误语义
---------
+清单 ``enabled`` 与私有 profile 的资料/方法、案例开关共同控制运行。
+关闭、跳过、空结果、默认响应、合成成功和失败探测都不证明真实服务能力；
+DataBlock 的离线 bytes 示例仍缺可用的 ``RetDataBlock`` 在线样本。
+底层客户端可发送任意 interface ID，其案例不是高层注册键，不能推广为服务全目录。
 
-默认模式继续返回 ``MusicError`` 以兼容旧调用；传入 ``strict=True`` 后，服务错误
-转换为结构化 ``CMADaaSError``。参数组合未登记、字段类型错误和缺少配对参数属于
-本地错误，在网络调用前抛出。
+未登记的高层组合在请求前抛 ``UnsupportedQueryError``；默认兼容 ``MusicError``
+及 ``strict=True`` 语义见 :doc:`错误指南 <../guide/errors>` 和
+:doc:`兼容契约 <music-compatibility>`。
+
+维护与检查
+----------
+
+维护时编辑唯一来源的 ``cases.yaml``：更新单案参数、返回断言、测试节点、指南地址，
+在线运行后再记录状态、实际结果、环境和时间。增加注册键时同时补案例；增加案例
+时可保留指南已有锚点，或让页面的 ``cmadaas-case-index`` 自动生成案例锚点。
+不要手工复制本页汇总或历史状态。构建会检查覆盖、重复 ID、接口匹配、返回契约、
+测试函数和指南；Sphinx 负责解析全部锚点。增量构建也重新发现新增/删除清单和注册键。
+
+``docs/_ext/support_matrix.py`` 只读取公开清单、测试源码与指南，不读取凭据或私有
+profile，不导入 pytest 或执行测试，不访问服务。逐案测试文件和清单可直接下载，
+其中 ``profile`` / ``fixture`` 是符号引用，实际私有资料配置并未发布。
+
+.. cmadaas-support-matrix::

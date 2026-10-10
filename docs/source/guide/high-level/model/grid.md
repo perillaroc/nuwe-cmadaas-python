@@ -418,3 +418,8 @@ uv run python -m examples.high_level.model_grid
 
 字符串数值化、单位/缺测、attrs 与空结果见 {doc}`使用返回结果 </guide/results>`；
 默认 MusicError、strict、底层响应状态与本地异常见 {doc}`错误处理 </guide/errors>`。
+
+## 完整案例索引
+
+```{cmadaas-case-index}
+```

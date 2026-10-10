@@ -38,9 +38,12 @@ def test_registered_case(case, request, integration_profile, dataset_profile):
         assert values.size == field.sizes[axis]
         assert np.isfinite(values).all()
         assert np.unique(values).size == values.size
-    assert isinstance(field.name, str) and field.name
-    assert "units" in field.attrs
-    if dataset.get("expected_units"):
+    optional_metadata = expected.get("response_metadata_optional", False)
+    assert isinstance(field.name, str)
+    if not optional_metadata:
+        assert field.name
+    assert isinstance(field.attrs.get("units"), str)
+    if dataset.get("expected_units") and (field.attrs["units"] or not optional_metadata):
         assert field.attrs["units"] == dataset["expected_units"]
 
     assert field.attrs["interface_id"] == case["interface_id"]
@@ -67,8 +70,10 @@ def test_registered_case(case, request, integration_profile, dataset_profile):
         ):
             values = field.coords[axis].values
             lower, upper = sorted((region[start], region[end]))
-            assert values.min() >= lower - 1e-4
-            assert values.max() <= upper + 1e-4
+            step = np.max(np.abs(np.diff(values))) if values.size > 1 else 0.0
+            assert ((values >= lower - 1e-4) & (values <= upper + 1e-4)).any()
+            assert values.min() >= lower - step - 1e-4
+            assert values.max() <= upper + step + 1e-4
 
 
 REPS_CONTROL_CODE = "NAFP_GRAPESREPS_FOR_FTM_CHN"

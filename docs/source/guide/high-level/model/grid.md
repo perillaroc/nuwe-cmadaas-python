@@ -104,6 +104,8 @@ forecast.values
 ```
 
 名称来自响应 `userEleName`，单位来自响应 `units`，不保证名称与请求要素相同。
+部分真实 REPS 格点响应将这两个字段留空；此时 DataArray 名称与 `units` 属性
+都是空字符串，不能据要素代码自行推断单位。
 库不自动完成单位换算或所有资料的缺测识别。本例实际 attrs 为：
 
 | 字段 | 值与含义 |
@@ -275,7 +277,7 @@ print(time_only_region.values)
 | `start_time` | pandas/标准库时次生成 `time`；当前八个组合都要求明确时次 |
 | `forecast_time` | 非负整数小时生成字符串 `validTime`；单一时效，不接受元组范围 |
 | `level_type` / `level` | 配对生成字符串 `levelType` / `fcstLevel`；推荐服务定义的单层值 |
-| `region` | None 全域或 rect 矩形；经纬端点校验并按 min/max 归一化 |
+| `region` | None 全域或 rect 矩形；经纬端点校验并按 min/max 归一化。服务可能按网格步长多返回边界相邻格点，实际范围以返回坐标为准 |
 | `number` | `fcstMember`；本例 0/10 作为整数保存于 attrs，具体编号须匹配资料 |
 | `data_type` | 默认 forecast；analysis 仅支持时次加层次及其矩形组合 |
 | `config` / `client` | CedarKit YAML/配置对象或显式客户端；提供 client 后忽略 config |

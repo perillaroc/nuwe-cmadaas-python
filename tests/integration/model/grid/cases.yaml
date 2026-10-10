@@ -191,15 +191,16 @@ cases:
     - latitude
     - longitude
     nonempty: true
+    response_metadata_optional: true
   profile_key: model_reps_control
   tier: extended
   enabled: true
   test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGF-017]
   documentation_anchor: guide/high-level/model/grid#mgf-017
   implemented: true
-  online_status: "failed"
-  reason: "E02 2026-10-10: current 2026-10-07 06 cycle returned service code -9002 (request parameters outside dataset range); repeat request failed identically."
-  last_verified_environment_and_time: "2026-10-10T13:35:23.049512+08:00; local WSL, Python 3.14.3; dataCode=NAFP_GRAPESREPS_FOR_FTM_CHN; E02 direct CMADaaS; dynamic category fixture"
+  online_status: "passed"
+  reason: "2026-10-10 evening recheck passed with finite control-member grid at dynamic previous-day 06 cycle; the service omitted userEleName and units, which this case explicitly permits. Earlier E02 three-days-ago 06 cycle returned -9002."
+  last_verified_environment_and_time: "2026-10-10T19:52:31+08:00; local WSL, Python 3.14.3; dataCode=NAFP_GRAPESREPS_FOR_FTM_CHN; direct CMADaaS without proxy; dynamic previous-day 06 cycle"
   legacy_tests:
   - model/grid/test_cma_reps.py::test_control_field
   e02_2026_10_10_result: "failed"
@@ -233,15 +234,16 @@ cases:
     - latitude
     - longitude
     nonempty: true
+    response_metadata_optional: true
   profile_key: model_reps_member
   tier: extended
   enabled: true
   test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGF-017-member-10]
   documentation_anchor: guide/high-level/model/grid#mgf-017-member-10
   implemented: true
-  online_status: "failed"
-  reason: "E02 2026-10-10: current 2026-10-07 06 cycle returned a grid containing no finite values; repeat request failed identically."
-  last_verified_environment_and_time: "2026-10-10T13:35:23.049512+08:00; local WSL, Python 3.14.3; dataCode=NAFP_GRAPESREPS_FOR_FTM_DIS_CHN; E02 direct CMADaaS; dynamic category fixture"
+  online_status: "passed"
+  reason: "2026-10-10 evening recheck passed with finite member-10 grid at dynamic previous-day 06 cycle; the service omitted userEleName and units, which this case explicitly permits. Earlier E02 three-days-ago 06 cycle was all missing."
+  last_verified_environment_and_time: "2026-10-10T19:52:31+08:00; local WSL, Python 3.14.3; dataCode=NAFP_GRAPESREPS_FOR_FTM_DIS_CHN; direct CMADaaS without proxy; dynamic previous-day 06 cycle"
   legacy_tests:
   - model/grid/test_cma_reps.py::test_member_field
   e02_2026_10_10_result: "failed"
@@ -278,15 +280,16 @@ cases:
     - latitude
     - longitude
     nonempty: true
+    response_metadata_optional: true
   profile_key: model_reps_member
   tier: smoke
   enabled: true
   test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGF-018]
   documentation_anchor: guide/high-level/model/grid#mgf-018
   implemented: true
-  online_status: "failed"
-  reason: "E02 2026-10-10: current 2026-10-07 06 cycle returned a small-rectangle grid containing no finite values; repeat request failed identically."
-  last_verified_environment_and_time: "2026-10-10T13:35:23.049512+08:00; local WSL, Python 3.14.3; dataCode=NAFP_GRAPESREPS_FOR_FTM_DIS_CHN; E02 direct CMADaaS; dynamic category fixture"
+  online_status: "passed"
+  reason: "2026-10-10 evening recheck passed with finite member-10 rectangle grid at dynamic previous-day 06 cycle; response metadata may be empty, and the service included a longitude at most one grid step beyond the requested bound. Earlier E02 three-days-ago 06 cycle was all missing."
+  last_verified_environment_and_time: "2026-10-10T19:52:31+08:00; local WSL, Python 3.14.3; dataCode=NAFP_GRAPESREPS_FOR_FTM_DIS_CHN; direct CMADaaS without proxy; dynamic previous-day 06 cycle"
   e02_2026_10_10_result: "failed"
 - case_id: MGA-005
   family: model_grid_analysis

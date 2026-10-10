@@ -8,8 +8,10 @@ def model_cycle_time(base_time):
 
 
 @pytest.fixture
-def start_time_for_reps(model_cycle_time):
-    return model_cycle_time
+def start_time_for_reps():
+    """Use the previous day's 06 cycle while recent REPS grids are available."""
+    return (pd.Timestamp.now() - pd.Timedelta(days=1)).normalize() + pd.Timedelta(hours=6)
+
 
 @pytest.fixture
 def future_start_date():

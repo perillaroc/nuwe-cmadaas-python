@@ -26,9 +26,10 @@ cases:
   test_node: tests/integration/obs/upper/file/test_file.py::test_registered_case[OUF-002]
   documentation_anchor: guide/high-level/obs/upper-air-files#ouf-002
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: UPAR_WPR_STATUS returned one file within the 10 MiB cap; preflight, download, path and file assertions passed.
-  last_verified_environment_and_time: 2026-10-08 15:57 +0800; local WSL, Python 3.14; UPAR_WPR_STATUS; dynamic two-days-ago time; direct CMADaaS connection
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=UPAR_WPR_STATUS; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OUF-003
   family: obs_upper_file
   query_features:
@@ -55,9 +56,10 @@ cases:
   test_node: tests/integration/obs/upper/file/test_file.py::test_registered_case[OUF-003]
   documentation_anchor: guide/high-level/obs/upper-air-files#ouf-003
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: UPAR_WPR_STATUS returned one file within the 10 MiB cap; preflight, download, path and file assertions passed.
-  last_verified_environment_and_time: 2026-10-08 15:57 +0800; local WSL, Python 3.14; UPAR_WPR_STATUS; dynamic two-days-ago one-hour window; direct CMADaaS connection
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=UPAR_WPR_STATUS; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OUF-007
   family: obs_upper_file
   query_features:
@@ -87,10 +89,11 @@ cases:
   test_node: tests/integration/obs/upper/file/test_file.py::test_registered_case[OUF-007]
   documentation_anchor: guide/high-level/obs/upper-air-files#ouf-007
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: UPAR_WPR_STATUS and station 54511 returned one file within the 10 MiB cap; preflight, download, path and file assertions passed.
-  last_verified_environment_and_time: 2026-10-08 15:57 +0800; local WSL, Python 3.14; UPAR_WPR_STATUS; station 54511; dynamic two-days-ago time; direct CMADaaS connection
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=UPAR_WPR_STATUS; E02 direct CMADaaS; dynamic category fixture"
   recommended_data_code: UPAR_WPR_STATUS
+  e02_2026_10_10_result: "passed"
 - case_id: OUF-009
   family: obs_upper_file
   query_features:
@@ -120,7 +123,8 @@ cases:
   test_node: tests/integration/obs/upper/file/test_file.py::test_registered_case[OUF-009]
   documentation_anchor: guide/high-level/obs/upper-air-files#ouf-009
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: UPAR_WPR_STATUS and station 54511 returned one file within the 10 MiB cap; preflight, download, path and file assertions passed.
-  last_verified_environment_and_time: 2026-10-08 15:57 +0800; local WSL, Python 3.14; UPAR_WPR_STATUS; station 54511; dynamic two-days-ago one-hour window; direct CMADaaS connection
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=UPAR_WPR_STATUS; E02 direct CMADaaS; dynamic category fixture"
   recommended_data_code: UPAR_WPR_STATUS
+  e02_2026_10_10_result: "passed"

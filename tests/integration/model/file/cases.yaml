@@ -27,10 +27,10 @@ cases:
   test_node: tests/integration/model/file/test_file.py::test_registered_case[MF-003]
   documentation_anchor: guide/high-level/model/files#mf-003
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: With limitCnt=1, preflight and actual download returned one 50,100,565-byte CMA-GFS file.
-  last_verified_environment_and_time: 2026-10-08 21:22 +0800; local WSL, Python 3.14; dynamic three-days-ago
-    06 cycle; direct CMADaaS; exact-query preflight
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: MF-004
   family: model_file
   query_features:
@@ -57,10 +57,10 @@ cases:
   test_node: tests/integration/model/file/test_file.py::test_registered_case[MF-004]
   documentation_anchor: guide/high-level/model/files#mf-004
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: With limitCnt=1, preflight and actual download returned one 50,100,565-byte CMA-GFS file.
-  last_verified_environment_and_time: 2026-10-08 21:22 +0800; local WSL, Python 3.14; dynamic three-days-ago
-    06 cycle; direct CMADaaS; exact-query preflight
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: MF-008
   family: model_file
   query_features:
@@ -90,11 +90,11 @@ cases:
   test_node: tests/integration/model/file/test_file.py::test_registered_case[MF-008]
   documentation_anchor: guide/high-level/model/files#mf-008
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Exact-query preflight returned one 28,492,363-byte CMA-GFS file; bounded download created a
     nonempty file in the temporary directory.
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; dynamic three-days-ago 06 cycle;
-    direct CMADaaS
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: MF-009
   family: model_file
   query_features:
@@ -124,11 +124,10 @@ cases:
   test_node: tests/integration/model/file/test_file.py::test_registered_case[MF-009]
   documentation_anchor: guide/high-level/model/files#mf-009
   implemented: true
-  online_status: passed
-  reason: Extended bounded preflight and actual download returned one 207,764,963-byte CMA-REPS control
-    file.
-  last_verified_environment_and_time: 2026-10-08 21:22 +0800; local WSL, Python 3.14; dynamic three-days-ago
-    06 cycle; direct CMADaaS; exact-query preflight
+  online_status: "passed"
+  reason: "E02 2026-10-10: bounded exact-query file preflight and actual download passed all assertions; see verification-2026-10-10.md for the current file size and cap."
+  last_verified_environment_and_time: "2026-10-10T13:26:07.373904+08:00; local WSL, Python 3.14.3; dataCode=NAFP_GRAPESREPS_FOR_FTM_CHN; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: MF-010
   family: model_file
   query_features:
@@ -161,11 +160,10 @@ cases:
   test_node: tests/integration/model/file/test_file.py::test_registered_case[MF-010]
   documentation_anchor: guide/high-level/model/files#mf-010
   implemented: true
-  online_status: passed
-  reason: Extended bounded preflight and actual download returned one 1,245,688,428-byte CMA-REPS disturbed-member
-    file.
-  last_verified_environment_and_time: 2026-10-08 21:22 +0800; local WSL, Python 3.14; dynamic three-days-ago
-    06 cycle; direct CMADaaS; exact-query preflight
+  online_status: "passed"
+  reason: "E02 2026-10-10: bounded exact-query file preflight and actual download passed all assertions; see verification-2026-10-10.md for the current file size and cap."
+  last_verified_environment_and_time: "2026-10-10T13:27:17.639562+08:00; local WSL, Python 3.14.3; dataCode=NAFP_GRAPESREPS_FOR_FTM_DIS_CHN; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: MF-012
   family: model_file
   query_features:
@@ -198,11 +196,10 @@ cases:
   test_node: tests/integration/model/file/test_file.py::test_registered_case[MF-012]
   documentation_anchor: guide/high-level/model/files#mf-012
   implemented: true
-  online_status: passed
-  reason: Extended bounded preflight and actual download returned one 1,245,688,428-byte CMA-REPS disturbed-member
-    file.
-  last_verified_environment_and_time: 2026-10-08 21:22 +0800; local WSL, Python 3.14; dynamic three-days-ago
-    06 cycle; direct CMADaaS; exact-query preflight
+  online_status: "passed"
+  reason: "E02 2026-10-10: bounded exact-query file preflight and actual download passed all assertions; see verification-2026-10-10.md for the current file size and cap."
+  last_verified_environment_and_time: "2026-10-10T13:27:17.639562+08:00; local WSL, Python 3.14.3; dataCode=NAFP_GRAPESREPS_FOR_FTM_DIS_CHN; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: MF-019
   family: model_file
   query_features:
@@ -238,11 +235,10 @@ cases:
   test_node: tests/integration/model/file/test_file.py::test_registered_case[MF-019]
   documentation_anchor: guide/high-level/model/files#mf-019
   implemented: true
-  online_status: passed
-  reason: Extended bounded preflight and actual download returned one 1,245,688,428-byte CMA-REPS disturbed-member
-    file.
-  last_verified_environment_and_time: 2026-10-08 21:22 +0800; local WSL, Python 3.14; dynamic three-days-ago
-    06 cycle; direct CMADaaS; exact-query preflight
+  online_status: "passed"
+  reason: "E02 2026-10-10: bounded exact-query file preflight and actual download passed all assertions; see verification-2026-10-10.md for the current file size and cap."
+  last_verified_environment_and_time: "2026-10-10T13:27:17.639562+08:00; local WSL, Python 3.14.3; dataCode=NAFP_GRAPESREPS_FOR_FTM_DIS_CHN; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: MFL-001
   family: model_file_latest
   query_features: []
@@ -267,8 +263,8 @@ cases:
   test_node: tests/integration/model/file/test_latest_time.py::test_registered_case[MFL-001]
   documentation_anchor: guide/high-level/model/files#mfl-001
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: CMA-GFS Northeast Hemisphere analysis returned one Datetime row via callAPI_to_array2D; file-list
     method returned -10002 and cannot download.
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; latestTime=72 relative hours;
-    direct CMADaaS; NAFP_ANA_FTM_GRAPES_GFS_NEHE
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=NAFP_ANA_FTM_GRAPES_GFS_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"

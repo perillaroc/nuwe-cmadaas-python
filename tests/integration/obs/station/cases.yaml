@@ -30,7 +30,8 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OS-002-time-list
   family: obs_station
   query_features:
@@ -60,9 +61,10 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - station/test_getSurfEleByTime.py::test_hourly
+  e02_2026_10_10_result: "passed"
 - case_id: OS-003
   family: obs_station
   query_features:
@@ -92,9 +94,10 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - station/test_getSurfEleByTimeRange.py::test_hourly
+  e02_2026_10_10_result: "passed"
 - case_id: OS-004
   family: obs_station
   query_features:
@@ -127,7 +130,8 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Climate temperature dataset (1991-2020 reference period) passed live assertions without a time selector; order Station_Id_C:asc avoids unavailable Station_ID_d"
-  last_verified_environment_and_time: "2026-10-08T14:08:50.073946+08:00; local WSL, Python 3.14; SURF_CLI_CHN_HOR_TEM_1991_2020; station 54511, max_rows 20; no times/timeRange parameter"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CLI_CHN_HOR_TEM_1991_2020; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OS-007
   family: obs_station
   query_features:
@@ -161,7 +165,8 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:17:48.159387+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OS-007-time-list
   family: obs_station
   query_features:
@@ -196,9 +201,10 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - station/test_getSurfEleByTimeRangeAndStaID.py::test_hourly_station_id
+  e02_2026_10_10_result: "passed"
 - case_id: OS-007-list
   family: obs_station
   query_features:
@@ -233,7 +239,8 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OS-008
   family: obs_station
   query_features:
@@ -269,7 +276,8 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OS-008-time-list
   family: obs_station
   query_features:
@@ -305,9 +313,10 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - station/test_getSurfEleByTimeAndStaIdRange.py::test_hourly
+  e02_2026_10_10_result: "passed"
 - case_id: OS-009
   family: obs_station
   query_features:
@@ -341,7 +350,8 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OS-009-day-list
   family: obs_station
   query_features:
@@ -376,10 +386,11 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - station/test_getSurfEleByTimeAndStaID.py::test_hourly_station_list
   - station/test_getSurfEleByTimeRangeAndStaID.py::test_hourly
+  e02_2026_10_10_result: "passed"
 - case_id: OS-009-day-scalar
   family: obs_station
   query_features:
@@ -414,9 +425,10 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - station/test_getSurfEleByTimeAndStaID.py::test_hourly_station
+  e02_2026_10_10_result: "passed"
 - case_id: OS-010
   family: obs_station
   query_features:
@@ -452,9 +464,10 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - station/test_getSurfEleByTimeRangeAndStaIDRange.py::test_hourly
+  e02_2026_10_10_result: "passed"
 - case_id: OS-012
   family: obs_station
   query_features:
@@ -485,7 +498,8 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR_N; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR_N; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OS-014
   family: obs_station
   query_features:
@@ -520,7 +534,8 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OS-014-time-list
   family: obs_station
   query_features:
@@ -555,9 +570,10 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - station/test_getSurfEleInRectByTime.py::test_hourly
+  e02_2026_10_10_result: "passed"
 - case_id: OS-015
   family: obs_station
   query_features:
@@ -592,9 +608,10 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - station/test_getSurfEleInRectByTimeRange.py::test_hourly
+  e02_2026_10_10_result: "passed"
 - case_id: OS-017
   family: obs_station
   query_features:
@@ -627,7 +644,8 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OS-017-time-list
   family: obs_station
   query_features:
@@ -660,9 +678,10 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - station/test_getSurfEleInRegionByTime.py::test_hourly
+  e02_2026_10_10_result: "passed"
 - case_id: OS-018
   family: obs_station
   query_features:
@@ -695,9 +714,10 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - station/test_getSurfEleInRegionByTimeRange.py::test_hourly
+  e02_2026_10_10_result: "passed"
 - case_id: OS-020
   family: obs_station
   query_features:
@@ -730,7 +750,8 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OS-020-time-list
   family: obs_station
   query_features:
@@ -763,9 +784,10 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - station/test_getSurfEleInBasinByTime.py::test_hourly
+  e02_2026_10_10_result: "passed"
 - case_id: OS-021
   family: obs_station
   query_features:
@@ -798,9 +820,10 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - station/test_getSurfEleInBasinByTimeRange.py::test_hourly
+  e02_2026_10_10_result: "passed"
 - case_id: OSL-001
   family: obs_station_latest
   query_features: []
@@ -825,6 +848,7 @@ cases:
   implemented: true
   online_status: "passed"
   reason: "Live service returned expected table schema and met all case assertions"
-  last_verified_environment_and_time: "2026-09-30T08:59:33.710948+08:00; local WSL, Python 3.14; SURF_CHN_MUL_HOR_N; previous-day station fixtures, bounded opt-in profile"
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR_N; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - station/test_getSurfLatestTime.py::test_hourly
+  e02_2026_10_10_result: "passed"

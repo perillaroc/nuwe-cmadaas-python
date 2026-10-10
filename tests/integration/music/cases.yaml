@@ -25,9 +25,10 @@ cases:
   test_node: tests/integration/music/test_tables.py::test_registered_case[LLT-001]
   documentation_anchor: guide/low-level/tables#llt-001
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: GFS point query returned a one-row Array2D with matching time, location, level and lead.
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+  last_verified_environment_and_time: "2026-10-10T13:17:48.159387+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: LLG-001
   family: music_grid_array2d
   query_features: []
@@ -56,9 +57,10 @@ cases:
   test_node: tests/integration/music/test_grids.py::test_registered_case[LLG-001]
   documentation_anchor: guide/low-level/grids#llg-001
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: GFS forecast returned a 9 by 9 grid for the one-degree rectangle.
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+  last_verified_environment_and_time: "2026-10-10T13:17:48.159387+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: LLG-002
   family: music_grid_scalar2d
   query_features: []
@@ -87,9 +89,10 @@ cases:
   test_node: tests/integration/music/test_grids.py::test_registered_case[LLG-002]
   documentation_anchor: guide/low-level/grids#llg-002
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: GFS forecast returned a 9 by 9 scalar grid via the low-level method.
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: LLG-003
   family: music_grid_vector2d
   query_features: []
@@ -116,9 +119,10 @@ cases:
   test_node: tests/integration/music/test_grids.py::test_registered_case[LLG-003]
   documentation_anchor: guide/low-level/grids#llg-003
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: GFS analysis returned a 720 by 1441 U/V grid at validTime zero.
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+  last_verified_environment_and_time: "2026-10-10T13:25:17.487569+08:00; local WSL, Python 3.14.3; dataCode=NAFP_ANA_FTM_GRAPES_GFS_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: LLF-001
   family: music_file_list
   query_features: []
@@ -141,9 +145,10 @@ cases:
   test_node: tests/integration/music/test_files.py::test_file_list[LLF-001]
   documentation_anchor: guide/low-level/file-list#llf-001
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: CMA-GFS query returned metadata for one 28,492,363-byte GRIB2 file without writing it.
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+  last_verified_environment_and_time: "2026-10-10T13:17:48.159387+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: LLF-002
   family: music_down_file
   query_features: []
@@ -168,9 +173,10 @@ cases:
   test_node: tests/integration/music/test_files.py::test_down_file[LLF-002]
   documentation_anchor: guide/low-level/downloads#llf-002
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Exact-query preflight bounded one 28,492,363-byte GRIB2 file; downFile wrote it to tmp_path.
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: LLS-001
   family: music_save_as_file
   query_features: [json]
@@ -195,9 +201,10 @@ cases:
   test_node: tests/integration/music/test_files.py::test_save_as_file[LLS-001]
   documentation_anchor: guide/low-level/save-as-file#lls-001
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: One GFS point record saved and parsed as JSON.
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: LLS-002
   family: music_save_as_file
   query_features: [xml]
@@ -222,9 +229,10 @@ cases:
   test_node: tests/integration/music/test_files.py::test_save_as_file[LLS-002]
   documentation_anchor: guide/low-level/save-as-file#lls-002
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: One GFS point record saved and parsed as XML.
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: LLS-003
   family: music_save_as_file
   query_features: [text]
@@ -249,9 +257,10 @@ cases:
   test_node: tests/integration/music/test_files.py::test_save_as_file[LLS-003]
   documentation_anchor: guide/low-level/save-as-file#lls-003
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: One GFS point record saved as a text table.
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: LLS-004
   family: music_save_as_file
   query_features: [html]
@@ -276,9 +285,10 @@ cases:
   test_node: tests/integration/music/test_files.py::test_save_as_file[LLS-004]
   documentation_anchor: guide/low-level/save-as-file#lls-004
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: One GFS point record saved as an HTML table.
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: LLR-001
   family: music_serialized_str
   query_features: [json]
@@ -302,9 +312,10 @@ cases:
   test_node: tests/integration/music/test_serialization.py::test_registered_case[LLR-001]
   documentation_anchor: guide/low-level/serialization#llr-001
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: GFS point query returned a parseable JSON string with one matching record.
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+  last_verified_environment_and_time: "2026-10-10T13:17:48.159387+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: LLR-002
   family: music_serialized_str
   query_features: [xml]
@@ -328,9 +339,10 @@ cases:
   test_node: tests/integration/music/test_serialization.py::test_registered_case[LLR-002]
   documentation_anchor: guide/low-level/serialization#llr-002
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: GFS point query returned a parseable XML string with one matching record.
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: LLR-003
   family: music_serialized_str
   query_features: [text]
@@ -354,9 +366,10 @@ cases:
   test_node: tests/integration/music/test_serialization.py::test_registered_case[LLR-003]
   documentation_anchor: guide/low-level/serialization#llr-003
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: GFS point query returned a text table string with one matching record.
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: LLR-004
   family: music_serialized_str
   query_features: [html]
@@ -380,9 +393,10 @@ cases:
   test_node: tests/integration/music/test_serialization.py::test_registered_case[LLR-004]
   documentation_anchor: guide/low-level/serialization#llr-004
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: GFS point query returned an HTML table string with one matching record.
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; recent 06 cycle; direct CMADaaS
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: LLB-001
   family: music_data_block
   query_features: []
@@ -410,3 +424,5 @@ cases:
     this account and a recent bounded sample; replace the example profile code before enabling.
   last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; 2026-10-07 NAFP/RADA catalog;
     direct CMADaaS probes with GFS and RADA_L2_UFMT
+  e02_2026_10_10_reason: "No cataloged RetDataBlock interface, authorized data code, and positive recent sample."
+  e02_2026_10_10_result: "skipped"

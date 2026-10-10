@@ -36,6 +36,8 @@ cases:
   run_prerequisite: Another NAFP numerical prediction dataset supported by this
     exact interface, with verified access, element, and recent data, is required
     if this interface is revisited; other data categories are not applicable.
+  e02_2026_10_10_reason: "Paused pending another catalog-supported NAFP numerical forecast dataset; historical -3001 retained."
+  e02_2026_10_10_result: "skipped"
 - case_id: MGF-008
   family: model_grid_forecast
   query_features:
@@ -69,12 +71,11 @@ cases:
   test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGF-008]
   documentation_anchor: guide/high-level/model/grid#mgf-008
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live DataArray passed dimension, coordinate, query metadata, region/member
     where applicable, and finite-value assertions.
-  last_verified_environment_and_time: 2026-10-08 16:24 +0800; local WSL, Python 3.14;
-    dynamic three-days-ago time; direct CMADaaS; NAFP_GRAPES_MESO_FOR_3KM; full-domain
-    forecast
+  last_verified_environment_and_time: "2026-10-10T13:25:17.487569+08:00; local WSL, Python 3.14.3; dataCode=NAFP_GRAPES_MESO_FOR_3KM; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: MGF-010
   family: model_grid_forecast
   query_features:
@@ -117,6 +118,8 @@ cases:
   run_prerequisite: Another NAFP numerical prediction dataset supported by this
     exact interface, with verified access, element, and recent data, is required
     if this interface is revisited; other data categories are not applicable.
+  e02_2026_10_10_reason: "Paused pending another catalog-supported NAFP numerical forecast dataset; historical -3001 retained."
+  e02_2026_10_10_result: "skipped"
 - case_id: MGF-016
   family: model_grid_forecast
   query_features:
@@ -153,12 +156,11 @@ cases:
   test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGF-016]
   documentation_anchor: guide/high-level/model/grid#mgf-016
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live DataArray passed dimension, coordinate, query metadata, region/member
     where applicable, and finite-value assertions.
-  last_verified_environment_and_time: 2026-10-08 16:24 +0800; local WSL, Python 3.14;
-    dynamic three-days-ago time; direct CMADaaS; NAFP_GRAPES_MESO_FOR_3KM; small-rectangle
-    forecast
+  last_verified_environment_and_time: "2026-10-10T13:17:48.159387+08:00; local WSL, Python 3.14.3; dataCode=NAFP_GRAPES_MESO_FOR_3KM; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: MGF-017
   family: model_grid_forecast
   query_features:
@@ -195,14 +197,12 @@ cases:
   test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGF-017]
   documentation_anchor: guide/high-level/model/grid#mgf-017
   implemented: true
-  online_status: passed
-  reason: Live DataArray passed dimension, coordinate, query metadata, region/member
-    where applicable, and finite-value assertions.
-  last_verified_environment_and_time: 2026-10-08 16:24 +0800; local WSL, Python 3.14;
-    dynamic three-days-ago time; direct CMADaaS; NAFP_GRAPESREPS_FOR_FTM_CHN; control
-    member 0
+  online_status: "failed"
+  reason: "E02 2026-10-10: current 2026-10-07 06 cycle returned service code -9002 (request parameters outside dataset range); repeat request failed identically."
+  last_verified_environment_and_time: "2026-10-10T13:35:23.049512+08:00; local WSL, Python 3.14.3; dataCode=NAFP_GRAPESREPS_FOR_FTM_CHN; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - model/grid/test_cma_reps.py::test_control_field
+  e02_2026_10_10_result: "failed"
 - case_id: MGF-017-member-10
   family: model_grid_forecast
   query_features:
@@ -239,14 +239,12 @@ cases:
   test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGF-017-member-10]
   documentation_anchor: guide/high-level/model/grid#mgf-017-member-10
   implemented: true
-  online_status: passed
-  reason: Live DataArray passed dimension, coordinate, query metadata, region/member
-    where applicable, and finite-value assertions.
-  last_verified_environment_and_time: 2026-10-08 16:24 +0800; local WSL, Python 3.14;
-    dynamic three-days-ago time; direct CMADaaS; NAFP_GRAPESREPS_FOR_FTM_DIS_CHN;
-    perturbation member 10
+  online_status: "failed"
+  reason: "E02 2026-10-10: current 2026-10-07 06 cycle returned a grid containing no finite values; repeat request failed identically."
+  last_verified_environment_and_time: "2026-10-10T13:35:23.049512+08:00; local WSL, Python 3.14.3; dataCode=NAFP_GRAPESREPS_FOR_FTM_DIS_CHN; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - model/grid/test_cma_reps.py::test_member_field
+  e02_2026_10_10_result: "failed"
 - case_id: MGF-018
   family: model_grid_forecast
   query_features:
@@ -286,12 +284,10 @@ cases:
   test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGF-018]
   documentation_anchor: guide/high-level/model/grid#mgf-018
   implemented: true
-  online_status: passed
-  reason: Live DataArray passed dimension, coordinate, query metadata, region/member
-    where applicable, and finite-value assertions.
-  last_verified_environment_and_time: 2026-10-08 16:24 +0800; local WSL, Python 3.14;
-    dynamic three-days-ago time; direct CMADaaS; NAFP_GRAPESREPS_FOR_FTM_DIS_CHN;
-    perturbation member 10, small rectangle
+  online_status: "failed"
+  reason: "E02 2026-10-10: current 2026-10-07 06 cycle returned a small-rectangle grid containing no finite values; repeat request failed identically."
+  last_verified_environment_and_time: "2026-10-10T13:35:23.049512+08:00; local WSL, Python 3.14.3; dataCode=NAFP_GRAPESREPS_FOR_FTM_DIS_CHN; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "failed"
 - case_id: MGA-005
   family: model_grid_analysis
   query_features:
@@ -323,12 +319,11 @@ cases:
   test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGA-005]
   documentation_anchor: guide/high-level/model/grid#mga-005
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live DataArray passed dimension, coordinate, query metadata, region/member
     where applicable, and finite-value assertions.
-  last_verified_environment_and_time: 2026-10-08 16:24 +0800; local WSL, Python 3.14;
-    dynamic three-days-ago time; direct CMADaaS; NAFP_GRAPES_MESO_ANA_3KM; full-domain
-    analysis
+  last_verified_environment_and_time: "2026-10-10T13:25:17.487569+08:00; local WSL, Python 3.14.3; dataCode=NAFP_GRAPES_MESO_ANA_3KM; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: MGA-013
   family: model_grid_analysis
   query_features:
@@ -363,9 +358,8 @@ cases:
   test_node: tests/integration/model/grid/test_grid.py::test_registered_case[MGA-013]
   documentation_anchor: guide/high-level/model/grid#mga-013
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live DataArray passed dimension, coordinate, query metadata, region/member
     where applicable, and finite-value assertions.
-  last_verified_environment_and_time: 2026-10-08 16:24 +0800; local WSL, Python 3.14;
-    dynamic three-days-ago time; direct CMADaaS; NAFP_GRAPES_MESO_ANA_3KM; small-rectangle
-    analysis
+  last_verified_environment_and_time: "2026-10-10T13:17:48.159387+08:00; local WSL, Python 3.14.3; dataCode=NAFP_GRAPES_MESO_ANA_3KM; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"

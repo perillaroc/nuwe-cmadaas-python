@@ -193,7 +193,7 @@ datasets:
     max_files: 1
   model_file_reps_control:
     enabled: false
-    # MF-009 passed with a one-file, 1.5 GiB extended profile; disabled by default.
+    # MF-009 passed with a one-file, 1.5 GiB extended profile on 2026-10-10.
     data_code: NAFP_GRAPESREPS_FOR_FTM_CHN
     parameter: TEM
     level_type: "103"
@@ -202,7 +202,8 @@ datasets:
     max_files: 1
   model_file_reps_member:
     enabled: false
-    # MF-010/012/019 passed with a one-file, 1.5 GiB extended profile.
+    # MF-010/012/019 each listed a 1,722,610,002-byte file on 2026-10-10;
+    # they passed with a one-file, 1.8 GB private cap. Check current size first.
     data_code: NAFP_GRAPESREPS_FOR_FTM_DIS_CHN
     parameter: TEM
     level_type: "103"

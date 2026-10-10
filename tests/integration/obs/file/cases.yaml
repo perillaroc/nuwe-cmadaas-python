@@ -27,15 +27,16 @@ cases:
   test_node: tests/integration/obs/file/test_file.py::test_registered_case[OF-002]
   documentation_anchor: guide/high-level/obs/files#of-002
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Preflight confirmed one file within 10 MiB; live download returned an existing file in the temporary output directory.
-  last_verified_environment_and_time: 2026-10-08 15:41 +0800; local WSL, Python 3.14; SURF_CMPA_FRT_5KM_10MIN; dynamic two-day date; direct CMADaaS connection
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CMPA_FRT_5KM_10MIN; E02 direct CMADaaS; dynamic category fixture"
   alternative_data_code_probe:
     data_code: SURF_CMPAS_CHN_1KM_RT
     historical_query_rule: three-days-before-run-at-01
     preflight_file_size_bytes: 141794058
     max_total_bytes: 10485760
     outcome: blocked-before-download
+  e02_2026_10_10_result: "passed"
 - case_id: OF-003
   family: obs_file
   query_features:
@@ -62,9 +63,10 @@ cases:
   test_node: tests/integration/obs/file/test_file.py::test_registered_case[OF-003]
   documentation_anchor: guide/high-level/obs/files#of-003
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Preflight confirmed one file within 10 MiB; live download returned an existing file in the temporary output directory.
-  last_verified_environment_and_time: 2026-10-08 15:41 +0800; local WSL, Python 3.14; SURF_CMPA_FRT_5KM_10MIN; dynamic two-day date; direct CMADaaS connection
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CMPA_FRT_5KM_10MIN; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OF-009
   family: obs_file
   query_features:
@@ -100,6 +102,8 @@ cases:
   recommended_data_code: SURF_PRODUCT_PART2_FILE_TAB
   run_prerequisite: Grant access to a catalog-supported station file code and select
     a verified station and time window before enabling this case.
+  e02_2026_10_10_reason: "The reference account lacks an authorized station-file data code for this interface."
+  e02_2026_10_10_result: "skipped"
 - case_id: OFL-001
   family: obs_file_latest
   query_features: []
@@ -121,7 +125,7 @@ cases:
   test_node: tests/integration/obs/file/test_latest_time.py::test_registered_case[OFL-001]
   documentation_anchor: guide/high-level/obs/files#ofl-001
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: The catalog declares RetArray2D; the independent table case passed online with a recent surface code.
-  last_verified_environment_and_time: 2026-10-08 22:44 +0800; local WSL, Python 3.14;
-    SURF_CHN_MUL_HOR_N, relative latestTime=24; one Datetime row within the query window.
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=SURF_CHN_MUL_HOR_N; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"

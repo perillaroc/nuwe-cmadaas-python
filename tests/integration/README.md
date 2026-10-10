@@ -90,7 +90,7 @@ uv run pytest tests/integration -m 'integration and extended' -ra --strict-marke
 
 `LLF-001` 只查文件元数据；`LLF-002` 预查询后下载单个 GFS GRIB2 文件。`LLS-001`～`LLS-004` 各生成一个受 1 MiB 限制的 JSON/XML/text/HTML 小文件。所有在线文件输出写入 pytest 的 `tmp_path`；不在仓库中保存下载结果。
 
-示例的 GFS 单文件案例曾分别约为 28.5 MiB 或 50 MiB，适合默认 64 MiB 上限。`MF-009`、`MF-010`、`MF-012`、`MF-019` 的 REPS 文件案例曾需要单文件、约 1.5 GiB 的临时上限；启用前先检查清单中的资料代码、实际清单大小和可用磁盘空间，并只在私有 profile 中调整 `max_total_bytes`。全域格点案例也会占用较多内存，应单独运行。`download_limits.unbounded_download_approved`、`approved_data_scope`、`approval_reason` 不是当前测试使用的下载开关，设置它们不会绕过字节上限。
+示例的 GFS 单文件案例曾分别约为 28.5 MiB 或 50 MiB，适合默认 64 MiB 上限。2026-10-10 的 `MF-009` 在单文件、1.5 GiB 上限内通过；`MF-010`、`MF-012`、`MF-019` 的文件清单每例为单个 1,722,610,002 字节文件，使用 1.8 GB 私有上限通过。启用前先检查清单中的资料代码、当次清单大小和可用磁盘空间，并只在私有 profile 中调整 `max_total_bytes`。全域格点案例也会占用较多内存，应单独运行。`download_limits.unbounded_download_approved`、`approved_data_scope`、`approval_reason` 不是当前测试使用的下载开关，设置它们不会绕过字节上限。
 
 ## 状态与待验证项
 
@@ -102,6 +102,6 @@ uv run pytest tests/integration -m 'integration and extended' -ra --strict-marke
 | `failed` | 曾联网失败；查看 `reason`、`verification_blocker`、`recommended_data_code` 和 `run_prerequisite`。 |
 | `implemented-unverified` | 有可收集案例或离线实现，但该案例尚无可确认的在线成功。 |
 
-2026-10-08 B07-fix-01 后为 88 条清单案例（历史在线 `passed` 78、`failed` 8、`implemented-unverified` 2），另有 6 个 REPS 错误码专项节点。`OFL-001` 已用 `SURF_CHN_MUL_HOR_N` 和相对 24 小时窗口单独在线验证 `Datetime` 表格。`OF-009` 需要获授权的站号文件资料 `SURF_PRODUCT_PART2_FILE_TAB`；`LLB-001` 的 DataBlock 转换有离线回归，仍缺目录明确声明 `RetDataBlock` 的接口、已授权资料及近期样本。高空 GPS、Light、Ard 与两个模式格点失败案例的具体前置条件见各自 `cases.yaml`。跳过、未验证和历史失败均不计为当前成功。
+2026-10-10 E02 逐案验收的 88 条清单案例为 **75 passed、3 failed、10 skipped**，另有 6 个 REPS 错误码专项节点通过。3 个失败均为本次时次的 REPS 格点结果，定向复测相同；10 个跳过案例保留历史 `online_status`，另记本轮跳过原因。逐案资料代码、运行时间、结果及后续条件见 [E02 验收记录](verification-2026-10-10.md)。`OFL-001` 已用 `SURF_CHN_MUL_HOR_N` 和相对 24 小时窗口验证 `Datetime` 表格。`OF-009` 需要获授权的站号文件资料 `SURF_PRODUCT_PART2_FILE_TAB`；`LLB-001` 的 DataBlock 转换有离线回归，仍缺目录明确声明 `RetDataBlock` 的接口、已授权资料及近期样本。跳过、未验证和历史失败均不计为本轮成功。
 
 在线复测后，应在对应 `cases.yaml` 中按**单个案例**记录状态、资料代码、执行环境和时间、实际结果或失败原因；不可把一个接口或资料的成功推及整组。B16 只提供运行说明；全量实时服务验收由 E02 另行执行。

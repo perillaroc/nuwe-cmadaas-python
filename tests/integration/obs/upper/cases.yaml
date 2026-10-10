@@ -28,11 +28,11 @@ cases:
   test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-002]
   documentation_anchor: guide/high-level/obs/upper-air#ou-002
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live service returned the configured columns and met row, station, region
     or level assertions
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
-    three-day runtime date; direct CMADaaS connection
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=UPAR_CHN_MUL_FTM; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OU-003
   family: obs_upper
   query_features:
@@ -60,11 +60,11 @@ cases:
   test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-003]
   documentation_anchor: guide/high-level/obs/upper-air#ou-003
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live service returned the configured columns and met row, station, region
     or level assertions
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
-    three-day runtime date; direct CMADaaS connection
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=UPAR_CHN_MUL_FTM; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OU-008
   family: obs_upper
   query_features:
@@ -97,11 +97,11 @@ cases:
   test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-008]
   documentation_anchor: guide/high-level/obs/upper-air#ou-008
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live service returned the configured columns and met row, station, region
     or level assertions
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
-    three-day runtime date; direct CMADaaS connection
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=UPAR_CHN_MUL_FTM; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OU-009
   family: obs_upper
   query_features:
@@ -134,11 +134,11 @@ cases:
   test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-009]
   documentation_anchor: guide/high-level/obs/upper-air#ou-009
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live service returned the configured columns and met row, station, region
     or level assertions
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
-    three-day runtime date; direct CMADaaS connection
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=UPAR_CHN_MUL_FTM; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OU-010
   family: obs_upper
   query_features:
@@ -171,11 +171,11 @@ cases:
   test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-010]
   documentation_anchor: guide/high-level/obs/upper-air#ou-010
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live service returned the configured columns and met row, station, region
     or level assertions
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
-    three-day runtime date; direct CMADaaS connection
+  last_verified_environment_and_time: "2026-10-10T13:17:48.159387+08:00; local WSL, Python 3.14.3; dataCode=UPAR_CHN_MUL_FTM; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OU-011
   family: obs_upper
   query_features:
@@ -208,11 +208,11 @@ cases:
   test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-011]
   documentation_anchor: guide/high-level/obs/upper-air#ou-011
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live service returned the configured columns and met row, station, region
     or level assertions
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
-    three-day runtime date; direct CMADaaS connection
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=UPAR_CHN_MUL_FTM; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OU-014
   family: obs_upper
   query_features:
@@ -246,11 +246,11 @@ cases:
   test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-014]
   documentation_anchor: guide/high-level/obs/upper-air#ou-014
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live service returned the configured columns and met row, station, region
     or level assertions
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
-    three-day runtime date; direct CMADaaS connection
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=UPAR_CHN_MUL_FTM; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OU-015
   family: obs_upper
   query_features:
@@ -284,11 +284,11 @@ cases:
   test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-015]
   documentation_anchor: guide/high-level/obs/upper-air#ou-015
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live service returned the configured columns and met row, station, region
     or level assertions
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
-    three-day runtime date; direct CMADaaS connection
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=UPAR_CHN_MUL_FTM; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OU-016
   family: obs_upper
   query_features:
@@ -322,11 +322,11 @@ cases:
   test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-016]
   documentation_anchor: guide/high-level/obs/upper-air#ou-016
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live service returned the configured columns and met row, station, region
     or level assertions
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
-    three-day runtime date; direct CMADaaS connection
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=UPAR_CHN_MUL_FTM; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OU-017
   family: obs_upper
   query_features:
@@ -365,11 +365,11 @@ cases:
   test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OU-017]
   documentation_anchor: guide/high-level/obs/upper-air#ou-017
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live service returned the configured columns and met row, station, region
     or level assertions
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
-    three-day runtime date; direct CMADaaS connection
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=UPAR_CHN_MUL_FTM; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: OUG-008
   family: obs_upper_gps
   query_features:
@@ -409,6 +409,8 @@ cases:
   run_prerequisite: Grant the current account access to UPAR_CHN_GPSMET_MUL before enabling this case.
   last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; direct CMADaaS
     connection
+  e02_2026_10_10_reason: "The reference account lacks GPS upper-air data access; historical -4001 retained."
+  e02_2026_10_10_result: "skipped"
 - case_id: OUG-010
   family: obs_upper_gps
   query_features:
@@ -448,6 +450,8 @@ cases:
   run_prerequisite: Grant the current account access to UPAR_CHN_GPSMET_MUL before enabling this case.
   last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; direct CMADaaS
     connection
+  e02_2026_10_10_reason: "The reference account lacks GPS upper-air data access; historical -4001 retained."
+  e02_2026_10_10_result: "skipped"
 - case_id: OUG-011
   family: obs_upper_gps
   query_features:
@@ -487,6 +491,8 @@ cases:
   run_prerequisite: Grant the current account access to UPAR_CHN_GPSMET_MUL before enabling this case.
   last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; direct CMADaaS
     connection
+  e02_2026_10_10_reason: "The reference account lacks GPS upper-air data access; historical -4001 retained."
+  e02_2026_10_10_result: "skipped"
 - case_id: OUL-009
   family: obs_upper_light
   query_features:
@@ -527,6 +533,8 @@ cases:
   run_prerequisite: Grant the current account access to UPAR_ADTD_CHN_LIS before enabling this case.
   last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; direct CMADaaS
     connection
+  e02_2026_10_10_reason: "The reference account lacks Light upper-air data access; historical -4001 retained."
+  e02_2026_10_10_result: "skipped"
 - case_id: OUA-001
   family: obs_upper_ard
   query_features:
@@ -567,6 +575,8 @@ cases:
   run_prerequisite: Find a time window with valid Flight_Heigh values within 0..15000 before enabling this case.
   last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_ARD_G_MUT_AMD;
     direct CMADaaS connection
+  e02_2026_10_10_reason: "A controlled recent Ard sample with finite flight height inside the requested range is needed; historical 999999 sentinel retained."
+  e02_2026_10_10_result: "skipped"
 - case_id: OUA-002
   family: obs_upper_ard
   query_features:
@@ -605,6 +615,8 @@ cases:
   run_prerequisite: Find a rectangle and time window with records before enabling this case.
   last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_ARD_G_MUT_AMD;
     direct CMADaaS connection
+  e02_2026_10_10_reason: "A controlled recent Ard sample in the requested rectangle and time is needed; historical no-record result retained."
+  e02_2026_10_10_result: "skipped"
 - case_id: OULAT-001
   family: obs_upper_latest
   query_features: []
@@ -627,7 +639,7 @@ cases:
   test_node: tests/integration/obs/upper/test_upper_air.py::test_registered_case[OULAT-001]
   documentation_anchor: guide/high-level/obs/upper-air#oulat-001
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live getUparLatestTime returned the expected Datetime table schema
-  last_verified_environment_and_time: 2026-10-08; local WSL, Python 3.14; UPAR_CHN_MUL_FTM;
-    direct CMADaaS connection
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=UPAR_CHN_MUL_FTM; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"

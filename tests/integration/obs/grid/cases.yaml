@@ -19,11 +19,12 @@ cases:
   test_node: tests/integration/obs/grid/test_grid.py::test_registered_case[OG-002]
   documentation_anchor: guide/high-level/obs/grid#og-002
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live full-domain grid met dimension, coordinate and metadata assertions
-  last_verified_environment_and_time: "2026-10-08T14:18:58+08:00; local WSL, Python 3.14; SURF_CMPAS_CHN_1KM_RT, PRE; direct CMADaaS connection; three-day grid fixture"
+  last_verified_environment_and_time: "2026-10-10T13:25:17.487569+08:00; local WSL, Python 3.14.3; dataCode=SURF_CMPAS_CHN_1KM_RT; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - grid/test_getSurfEleGridByTime.py::test_cmpas_chn_1km_rt
+  e02_2026_10_10_result: "passed"
 - case_id: OG-005
   family: obs_grid
   query_features:
@@ -44,8 +45,9 @@ cases:
   test_node: tests/integration/obs/grid/test_grid.py::test_registered_case[OG-005]
   documentation_anchor: guide/high-level/obs/grid#og-005
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live small-rectangle grid met dimension, coordinate, region and metadata assertions
-  last_verified_environment_and_time: "2026-10-08T14:18:58+08:00; local WSL, Python 3.14; SURF_CMPAS_CHN_1KM_RT, PRE; direct CMADaaS connection; three-day grid fixture"
+  last_verified_environment_and_time: "2026-10-10T13:17:48.159387+08:00; local WSL, Python 3.14.3; dataCode=SURF_CMPAS_CHN_1KM_RT; E02 direct CMADaaS; dynamic category fixture"
   legacy_tests:
   - grid/test_getSurfEleGridByTimeAndRect.py::test_cmpas_chn_1km_rt
+  e02_2026_10_10_result: "passed"

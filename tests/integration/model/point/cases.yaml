@@ -24,10 +24,10 @@ cases:
   test_node: tests/integration/model/point/test_point.py::test_registered_case[MP-001]
   documentation_anchor: guide/high-level/model/point#mp-001
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live point result matched position, cycle, level, lead, and finite 2 m temperature bounds.
-  last_verified_environment_and_time: 2026-10-08 20:13 +0800; local WSL, Python 3.14;
-    dynamic three-days-ago 06 cycle; direct CMADaaS; NAFP_FOR_FTM_GRAPES_CFSV2_NEHE
+  last_verified_environment_and_time: "2026-10-10T13:17:48.159387+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: MP-001-multi-point
   family: model_point
   query_features: [level, point, time, valid_time]
@@ -56,10 +56,10 @@ cases:
   test_node: tests/integration/model/point/test_point.py::test_registered_case[MP-001-multi-point]
   documentation_anchor: guide/high-level/model/point#mp-001-multi-point
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Two requested coordinates returned two distinct bounded temperature rows.
-  last_verified_environment_and_time: 2026-10-08 20:13 +0800; local WSL, Python 3.14;
-    dynamic three-days-ago 06 cycle; direct CMADaaS; NAFP_FOR_FTM_GRAPES_CFSV2_NEHE
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: MP-002
   family: model_point
   query_features: [level, point, time, valid_time_range]
@@ -84,10 +84,10 @@ cases:
   test_node: tests/integration/model/point/test_point.py::test_registered_case[MP-002]
   documentation_anchor: guide/high-level/model/point#mp-002
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live point lead-range result contained multiple leads within 6..24 h and valid temperature values.
-  last_verified_environment_and_time: 2026-10-08 20:13 +0800; local WSL, Python 3.14;
-    dynamic three-days-ago 06 cycle; direct CMADaaS; NAFP_FOR_FTM_GRAPES_CFSV2_NEHE
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: MP-003
   family: model_point
   query_features: [level, station, time, valid_time]
@@ -112,10 +112,10 @@ cases:
   test_node: tests/integration/model/point/test_point.py::test_registered_case[MP-003]
   documentation_anchor: guide/high-level/model/point#mp-003
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live station 54511 result matched station ID, cycle, level, lead, and temperature bounds.
-  last_verified_environment_and_time: 2026-10-08 20:13 +0800; local WSL, Python 3.14;
-    dynamic three-days-ago 06 cycle; direct CMADaaS; NAFP_FOR_FTM_GRAPES_CFSV2_NEHE
+  last_verified_environment_and_time: "2026-10-10T13:17:48.159387+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"
 - case_id: MP-004
   family: model_point
   query_features: [level, station, time, valid_time_range]
@@ -140,7 +140,7 @@ cases:
   test_node: tests/integration/model/point/test_point.py::test_registered_case[MP-004]
   documentation_anchor: guide/high-level/model/point#mp-004
   implemented: true
-  online_status: passed
+  online_status: "passed"
   reason: Live station 54511 lead-range result contained multiple bounded leads and valid temperatures.
-  last_verified_environment_and_time: 2026-10-08 20:13 +0800; local WSL, Python 3.14;
-    dynamic three-days-ago 06 cycle; direct CMADaaS; NAFP_FOR_FTM_GRAPES_CFSV2_NEHE
+  last_verified_environment_and_time: "2026-10-10T13:21:42.809786+08:00; local WSL, Python 3.14.3; dataCode=NAFP_FOR_FTM_GRAPES_CFSV2_NEHE; E02 direct CMADaaS; dynamic category fixture"
+  e02_2026_10_10_result: "passed"

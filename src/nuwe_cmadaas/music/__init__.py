@@ -35,12 +35,14 @@ def create_client(config: Optional[Union[CMADaasConfig, str, Path]]) -> CMADaaSC
     Parameters
     ----------
     config
-        配置，配置对象或配置文件路径
+        含 auth/server 的配置字典，或 CedarKit YAML 路径；该参数没有默认值，
+        但可显式传 None 使用 YAML 的环境变量/用户默认文件查找规则。
 
     Returns
     -------
     CMADaaSClient
-        CMADaaS 访问客户端
+        本地初始化的客户端；创建不会请求服务。文件/解析/配置错误直接传播，
+        不自动包装为 CMADaaSConfigurationError。
     """
     if isinstance(config, dict):
         cmadaas_config = config
@@ -55,6 +57,23 @@ def get_or_create_client(
         config: Optional[Union[CMADaasConfig, str, Path]] = None,
         client: Optional[CMADaaSClient] = None
 ) -> CMADaaSClient:
+    """Return an injected client, or create one from CedarKit configuration.
+
+    Parameters
+    ----------
+    config : CMADaasConfig or str or pathlib.Path, optional
+        Inner configuration dict or YAML path; None enables YAML discovery
+        only when client is None.
+    client : CMADaaSClient, optional
+        When provided, returned unchanged without loading configuration.
+        A simultaneous config value is ignored with a log warning.
+
+    Returns
+    -------
+    CMADaaSClient
+        Existing client or locally constructed client. This selection does
+        not perform service requests or validate query parameters.
+    """
     if client is None:
         cmadaas_client = create_client(config)
     else:

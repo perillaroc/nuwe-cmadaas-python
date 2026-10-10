@@ -11,6 +11,11 @@ from .errors import error_from_request
 
 @dataclass
 class MusicError:
+    """Legacy high-level failure result with code/message; not an exception.
+
+    This dataclass has no special false truth value. Check isinstance before
+    using a default-mode high-level result as a table, grid or path list.
+    """
     code: int
     message: str
 
@@ -119,6 +124,11 @@ def _grid_coordinates(
 
 
 class RequestInfo:
+    """Request status and service metadata, plus an optional local cause.
+
+    Protobuf loading copies fields without interpreting time strings,
+    counters or take_time units; it does not populate a local cause.
+    """
     def __init__(
             self,
             error_code: int = 0,
@@ -166,6 +176,13 @@ class RequestInfo:
 
 
 class ResponseData:
+    """Shared response state, metadata and explicit error conversion.
+
+    Constructor request=None creates a default successful RequestInfo;
+    metadata starts as an empty dict. Base loaders and pandas/xarray
+    conversions raise NotImplementedError; subclasses implement selected
+    formats. A default or successful response need not contain data.
+    """
     def __init__(
             self,
             request: RequestInfo = None
@@ -185,6 +202,9 @@ class ResponseData:
 
         The method is intentionally a no-op for successful responses so it can
         be used by callers immediately after every compatible client call.
+        Failure creates a typed CMADaaSError with the explicit context and
+        optional request.cause, chaining that cause when present. Context is
+        not inferred from metadata or saved for later conversion calls.
         """
         if self.ok:
             return self
@@ -218,6 +238,12 @@ class ResponseData:
 
     @classmethod
     def create_from_protobuf(cls, content: bytes) -> "ResponseData":
+        """Construct cls and decode serialized response bytes with its loader.
+
+        Returns the subclass response, without client-attached metadata or
+        automatically raising for a nonzero service error. Direct decode or
+        structural failures propagate, unlike handled client requests.
+        """
         data = cls()
         data.load_from_protobuf_content(content)
         return data
@@ -230,6 +256,11 @@ class ResponseData:
 
 
 class Array2D(ResponseData):
+    """String table decoded from RetArray2D, with response columns and shape.
+
+    to_pandas checks status and column shape, preserving string values and
+    available metadata. It performs no numeric, unit or missing-value policy.
+    """
     protobuf_object_type = pb.RetArray2D
 
     def __init__(
@@ -296,6 +327,12 @@ class Array2D(ResponseData):
 
 
 class DataBlock(ResponseData):
+    """Opaque RetDataBlock name and bytes, without disk writing or conversion.
+
+    Defaults are an empty name and b''. Loading retains payload fields even
+    on nonzero request errors; check state before reading. pandas/xarray
+    conversions are inherited and unimplemented.
+    """
     protobuf_object_type = pb.RetDataBlock
 
     def __init__(
@@ -320,6 +357,11 @@ class DataBlock(ResponseData):
 
 
 class GridArray2D(ResponseData):
+    """RetGridArray2D numeric field converted to a two-dimensional DataArray.
+
+    Coordinates, units and name come from the response. No sorting,
+    interpolation, missing-value masking or additional dimensions are added.
+    """
     protobuf_object_type = pb.RetGridArray2D
 
     def __init__(
@@ -432,6 +474,11 @@ class GridArray2D(ResponseData):
 
 
 class FileInfo:
+    """Service file metadata; neither a local Path nor a downloaded body.
+
+    size remains a string and save_path remains the service's path. attributes
+    is a list of strings, distinct from pandas/xarray attrs or response metadata.
+    """
     def __init__(
             self,
             file_name: str = "",
@@ -464,6 +511,11 @@ class FileInfo:
 
 
 class FilesInfo(ResponseData):
+    """RetFilesInfo file list and request state; no pandas/xarray conversion.
+
+    files_info is a list of FileInfo, empty on decoded service failure. Client
+    download methods may write files but still return this response type.
+    """
     protobuf_object_type = pb.RetFilesInfo
 
     def __init__(self, files_info: List[FileInfo] = None, request: RequestInfo = None):
@@ -487,6 +539,11 @@ class FilesInfo(ResponseData):
 
 
 class GridVector2D(ResponseData):
+    """RetGridVector2D U/V fields converted to a latitude/longitude Dataset.
+
+    Variable names use the response names, falling back to u/v when empty.
+    Dataset attrs contain available metadata; component units are not added.
+    """
     protobuf_object_type = pb.RetGridVector2D
 
     def __init__(
@@ -606,6 +663,11 @@ class GridVector2D(ResponseData):
 
 
 class GridScalar2D(ResponseData):
+    """RetGridScalar2D numeric field converted to a two-dimensional DataArray.
+
+    The protobuf datas field is exposed as data. Coordinates, units and name
+    are retained without masking, unit conversion or extra dimensions.
+    """
     protobuf_object_type = pb.RetGridScalar2D
 
     def __init__(

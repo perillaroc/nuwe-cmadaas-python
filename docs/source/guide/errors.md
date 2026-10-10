@@ -232,5 +232,6 @@ print("temporary directory removed:", not output_root.exists())
 
 本页未访问真实服务；模拟错误不作为在线能力或真实错误码验收结果。
 替换真实客户端的方法见 {doc}`配置介绍 <configuration/index>`；
+完整异常属性见 {doc}`异常参考 </reference/exceptions>`；
 完整方法签名和兼容规则见 {doc}`高层参考 </reference/high-level>`、
 {doc}`客户端参考 </reference/client>`、{doc}`MUSIC 兼容性清单 </reference/music-compatibility>`。

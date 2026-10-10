@@ -123,6 +123,8 @@ client = CMADaaSClient(
 
 ## 配置错误与下一步
 
+类型、必需键与辅助函数签名见 {doc}`配置参考 </reference/configuration>`。
+
 YAML 路径不存在时抛出 `FileNotFoundError`；语法错误由 YAML 解析器报错；缺少 `cmadaas`、`auth`、`server` 或读取所需字段可能抛出 `KeyError`，节点类型不正确还可能产生 `TypeError`。`TypedDict` 不提供运行时校验，构造成功也不表示地址、凭据或资料权限有效。这些本地配置错误不会因高层 `strict=False` 而变成 `MusicError`；`strict` 控制的是服务响应错误的处理方式。
 
 配置好连接后，从 {doc}`地面站点 </guide/high-level/obs/station>`、{doc}`地面格点 </guide/high-level/obs/grid>` 或 {doc}`文件下载 </guide/high-level/obs/files>` 选择业务入口；完整签名见 {doc}`高层接口参考 </reference/high-level>`。集成测试的资料与案例开关另由 `NUWE_CMADAAS_TEST_PROFILE` 管理，它不参与生产库的配置查找。

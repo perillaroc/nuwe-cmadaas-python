@@ -56,7 +56,11 @@ class CMADaaSError(Exception):
 
 
 class CMADaaSConfigurationError(CMADaaSError):
-    """Raised for invalid or incomplete client configuration."""
+    """Public configuration-error category; loaders may raise native errors.
+
+    Current YAML/INI file, parsing and missing-key failures are not uniformly
+    converted to this class. See the configuration and exception references.
+    """
 
 
 class CMADaaSQueryError(CMADaaSError):

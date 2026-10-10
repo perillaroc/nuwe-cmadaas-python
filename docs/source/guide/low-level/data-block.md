@@ -11,7 +11,7 @@ simulated_data: true
 ## 用途与能力边界
 
 {py:meth}`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_dataBlock` 请求 RetDataBlock，
-返回 DataBlock，由调用者检查状态并按已知格式读取 bytes。
+返回 {py:class}`~nuwe_cmadaas.music.DataBlock`，由调用者检查状态并按已知格式读取 bytes。
 `data_name` 是服务给出的名称字符串，`data` 是原始二进制内容；名称不是本地 Path，
 方法不下载文件清单、不写磁盘，也没有自动文本解码或 pandas/xarray 转换。
 查询文件元数据或下载文件时，见 {doc}`文件清单 <file-list>` 和 {doc}`文件下载 <downloads>`。
@@ -235,7 +235,7 @@ if len(sample_time) != 14 or not sample_time.isdigit():
 datetime.strptime(sample_time, "%Y%m%d%H%M%S")
 
 client = CMADaaSClient(
-    config_file="client.config", user_id="YOUR_USER_ID", password="YOUR_PASSWORD",
+    config_file="client.config", user="YOUR_USER", password="YOUR_PASSWORD",
     log_policy="redacted",
 )
 params = {"dataCode": data_code, "time": sample_time}

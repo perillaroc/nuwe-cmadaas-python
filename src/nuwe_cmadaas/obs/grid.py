@@ -69,13 +69,21 @@ def retrieve_obs_grid(
         配置。配置文件路径或配置对象
     client
         客户端对象，默认新建。如果设置则直接使用，忽略 config 参数
+    strict
+        默认 False 返回 MusicError；True 对失败响应抛结构化 CMADaaSError。
     kwargs
         其他需要传递给 MUSIC 接口的参数
 
     Returns
     -------
     xr.DataArray or MusicError
-        检索成功返回 ``xarray.DataArray`` 对象，服务错误返回 ``MusicError``
+        成功返回二维 ``xarray.DataArray``，可为合法空场；默认模式的失败响应
+        返回 ``MusicError`` 并发出兼容弃用警告，strict=True 时抛结构化异常。
+
+    Notes
+    -----
+    strict 只控制失败响应的处理，不隐藏参数、配置或本地转换异常。
+    单位、坐标顺序和名称按服务响应保留，不自动屏蔽缺测、换算单位或展开时间维度。
     """
     interface_config = InterfaceConfig(
         name="getSurfEleGrid",

@@ -230,5 +230,6 @@ DataBlock 的名称和 bytes，应先检查状态、非空及已确认的内容�
 
 本页未请求真实服务。替换客户端及原生业务参数的方法见
 {doc}`配置介绍 <configuration/index>` 与对应业务指南；真实单位、缺测和质量策略
-必须由实际资料定义确认，不能复用本例人工值。完整入口见
+必须由实际资料定义确认，不能复用本例人工值。完整响应字段见
+{doc}`响应对象参考 </reference/responses>`；完整入口见
 {doc}`高层接口 <high-level/index>`、{doc}`底层 MUSIC 接口 <low-level/index>`。

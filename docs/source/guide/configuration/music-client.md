@@ -116,6 +116,9 @@ with requests.Session() as session:
 
 ## 请求节点与常见配置错误
 
+配置类型/加载辅助函数见 {doc}`配置参考 </reference/configuration>`；
+异常分类与本地配置边界见 {doc}`异常参考 </reference/exceptions>`。
+
 底层 `callAPI_to_*` 方法可用 `server_id=` 覆盖这一次调用的服务节点；省略或传 `None` 时使用客户端的 `server_id`，覆盖值不会更改客户端默认值。interface ID 和资料参数由调用者提供，连接配置不决定资料是否有权限或支持某个返回形式，参见 {doc}`底层 MUSIC 接口 </guide/low-level/index>`。
 
 指定的 INI 路径不存在时，构造函数抛出 `RuntimeError`；缺少 `[Pb]` 或需读取的字段会产生 `configparser` 异常，非整数端口/超时会产生 `ValueError`。底层 `config=` 传入 YAML 路径不会调用加载函数，通常会产生 `TypeError`。这些是请求前的本地错误，不会被包装为响应对象。完整构造参数与方法见 {doc}`客户端参考 </reference/client>`；服务错误的兼容返回约定见 {doc}`MUSIC 兼容性清单 </reference/music-compatibility>`。

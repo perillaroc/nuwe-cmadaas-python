@@ -46,7 +46,7 @@ class CMADaaSClient:
     connect_timeout : float
         连接超时，单位秒
     read_timeout : float
-        连接超时，单位秒
+        读取超时，单位秒
     """
     clientLanguage = "Python"
     clientVersion = "V2.0.0"
@@ -84,18 +84,47 @@ class CMADaaSClient:
 
         Parameters
         ----------
-        server_ip
-        server_port
-        server_id
-        connection_timeout
-        read_timeout
-        user
-        password
-        config : CMADaasConfig
-            参数配置，字典格式。通常从YAML格式配置文件中加载而来。
+        server_ip : str, optional
+            MUSIC 主机或 IP，不含协议或 API 路径。
+        server_port : int, optional
+            服务端口。
+        server_id : str, optional
+            默认服务节点；配置字典也可提供整数节点值。
+        connection_timeout : float, optional
+            连接超时（秒），保存为 connect_timeout。
+        read_timeout : float, optional
+            读取超时（秒），不是完整请求的总耗时上限。
+        user : str, optional
+            账号，参数名为 user，不接受 user_id。
+        password : str, optional
+            账号密码。
+        config : CMADaasConfig, optional
+            含 auth/server 的配置字典，不含顶层 cmadaas，也不接受 YAML 路径。
+        config_file : pathlib.Path or str, optional
+            MUSIC 原生 INI 路径，读取 [Pb] 连接字段，不读取认证。
+        session : object, optional
+            提供 get() 的 HTTP session，与 transport 互斥；由调用者管理生命周期。
+        transport : object, optional
+            提供 get() 的请求传输对象，与 session 互斥；默认使用 requests。
+        log_policy : str
+            full（默认完整 URL）、redacted（遮盖认证参数）或 summary（摘要）。
+        max_retries : int
+            初次请求外的最多重试次数，默认 2，必须为非负整数且不能是 bool。
+        retry_backoff : float
+            指数退避的基础秒数，默认 0.1，必须非负。
 
-        config_file : pathlib.Path or str
-            MUSIC原生接口配置文件路径，INI格式，通常名为 ``client.config``。
+        Raises
+        ------
+        ValueError
+            日志策略、重试选项非法或同时传 session/transport。
+        RuntimeError
+            指定 INI 文件不存在。
+
+        Notes
+        -----
+        构造仅初始化本地连接对象，不登录或请求服务；未提供的连接/认证字段
+        可以保留 None，不自动补业务默认值。配置缺字段、错误类型或解析失败
+        也可能直接抛异常，不统一包装为 CMADaaSConfigurationError。
         """
         self.server_ip = server_ip
         self.server_port = server_port
@@ -131,6 +160,13 @@ class CMADaaSClient:
         self.create_connect(self.user, self.password)
 
     def create_connect(self, user: str, password: str):
+        """Replace credentials and rebuild the local connection; return None.
+
+        ``user`` and ``password`` replace the stored credentials. Connection
+        settings and the injected session/transport are reused, without
+        reloading configuration, logging in or issuing a service request.
+        The caller remains responsible for an injected session's lifetime.
+        """
         self.user = user
         self.password = password
         self._connection = Connection(

@@ -263,12 +263,10 @@ else:
 本入口没有 data_type、number、region、count 或 `**kwargs`，不把格点的分析/成员/区域
 参数或内部 feature 名 time/valid_time_range 传给此函数。当前只登记四种组合：
 
-| 查询条件（均需起报时次和层次） | 底层 interface | 案例 |
-| --- | --- | --- |
-| 点 + 单时效 | `getNafpEleAtPointByTimeAndLevelAndValidtime` | MP-001/多点变体 |
-| 点 + 时效范围 | `getNafpEleAtPointByTimeAndLevelAndValidtimeRange` | MP-002 |
-| 站号 + 单时效 | `getNafpEleByTimeAndLevelAndValidtimeAndStaID` | MP-003 |
-| 站号 + 时效范围 | `getNafpEleByTimeAndLevelAndValidtimeRangeAndStaID` | MP-004 |
+- 点 + 单时效：`getNafpEleAtPointByTimeAndLevelAndValidtime`；MP-001/多点变体。
+- 点 + 时效范围：`getNafpEleAtPointByTimeAndLevelAndValidtimeRange`；MP-002。
+- 站号 + 单时效：`getNafpEleByTimeAndLevelAndValidtimeAndStaID`；MP-003。
+- 站号 + 时效范围：`getNafpEleByTimeAndLevelAndValidtimeRangeAndStaID`；MP-004。
 
 底层均使用 callAPI_to_array2D，响应成功后转 to_pandas；这与格点 DataArray 的返回不同。
 以下错误能离线复现，输出证明没有新增请求：

@@ -34,16 +34,23 @@ simulated_data: true
 底层 `params` 使用接口要求的原生键，值按服务格式传入，不自动转换高层筛选，
 也不执行高层登记组合校验。三个方法均不修改参数字典。
 
-| 参数 | 本页标量/数组查询 | 本页矢量查询 |
-| --- | --- | --- |
-| interface_id | `getNafpEleGridInRectByTimeAndLevelAndValidtime` | `getNafpVectorEleGridByTimeAndLevelAndValidtime` |
-| dataCode | `SYNTHETIC_GRID` | `SYNTHETIC_VECTOR` |
-| 要素 | `fcstEle="synthetic_temperature"` | **fcstuele** / **fcstvele**，原生键为小写 ele |
-| time | `"20260102060000"`，起报时次 | 相同，分析时次 |
-| levelType / fcstLevel | `"103"` / `"2"`，2 米高度 | `"100"` / `"850"`，850 hPa |
-| validTime | `"24"`，预报小时数 | `"0"`，分析资料的零时效 |
-| 矩形 | minLat/maxLat 为 `"30.0"/"31.0"`，minLon/maxLon 为 `"110.0"/"112.0"` | 本例接口未传矩形，不许诺同样的矩形参数可用 |
-| server_id | 可选方法参数，省略则使用客户端节点；显式给出仅覆盖本次请求 | 相同 |
+本页标量/数组查询使用以下原生参数：
+
+- `interface_id`：`getNafpEleGridInRectByTimeAndLevelAndValidtime`。
+- `dataCode`：`SYNTHETIC_GRID`；要素为 `fcstEle="synthetic_temperature"`。
+- `time`：`"20260102060000"`，起报时次；`levelType="103"`、
+  `fcstLevel="2"` 表示 2 米高度；`validTime="24"` 是预报小时数。
+- 矩形：`minLat/maxLat="30.0"/"31.0"`，`minLon/maxLon="110.0"/"112.0"`。
+
+本页矢量查询使用：
+
+- `interface_id`：`getNafpVectorEleGridByTimeAndLevelAndValidtime`。
+- `dataCode`：`SYNTHETIC_VECTOR`；要素使用小写原生键 **fcstuele** / **fcstvele**。
+- `time` 与上方相同，但表示分析时次；`levelType="100"`、`fcstLevel="850"`
+  表示 850 hPa，`validTime="0"` 表示分析资料的零时效。
+- 本例接口未传矩形，不许诺同样的矩形参数可用。
+
+两种查询都可选传 `server_id` 方法参数；省略则使用客户端节点，显式给出仅覆盖本次请求。
 
 不要将 `forecast_time="24h"`、`region`、`parameter` 或 Timestamp 直接放进 params，
 也不加入签名、userId、serviceNodeId 等封装字段，认证由客户端构造。

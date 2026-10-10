@@ -2,29 +2,23 @@
 ========
 
 观测入口位于 ``nuwe_cmadaas.obs``，包括三种数据查询和两种文件下载。
-下表中的函数名链接完整 API 参考；已存在的教程提供无账号可执行示例。
+下列函数名链接完整 API 参考；对应教程提供无账号可执行示例。
 
-.. list-table::
-   :header-rows: 1
-
-   * - 入口与用途
-     - 主要查询参数
-     - 结果与教程
-   * - :py:func:`~nuwe_cmadaas.obs.retrieve_obs_station`：地面站点
-     - ``elements``、``time``、``station``、``region``、``station_level``、``count``
-     - ``DataFrame``；:doc:`地面站点 <station>`
-   * - :py:func:`~nuwe_cmadaas.obs.retrieve_obs_grid`：地面格点
-     - ``parameter``、``time``、``region``
-     - ``DataArray``；:doc:`地面格点 <grid>`
-   * - :py:func:`~nuwe_cmadaas.obs.retrieve_obs_upper_air`：高空表格
-     - ``elements``、``time``、``station``、``region``、``level_type``、``level``、``interface_data_type``
-     - ``DataFrame``；:doc:`高空观测 <upper-air>` 展示常规、GPS、Light 和 Ard 分支
-   * - :py:func:`~nuwe_cmadaas.obs.download_obs_file`：地面文件
-     - ``time``、``station``、``region``、``station_level``、``output_dir``、``count``
-     - ``list[Path]``；:doc:`文件下载 <files>`
-   * - :py:func:`~nuwe_cmadaas.obs.download_obs_upper_air_file`：高空文件
-     - ``time``、``station``、``output_dir``、``count``
-     - ``list[Path]``；:doc:`高空文件下载 <upper-air-files>` 独立展示四种查询与生成文件
+* :py:func:`~nuwe_cmadaas.obs.retrieve_obs_station`：地面站点；主要参数为
+  ``elements``、``time``、``station``、``region``、``station_level``、``count``；
+  返回 ``DataFrame``，见 :doc:`地面站点 <station>`。
+* :py:func:`~nuwe_cmadaas.obs.retrieve_obs_grid`：地面格点；主要参数为
+  ``parameter``、``time``、``region``；返回 ``DataArray``，见 :doc:`地面格点 <grid>`。
+* :py:func:`~nuwe_cmadaas.obs.retrieve_obs_upper_air`：高空表格；主要参数为
+  ``elements``、``time``、``station``、``region``、``level_type``、``level``、
+  ``interface_data_type``；返回 ``DataFrame``，见 :doc:`高空观测 <upper-air>`，
+  其中展示常规、GPS、Light 和 Ard 分支。
+* :py:func:`~nuwe_cmadaas.obs.download_obs_file`：地面文件；主要参数为
+  ``time``、``station``、``region``、``station_level``、``output_dir``、``count``；
+  返回 ``list[Path]``，见 :doc:`文件下载 <files>`。
+* :py:func:`~nuwe_cmadaas.obs.download_obs_upper_air_file`：高空文件；主要参数为
+  ``time``、``station``、``output_dir``、``count``；返回 ``list[Path]``，见
+  :doc:`高空文件下载 <upper-air-files>`，其中展示四种查询与生成文件。
 
 观测时间与 latest 查询
 ------------------------------

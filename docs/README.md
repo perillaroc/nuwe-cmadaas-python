@@ -100,7 +100,9 @@ DataArray 与 U/V Dataset 的实际 attrs、空场、服务失败及坏矢量的
 
 `docs/requirements.txt` 与 `pyproject.toml` 的 `docs` 依赖组保持相同的直接依赖。
 Read the Docs 按 `.readthedocs.yml` 先安装前者，再安装本项目；该配置仍请求 PDF。
-具备 TeX 工具链时，可先构建 LaTeX 源文件，再检查 PDF 输出：
+RTD 的 Ubuntu 构建环境会安装 `fonts-freefont-otf`，供 PDF 使用 FreeSerif 字体。
+本地需具备 TeX 工具链（含 XeLaTeX、latexmk）和该字体，才能先构建 LaTeX
+源文件，再检查 PDF 输出：
 
 ```bash
 uv run --group docs sphinx-build -b latex -E -a -W --keep-going docs/source docs/build/latex

@@ -33,7 +33,7 @@ Windows PowerShell 中激活环境：
 .. code-block:: bash
 
     python -m pip install -e .
-    python -c "from nuwe_cmadaas.obs import retrieve_obs_station; print(retrieve_obs_station.__name__)"
+    python -c "import nuwe_cmadaas as n; print(n.retrieve_obs_station.__name__)"
 
 最后一条命令应输出 ``retrieve_obs_station``。运行时依赖（包括 pandas）会随主库
 安装；运行快速入门的 Python 代码无需 Sphinx、Click 或测试依赖。

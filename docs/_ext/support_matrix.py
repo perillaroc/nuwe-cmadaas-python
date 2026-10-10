@@ -139,6 +139,17 @@ def _table(headers, rows):
     return lines + [""]
 
 
+def _case_table(headers, rows):
+    """Keep the compact HTML table and give long interface IDs room in PDF."""
+    lines = [".. only:: html", ""]
+    lines.extend("   " + line if line else "" for line in _table(headers, rows))
+    lines.extend([".. only:: latex", ""])
+    for row in rows:
+        details = "；".join(f"{header}：{cell}" for header, cell in zip(headers[1:], row[1:]))
+        lines.append(f"   * {row[0]}：{details}。")
+    return lines + [""]
+
+
 def render_matrix(cases):
     """Produce a summary and complete, individually addressable case records."""
     groups = defaultdict(list)
@@ -179,7 +190,7 @@ def render_matrix(cases):
                 "``" + (" + ".join(case["query_features"]) or "<none>") + "``",
                 f"``{case['interface_id']}``", STATUS[case["online_status"]],
             ])
-        lines += _table(["案例详情", "查询组合", "MUSIC interface", "历史在线状态"], rows)
+        lines += _case_table(["案例详情", "查询组合", "MUSIC interface", "历史在线状态"], rows)
         for case in group:
             case_id = case["case_id"]
             anchor = case["documentation_anchor"].split("#", 1)[1]
@@ -210,7 +221,7 @@ def render_matrix(cases):
     return lines
 
 
-def render_case_index(cases, docname):
+def render_case_index(cases, docname, *, latex=False):
     """Fill missing guide anchors and link each guide case back to its evidence."""
     selected = [c for c in cases if c["documentation_anchor"].split("#", 1)[0] == docname]
     if not selected:
@@ -222,11 +233,22 @@ def render_case_index(cases, docname):
         if not case["existing_guide_anchor"]:
             anchor = case["documentation_anchor"].split("#", 1)[1]
             prefix = f".. _{anchor}:\n\n"
+        if latex:
+            if prefix:
+                lines.extend([prefix.rstrip(), ""])
+            lines.extend([
+                f"* :ref:`{case['case_id']} <{case_label(case)}>`："
+                f"MUSIC interface ``{case['interface_id']}``；"
+                f"历史在线状态：{STATUS[case['online_status']]}。",
+                "",
+            ])
+            continue
         rows.append([
             prefix + f":ref:`{case['case_id']} <{case_label(case)}>`",
             f"``{case['interface_id']}``", STATUS[case["online_status"]],
         ])
-    lines += _table(["案例详情", "MUSIC interface", "历史在线状态"], rows)
+    if not latex:
+        lines += _table(["案例详情", "MUSIC interface", "历史在线状态"], rows)
     return lines
 
 
@@ -242,7 +264,9 @@ class CaseDirective(SphinxDirective):
                 docname = case["documentation_anchor"].split("#", 1)[0]
                 self.env.note_dependency(str(root / "docs/source" / (docname + ".md")))
             lines = (render_matrix(cases) if self.name == "cmadaas-support-matrix"
-                     else render_case_index(cases, self.env.docname))
+                     else render_case_index(
+                         cases, self.env.docname, latex=self.env.app.builder.name == "latex"
+                     ))
             if self.name == "cmadaas-case-index":
                 # Guide pages use MyST; parse generated RST with its RST bridge.
                 lines = ["```{eval-rst}", *lines, "```"]
@@ -259,7 +283,8 @@ class CaseDirective(SphinxDirective):
                 and not case["existing_guide_anchor"]
             }
             for node in container.findall(nodes.Element):
-                if missing.intersection(node.get("names", [])):
+                new_names = missing.intersection(node.get("names", []))
+                if new_names and not new_names.intersection(self.state.document.nameids):
                     self.state.document.note_explicit_target(node)
         return list(container.children)
 

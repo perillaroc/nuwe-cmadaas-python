@@ -3,6 +3,8 @@
 from pathlib import Path
 import sys
 
+from sphinx.search.zh import SearchChinese
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "_ext"))
 
 project = "nuwe-cmadaas-python"
@@ -50,3 +52,15 @@ html_context = {
     "github_version": "main",
     "doc_path": "docs/source",
 }
+
+
+class ChineseSearchWithEnglishStemmer(SearchChinese):
+    """Use the JavaScript stemmer bundled for Sphinx's Chinese search."""
+
+    # Sphinx's Chinese search indexes Latin terms with English stemming and
+    # bundles EnglishStemmer, but its default class name expects ChineseStemmer.
+    language_name = "English"
+
+
+def setup(app):
+    app.add_search_language(ChineseSearchWithEnglishStemmer)

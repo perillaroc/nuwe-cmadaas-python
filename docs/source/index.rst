@@ -26,5 +26,4 @@ nuwe-cmadaas-python 提供 CMADaaS MUSIC 客户端和常用气象资料的高层
 ----
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`

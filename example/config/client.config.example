@@ -1,10 +1,8 @@
-# This is a sample config file for low level API.
-# Please see CMADaaS MUSIC API document for detail.
-
+# MUSIC INI connection options only; provide user/password separately.
+# Replace the host/service placeholders before manually using a real service.
 [Pb]
-music_server=music host
-music_port=music port
-
-music_connTimeout=3   # connection timeout, seconds
-music_readTimeout=3000  # read timeout, seconds
-music_ServiceId=service id  # service id
+music_server=YOUR_MUSIC_HOST
+music_port=80
+music_connTimeout=3
+music_readTimeout=30
+music_ServiceId=YOUR_SERVICE_ID

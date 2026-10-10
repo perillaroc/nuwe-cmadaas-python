@@ -1,7 +1,20 @@
 示例
 ====
 
-现有 MUSIC 原生示例位于仓库的 ``example/`` 目录。
+统一示例位于仓库的 ``examples/`` 目录，完整源码和运行说明可
+:download:`下载统一 README <../../../examples/README.md>`。
+安装主项目后从仓库根目录运行，不需要第二个发行包或 Click：
+
+.. code-block:: bash
+
+   uv sync
+   uv run python -m examples --list
+   uv run python -m examples station
+   uv run python -m examples --all
+
+统一入口复用下列现有脚本及其断言，默认全部为人工数据；临时输出验证后清理。
+指南和脚本继续共享准备与校验，公开调用留在教学代码中。原生独特场景见本页末尾，
+旧包仍作为兼容过渡保留，不用于默认离线执行。
 地面站点高层示例已位于 ``examples/high_level/station.py``，从仓库根目录运行：
 
 .. code-block:: bash
@@ -148,10 +161,54 @@ None 目标和成功空保存清单的现有行为单独验证。
 :doc:`数据块指南 <../guide/low-level/data-block>` 复用准备和独立断言，
 保留 LLB-001 待确认及默认关闭状态，真实替换代码在确认接口/资料/样本后才可请求。
 
-完整的高层/MUSIC 示例集及旧包迁移索引将在 D20 整合。
+全部八个高层入口和九个底层方法可按上述模块独立运行，也可从统一入口选择。
 
 通用 :doc:`结果指南 <../guide/results>` 与 :doc:`错误指南 <../guide/errors>`
 复用 ``examples/high_level/handling.py`` 中的精确客户端工厂和独立断言。
 该模块作为页面辅助代码使用，教学调用直接保留在两页的可执行单元中；
 严格文档构建会验证数值/缺测/单位/attrs、空表/空场/空路径、实际文件，
 以及 MusicError/strict、错误上下文、转换错误和参数/配置请求前拒绝。
+
+旧原生场景与兼容迁移
+--------------------
+
+``examples/music/scenarios.py`` 保留站点统计 ``statSurfEle``、站点元数据
+``getStaInfoInRect``、雷达文件 ``getRadaFileByTimeRangeAndStaId``、模式点时序和
+U/V 矢量格点等原生场景。JSON/XML/text/HTML 变体合并为参数：
+
+.. code-block:: bash
+
+   uv run python -m examples.music.scenarios station_statistics
+   uv run python -m examples.music.scenarios station_info --operation serialized --format xml
+   uv run python -m examples.music.scenarios radar_files --operation download
+   uv run python -m examples --legacy music/grid_element_rect_search/grid_element_rect_search_grid_verctor_2d.py
+
+新场景保持原生 interface、字段/统计要素、层次/时效、站点/矩形条件；
+历史非日期参数保存在 ``examples/legacy-migration.json``，实际运行替换为虚构资料与
+小规模响应。原数组脚本文件名带 rect 却使用全域 ID，另有矩形格式化入口；
+通用格点的地面层/零时效、十五列站点时间段查询也分别保留。
+这些原生示例不新增高层注册键，也不更新 :doc:`支持矩阵 <../reference/support-matrix>`
+的在线记录。旧包独特能力的真实服务验证仍须确认资料、权限和返回形式。
+
+逐项去向可 :download:`下载旧路径迁移索引 <../../../example/MIGRATION.md>`；
+58 条记录由 JSON 生成，更新后运行 ``python -m examples --write-migration-index``。
+``--legacy`` 执行原场景对应的离线替代，旧 Click 认证/输出选项不传给新入口。
+原 ``example/`` 中的脚本、导入路径、空占位和打包配置保留兼容过渡，说明见
+:download:`旧包 README <../../../example/README.md>`。本地未见下游引用不能判断外部
+安装用户；至少保留至本轮迁移及 E06 验收完成，外部依赖核查/通知和退出条件仍须
+单独满足，不能据离线通过直接删除独立包。
+
+新 CLI 不读取真实配置。手动真实调用使用显式客户端注入，
+``examples/_support/live_config.py`` 只读取明确的 CedarKit YAML 路径，
+``make_live_params()`` 要求原生资料/字段/筛选并按运行日期生成时次；不沿用人工
+配置或固定日期。INI 模板可 :download:`下载 <../../../examples/config/client.config.example>`，
+认证另传 user/password。实际保存/下载须显式给输出路径并自行检查规模，完整示例
+见统一 README，配置语义见 :doc:`底层配置 <../guide/configuration/music-client>`。
+
+.. code-block:: bash
+
+   uv sync --group test --group docs
+   uv run pytest tests/unit/test_examples.py tests/unit/test_example_support.py --disable-socket --strict-markers -q
+
+默认离线示例、原生替代和旧 CLI 的 help 可在禁用 socket 的环境验证；真实服务
+片段不在这类检查中执行。完整文档构建命令见仓库 ``docs/README.md``。

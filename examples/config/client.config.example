@@ -1,0 +1,8 @@
+# MUSIC INI connection options only; provide user/password separately.
+# Replace the host/service placeholders before manually using a real service.
+[Pb]
+music_server=YOUR_MUSIC_HOST
+music_port=80
+music_connTimeout=3
+music_readTimeout=30
+music_ServiceId=YOUR_SERVICE_ID

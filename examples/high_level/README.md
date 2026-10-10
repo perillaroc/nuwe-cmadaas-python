@@ -69,3 +69,5 @@ The executable guides reuse each module's client factory and `check_results()`.
 Keep public calls in the script and guide consistent when changing the tutorial.
 These repository examples and their
 `examples/_support/` helpers are not included in the main package's wheel.
+
+统一入口、全部公开方法与旧场景迁移见 [examples/README.md](../README.md)。

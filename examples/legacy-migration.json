@@ -1,0 +1,893 @@
+{
+  "version": 1,
+  "scripts": [
+    {
+      "legacy_path": "music/array_2d.py",
+      "scenario": "station_range",
+      "operation": "query",
+      "format": null,
+      "interface_id": "getSurfEleByTimeRange",
+      "method": "callAPI_to_array2D",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_Id_d,Lat,Lon,Alti,Day,Hour,PRS_Sea,TEM,DPT,WIN_D_INST,WIN_S_INST,PRE_1h,PRE_6h,PRE_24h,PRS",
+        "orderby": "Station_ID_d:ASC",
+        "limitCnt": "10"
+      }
+    },
+    {
+      "legacy_path": "music/download.py",
+      "scenario": "model_files",
+      "operation": "download",
+      "format": null,
+      "interface_id": "getNafpFileByTime",
+      "method": "callAPI_to_downFile",
+      "legacy_parameters": {
+        "dataCode": "NAFP_FOR_FTM_KWBC_GLB"
+      }
+    },
+    {
+      "legacy_path": "music/file_info_search/file_info_search_download_file.py",
+      "scenario": "radar_files",
+      "operation": "download",
+      "format": null,
+      "interface_id": "getRadaFileByTimeRangeAndStaId",
+      "method": "callAPI_to_downFile",
+      "legacy_parameters": {
+        "dataCode": "RADA_L2_UFMT",
+        "staIds": "Z9210,Z9024,Z9010"
+      }
+    },
+    {
+      "legacy_path": "music/file_info_search/file_info_search_file_list.py",
+      "scenario": "radar_files",
+      "operation": "query",
+      "format": null,
+      "interface_id": "getRadaFileByTimeRangeAndStaId",
+      "method": "callAPI_to_fileList",
+      "legacy_parameters": {
+        "dataCode": "RADA_L2_UFMT",
+        "staIds": "Z9210,Z9024,Z9010"
+      }
+    },
+    {
+      "legacy_path": "music/file_info_search/file_info_search_serialized_str_html.py",
+      "scenario": "radar_files",
+      "operation": "serialized",
+      "format": "html",
+      "interface_id": "getRadaFileByTimeRangeAndStaId",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "RADA_L2_UFMT",
+        "staIds": "Z9210,Z9024,Z9010"
+      }
+    },
+    {
+      "legacy_path": "music/file_info_search/file_info_search_serialized_str_json.py",
+      "scenario": "radar_files",
+      "operation": "serialized",
+      "format": "json",
+      "interface_id": "getRadaFileByTimeRangeAndStaId",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "RADA_L2_UFMT",
+        "staIds": "Z9210,Z9024,Z9010"
+      }
+    },
+    {
+      "legacy_path": "music/file_info_search/file_info_search_serialized_str_text.py",
+      "scenario": "radar_files",
+      "operation": "serialized",
+      "format": "text",
+      "interface_id": "getRadaFileByTimeRangeAndStaId",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "RADA_L2_UFMT",
+        "staIds": "Z9210,Z9024,Z9010"
+      }
+    },
+    {
+      "legacy_path": "music/file_info_search/file_info_search_serialized_str_xml.py",
+      "scenario": "radar_files",
+      "operation": "serialized",
+      "format": "xml",
+      "interface_id": "getRadaFileByTimeRangeAndStaId",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "RADA_L2_UFMT",
+        "staIds": "Z9210,Z9024,Z9010"
+      }
+    },
+    {
+      "legacy_path": "music/filelist.py",
+      "scenario": "model_files",
+      "operation": "query",
+      "format": null,
+      "interface_id": "getNafpFileByTime",
+      "method": "callAPI_to_fileList",
+      "legacy_parameters": {
+        "dataCode": "NAFP_FOR_FTM_KWBC_GLB"
+      }
+    },
+    {
+      "legacy_path": "music/grid_array_2d.py",
+      "scenario": "model_grid_surface",
+      "operation": "query",
+      "format": null,
+      "interface_id": "getNafpEleGridByTimeAndLevelAndValidtime",
+      "method": "callAPI_to_gridArray2D",
+      "legacy_parameters": {
+        "dataCode": "NAFP_FOR_FTM_KWBC_GLB",
+        "fcstEle": "TEM",
+        "levelType": "1",
+        "fcstLevel": "0",
+        "validTime": "0"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_point_search/grid_element_point_search_array_2d.py",
+      "scenario": "model_point",
+      "operation": "query",
+      "format": null,
+      "interface_id": "getNafpEleAtPointByTimeAndLevelAndValidtimeRange",
+      "method": "callAPI_to_array2D",
+      "legacy_parameters": {
+        "dataCode": "NAFP_ANA_FTM_GRAPES_GFS_NEHE",
+        "minVT": "0",
+        "maxVT": "12",
+        "latLons": "39.8/116.4667,31.2/121.4333",
+        "fcstEle": "TEM",
+        "levelType": "100",
+        "fcstLevel": "850"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_point_search/grid_element_point_search_save_as_file_html.py",
+      "scenario": "model_point",
+      "operation": "save",
+      "format": "html",
+      "interface_id": "getNafpEleAtPointByTimeAndLevelAndValidtimeRange",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "NAFP_ANA_FTM_GRAPES_GFS_NEHE",
+        "minVT": "0",
+        "maxVT": "12",
+        "latLons": "39.8/116.4667,31.2/121.4333",
+        "fcstEle": "TEM",
+        "levelType": "100",
+        "fcstLevel": "850"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_point_search/grid_element_point_search_save_as_file_json.py",
+      "scenario": "model_point",
+      "operation": "save",
+      "format": "json",
+      "interface_id": "getNafpEleAtPointByTimeAndLevelAndValidtimeRange",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "NAFP_ANA_FTM_GRAPES_GFS_NEHE",
+        "minVT": "0",
+        "maxVT": "12",
+        "latLons": "39.8/116.4667,31.2/121.4333",
+        "fcstEle": "TEM",
+        "levelType": "100",
+        "fcstLevel": "850"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_point_search/grid_element_point_search_save_as_file_text.py",
+      "scenario": "model_point",
+      "operation": "save",
+      "format": "text",
+      "interface_id": "getNafpEleAtPointByTimeAndLevelAndValidtimeRange",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "NAFP_ANA_FTM_GRAPES_GFS_NEHE",
+        "minVT": "0",
+        "maxVT": "12",
+        "latLons": "39.8/116.4667,31.2/121.4333",
+        "fcstEle": "TEM",
+        "levelType": "100",
+        "fcstLevel": "850"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_point_search/grid_element_point_search_save_as_file_xml.py",
+      "scenario": "model_point",
+      "operation": "save",
+      "format": "xml",
+      "interface_id": "getNafpEleAtPointByTimeAndLevelAndValidtimeRange",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "NAFP_ANA_FTM_GRAPES_GFS_NEHE",
+        "minVT": "0",
+        "maxVT": "12",
+        "latLons": "39.8/116.4667,31.2/121.4333",
+        "fcstEle": "TEM",
+        "levelType": "100",
+        "fcstLevel": "850"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_point_search/grid_element_point_search_serialized_str_html.py",
+      "scenario": "model_point",
+      "operation": "serialized",
+      "format": "html",
+      "interface_id": "getNafpEleAtPointByTimeAndLevelAndValidtimeRange",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "NAFP_ANA_FTM_GRAPES_GFS_NEHE",
+        "minVT": "0",
+        "maxVT": "12",
+        "latLons": "39.8/116.4667,31.2/121.4333",
+        "fcstEle": "TEM",
+        "levelType": "100",
+        "fcstLevel": "850"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_point_search/grid_element_point_search_serialized_str_json.py",
+      "scenario": "model_point",
+      "operation": "serialized",
+      "format": "json",
+      "interface_id": "getNafpEleAtPointByTimeAndLevelAndValidtimeRange",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "NAFP_ANA_FTM_GRAPES_GFS_NEHE",
+        "minVT": "0",
+        "maxVT": "12",
+        "latLons": "39.8/116.4667,31.2/121.4333",
+        "fcstEle": "TEM",
+        "levelType": "100",
+        "fcstLevel": "850"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_point_search/grid_element_point_search_serialized_str_text.py",
+      "scenario": "model_point",
+      "operation": "serialized",
+      "format": "text",
+      "interface_id": "getNafpEleAtPointByTimeAndLevelAndValidtimeRange",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "NAFP_ANA_FTM_GRAPES_GFS_NEHE",
+        "minVT": "0",
+        "maxVT": "12",
+        "latLons": "39.8/116.4667,31.2/121.4333",
+        "fcstEle": "TEM",
+        "levelType": "100",
+        "fcstLevel": "850"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_point_search/grid_element_point_search_serialized_str_xml.py",
+      "scenario": "model_point",
+      "operation": "serialized",
+      "format": "xml",
+      "interface_id": "getNafpEleAtPointByTimeAndLevelAndValidtimeRange",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "NAFP_ANA_FTM_GRAPES_GFS_NEHE",
+        "minVT": "0",
+        "maxVT": "12",
+        "latLons": "39.8/116.4667,31.2/121.4333",
+        "fcstEle": "TEM",
+        "levelType": "100",
+        "fcstLevel": "850"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_rect_search/grid_element_rect_search_grid_array_2d.py",
+      "scenario": "model_grid",
+      "operation": "query",
+      "format": null,
+      "interface_id": "getNafpEleGridByTimeAndLevelAndValidtime",
+      "method": "callAPI_to_gridArray2D",
+      "legacy_parameters": {
+        "dataCode": "NAFP_FOR_FTM_LOW_EC_GLB",
+        "validTime": "24",
+        "fcstEle": "TEM",
+        "fcstLevel": "850",
+        "levelType": "100"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_rect_search/grid_element_rect_search_grid_verctor_2d.py",
+      "scenario": "vector_grid",
+      "operation": "query",
+      "format": null,
+      "interface_id": "getNafpVectorEleGridByTimeAndLevelAndValidtime",
+      "method": "callAPI_to_gridVector2D",
+      "legacy_parameters": {
+        "dataCode": "NAFP_FOR_FTM_LOW_EC_GLB",
+        "validTime": "24",
+        "fcstuele": "WIU",
+        "fcstvele": "WIV",
+        "fcstLevel": "850",
+        "levelType": "100"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_rect_search/grid_element_rect_search_save_as_file_html.py",
+      "scenario": "model_grid_rect",
+      "operation": "save",
+      "format": "html",
+      "interface_id": "getNafpEleGridInRectByTimeAndLevelAndValidtime",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "NAFP_FOR_FTM_LOW_EC_GLB",
+        "validTime": "24",
+        "minLat": "39",
+        "maxLat": "42",
+        "minLon": "115",
+        "maxLon": "117",
+        "fcstEle": "TEM",
+        "levelType": "100",
+        "fcstLevel": "850"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_rect_search/grid_element_rect_search_save_as_file_json.py",
+      "scenario": "model_grid_rect",
+      "operation": "save",
+      "format": "json",
+      "interface_id": "getNafpEleGridInRectByTimeAndLevelAndValidtime",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "NAFP_FOR_FTM_LOW_EC_GLB",
+        "validTime": "24",
+        "minLat": "39",
+        "maxLat": "42",
+        "minLon": "115",
+        "maxLon": "117",
+        "fcstEle": "TEM",
+        "levelType": "100",
+        "fcstLevel": "850"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_rect_search/grid_element_rect_search_save_as_file_text.py",
+      "scenario": "model_grid_rect",
+      "operation": "save",
+      "format": "text",
+      "interface_id": "getNafpEleGridInRectByTimeAndLevelAndValidtime",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "NAFP_FOR_FTM_LOW_EC_GLB",
+        "validTime": "24",
+        "minLat": "39",
+        "maxLat": "42",
+        "minLon": "115",
+        "maxLon": "117",
+        "fcstEle": "TEM",
+        "levelType": "100",
+        "fcstLevel": "850"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_rect_search/grid_element_rect_search_save_as_file_xml.py",
+      "scenario": "model_grid_rect",
+      "operation": "save",
+      "format": "xml",
+      "interface_id": "getNafpEleGridInRectByTimeAndLevelAndValidtime",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "NAFP_FOR_FTM_LOW_EC_GLB",
+        "validTime": "24",
+        "minLat": "39",
+        "maxLat": "42",
+        "minLon": "115",
+        "maxLon": "117",
+        "fcstEle": "TEM",
+        "levelType": "100",
+        "fcstLevel": "850"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_rect_search/grid_element_rect_search_serialized_str_html.py",
+      "scenario": "model_grid_rect",
+      "operation": "serialized",
+      "format": "html",
+      "interface_id": "getNafpEleGridInRectByTimeAndLevelAndValidtime",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "NAFP_FOR_FTM_LOW_EC_GLB",
+        "validTime": "24",
+        "minLat": "39",
+        "maxLat": "42",
+        "minLon": "115",
+        "maxLon": "117",
+        "fcstEle": "TEM",
+        "levelType": "100",
+        "fcstLevel": "850"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_rect_search/grid_element_rect_search_serialized_str_json.py",
+      "scenario": "model_grid_rect",
+      "operation": "serialized",
+      "format": "json",
+      "interface_id": "getNafpEleGridInRectByTimeAndLevelAndValidtime",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "NAFP_FOR_FTM_LOW_EC_GLB",
+        "validTime": "24",
+        "minLat": "39",
+        "maxLat": "42",
+        "minLon": "115",
+        "maxLon": "117",
+        "fcstEle": "TEM",
+        "levelType": "100",
+        "fcstLevel": "850"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_rect_search/grid_element_rect_search_serialized_str_text.py",
+      "scenario": "model_grid_rect",
+      "operation": "serialized",
+      "format": "text",
+      "interface_id": "getNafpEleGridInRectByTimeAndLevelAndValidtime",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "NAFP_FOR_FTM_LOW_EC_GLB",
+        "validTime": "24",
+        "minLat": "39",
+        "maxLat": "42",
+        "minLon": "115",
+        "maxLon": "117",
+        "fcstEle": "TEM",
+        "levelType": "100",
+        "fcstLevel": "850"
+      }
+    },
+    {
+      "legacy_path": "music/grid_element_rect_search/grid_element_rect_search_serialized_str_xml.py",
+      "scenario": "model_grid_rect",
+      "operation": "serialized",
+      "format": "xml",
+      "interface_id": "getNafpEleGridInRectByTimeAndLevelAndValidtime",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "NAFP_FOR_FTM_LOW_EC_GLB",
+        "validTime": "24",
+        "minLat": "39",
+        "maxLat": "42",
+        "minLon": "115",
+        "maxLon": "117",
+        "fcstEle": "TEM",
+        "levelType": "100",
+        "fcstLevel": "850"
+      }
+    },
+    {
+      "legacy_path": "music/save_as_file.py",
+      "scenario": "station_range",
+      "operation": "save",
+      "format": "json",
+      "interface_id": "getSurfEleByTimeRange",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_Id_d,Lat,Lon,Alti,Day,Hour,PRS_Sea,TEM,DPT,WIN_D_INST,WIN_S_INST,PRE_1h,PRE_6h,PRE_24h,PRS",
+        "orderby": "Station_ID_d:ASC",
+        "limitCnt": "10"
+      }
+    },
+    {
+      "legacy_path": "music/serialized_str.py",
+      "scenario": "station_range",
+      "operation": "serialized",
+      "format": "json",
+      "interface_id": "getSurfEleByTimeRange",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_Id_d,Lat,Lon,Alti,Day,Hour,PRS_Sea,TEM,DPT,WIN_D_INST,WIN_S_INST,PRE_1h,PRE_6h,PRE_24h,PRS",
+        "orderby": "Station_ID_d:ASC",
+        "limitCnt": "10"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_search/station_element_search_array_2d.py",
+      "scenario": "station",
+      "operation": "query",
+      "format": null,
+      "interface_id": "getSurfEleByTime",
+      "method": "callAPI_to_array2D",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,PRE_1h,PRS,RHU,VIS,WIN_S_Avg_2mi,WIN_D_Avg_2mi,Q_PRS",
+        "orderby": "Station_ID_d:ASC",
+        "limitCnt": "10"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_search/station_element_search_save_as_file_html.py",
+      "scenario": "station",
+      "operation": "save",
+      "format": "html",
+      "interface_id": "getSurfEleByTime",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,PRE_1h,PRS,RHU,VIS,WIN_S_Avg_2mi,WIN_D_Avg_2mi,Q_PRS",
+        "orderby": "Station_ID_d:ASC",
+        "limitCnt": "10"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_search/station_element_search_save_as_file_json.py",
+      "scenario": "station",
+      "operation": "save",
+      "format": "json",
+      "interface_id": "getSurfEleByTime",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,PRE_1h,PRS,RHU,VIS,WIN_S_Avg_2mi,WIN_D_Avg_2mi,Q_PRS",
+        "orderby": "Station_ID_d:ASC",
+        "limitCnt": "10"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_search/station_element_search_save_as_file_text.py",
+      "scenario": "station",
+      "operation": "save",
+      "format": "text",
+      "interface_id": "getSurfEleByTime",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,PRE_1h,PRS,RHU,VIS,WIN_S_Avg_2mi,WIN_D_Avg_2mi,Q_PRS",
+        "orderby": "Station_ID_d:ASC",
+        "limitCnt": "10"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_search/station_element_search_save_as_file_xml.py",
+      "scenario": "station",
+      "operation": "save",
+      "format": "xml",
+      "interface_id": "getSurfEleByTime",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,PRE_1h,PRS,RHU,VIS,WIN_S_Avg_2mi,WIN_D_Avg_2mi,Q_PRS",
+        "orderby": "Station_ID_d:ASC",
+        "limitCnt": "10"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_search/station_element_search_serialized_str_html.py",
+      "scenario": "station",
+      "operation": "serialized",
+      "format": "html",
+      "interface_id": "getSurfEleByTime",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,PRE_1h,PRS,RHU,VIS,WIN_S_Avg_2mi,WIN_D_Avg_2mi,Q_PRS",
+        "orderby": "Station_ID_d:ASC",
+        "limitCnt": "10"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_search/station_element_search_serialized_str_json.py",
+      "scenario": "station",
+      "operation": "serialized",
+      "format": "json",
+      "interface_id": "getSurfEleByTime",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,PRE_1h,PRS,RHU,VIS,WIN_S_Avg_2mi,WIN_D_Avg_2mi,Q_PRS",
+        "orderby": "Station_ID_d:ASC",
+        "limitCnt": "10"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_search/station_element_search_serialized_str_text.py",
+      "scenario": "station",
+      "operation": "serialized",
+      "format": "text",
+      "interface_id": "getSurfEleByTime",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,PRE_1h,PRS,RHU,VIS,WIN_S_Avg_2mi,WIN_D_Avg_2mi,Q_PRS",
+        "orderby": "Station_ID_d:ASC",
+        "limitCnt": "10"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_search/station_element_search_serialized_str_xml.py",
+      "scenario": "station",
+      "operation": "serialized",
+      "format": "xml",
+      "interface_id": "getSurfEleByTime",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,PRE_1h,PRS,RHU,VIS,WIN_S_Avg_2mi,WIN_D_Avg_2mi,Q_PRS",
+        "orderby": "Station_ID_d:ASC",
+        "limitCnt": "10"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_statistics/station_element_statistics_array_2d.py",
+      "scenario": "station_statistics",
+      "operation": "query",
+      "format": null,
+      "interface_id": "statSurfEle",
+      "method": "callAPI_to_array2D",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,Station_Name",
+        "statEles": "SUM_PRE_1h,AVG_PRE_1h,SUM_TEM,AVG_TEM",
+        "orderBy": "SUM_PRE_1h:desc",
+        "limitCnt": "10"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_statistics/station_element_statistics_save_as_file_html.py",
+      "scenario": "station_statistics",
+      "operation": "save",
+      "format": "html",
+      "interface_id": "statSurfEle",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,Station_Name",
+        "statEles": "SUM_PRE_1h,AVG_PRE_1h,SUM_TEM,AVG_TEM",
+        "orderBy": "SUM_PRE_1h:desc"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_statistics/station_element_statistics_save_as_file_json.py",
+      "scenario": "station_statistics",
+      "operation": "save",
+      "format": "json",
+      "interface_id": "statSurfEle",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,Station_Name",
+        "statEles": "SUM_PRE_1h,AVG_PRE_1h,SUM_TEM,AVG_TEM",
+        "orderBy": "SUM_PRE_1h:desc"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_statistics/station_element_statistics_save_as_file_text.py",
+      "scenario": "station_statistics",
+      "operation": "save",
+      "format": "text",
+      "interface_id": "statSurfEle",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,Station_Name",
+        "statEles": "SUM_PRE_1h,AVG_PRE_1h,SUM_TEM,AVG_TEM",
+        "orderBy": "SUM_PRE_1h:desc"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_statistics/station_element_statistics_save_as_file_xml.py",
+      "scenario": "station_statistics",
+      "operation": "save",
+      "format": "xml",
+      "interface_id": "statSurfEle",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,Station_Name",
+        "statEles": "SUM_PRE_1h,AVG_PRE_1h,SUM_TEM,AVG_TEM",
+        "orderBy": "SUM_PRE_1h:desc"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_statistics/station_element_statistics_serialized_str_html.py",
+      "scenario": "station_statistics",
+      "operation": "serialized",
+      "format": "html",
+      "interface_id": "statSurfEle",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,Station_Name",
+        "statEles": "SUM_PRE_1h,AVG_PRE_1h,SUM_TEM,AVG_TEM",
+        "orderBy": "SUM_PRE_1h:desc",
+        "limitCnt": "10"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_statistics/station_element_statistics_serialized_str_json.py",
+      "scenario": "station_statistics",
+      "operation": "serialized",
+      "format": "json",
+      "interface_id": "statSurfEle",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,Station_Name",
+        "statEles": "SUM_PRE_1h,AVG_PRE_1h,SUM_TEM,AVG_TEM",
+        "orderBy": "SUM_PRE_1h:desc",
+        "limitCnt": "10"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_statistics/station_element_statistics_serialized_str_text.py",
+      "scenario": "station_statistics",
+      "operation": "serialized",
+      "format": "text",
+      "interface_id": "statSurfEle",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,Station_Name",
+        "statEles": "SUM_PRE_1h,AVG_PRE_1h,SUM_TEM,AVG_TEM",
+        "orderBy": "SUM_PRE_1h:desc",
+        "limitCnt": "10"
+      }
+    },
+    {
+      "legacy_path": "music/station_element_statistics/station_element_statistics_serialized_str_xml.py",
+      "scenario": "station_statistics",
+      "operation": "serialized",
+      "format": "xml",
+      "interface_id": "statSurfEle",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "SURF_CHN_MUL_HOR",
+        "elements": "Station_ID_C,Station_Name",
+        "statEles": "SUM_PRE_1h,AVG_PRE_1h,SUM_TEM,AVG_TEM",
+        "orderBy": "SUM_PRE_1h:desc",
+        "limitCnt": "10"
+      }
+    },
+    {
+      "legacy_path": "music/station_info_search/station_info_search_array_2d.py",
+      "scenario": "station_info",
+      "operation": "query",
+      "format": null,
+      "interface_id": "getStaInfoInRect",
+      "method": "callAPI_to_array2D",
+      "legacy_parameters": {
+        "dataCode": "STA_INFO_SURF_CHN",
+        "elements": "Station_ID_C,Station_Name,Lat,Lon,Alti",
+        "minLat": "39",
+        "maxLat": "42",
+        "minLon": "115",
+        "maxLon": "117"
+      }
+    },
+    {
+      "legacy_path": "music/station_info_search/station_info_search_save_as_file_html.py",
+      "scenario": "station_info",
+      "operation": "save",
+      "format": "html",
+      "interface_id": "getStaInfoInRect",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "STA_INFO_SURF_CHN",
+        "elements": "Station_ID_C,Station_Name,Lat,Lon,Alti",
+        "minLat": "39",
+        "maxLat": "42",
+        "minLon": "115",
+        "maxLon": "117"
+      }
+    },
+    {
+      "legacy_path": "music/station_info_search/station_info_search_save_as_file_json.py",
+      "scenario": "station_info",
+      "operation": "save",
+      "format": "json",
+      "interface_id": "getStaInfoInRect",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "STA_INFO_SURF_CHN",
+        "elements": "Station_ID_C,Station_Name,Lat,Lon,Alti",
+        "minLat": "39",
+        "maxLat": "42",
+        "minLon": "115",
+        "maxLon": "117"
+      }
+    },
+    {
+      "legacy_path": "music/station_info_search/station_info_search_save_as_file_text.py",
+      "scenario": "station_info",
+      "operation": "save",
+      "format": "text",
+      "interface_id": "getStaInfoInRect",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "STA_INFO_SURF_CHN",
+        "elements": "Station_ID_C,Station_Name,Lat,Lon,Alti",
+        "minLat": "39",
+        "maxLat": "42",
+        "minLon": "115",
+        "maxLon": "117"
+      }
+    },
+    {
+      "legacy_path": "music/station_info_search/station_info_search_save_as_file_xml.py",
+      "scenario": "station_info",
+      "operation": "save",
+      "format": "xml",
+      "interface_id": "getStaInfoInRect",
+      "method": "callAPI_to_saveAsFile",
+      "legacy_parameters": {
+        "dataCode": "STA_INFO_SURF_CHN",
+        "elements": "Station_ID_C,Station_Name,Lat,Lon,Alti",
+        "minLat": "39",
+        "maxLat": "42",
+        "minLon": "115",
+        "maxLon": "117"
+      }
+    },
+    {
+      "legacy_path": "music/station_info_search/station_info_search_serialized_str_html.py",
+      "scenario": "station_info",
+      "operation": "serialized",
+      "format": "html",
+      "interface_id": "getStaInfoInRect",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "STA_INFO_SURF_CHN",
+        "elements": "Station_ID_C,Station_Name,Lat,Lon,Alti",
+        "minLat": "39",
+        "maxLat": "42",
+        "minLon": "115",
+        "maxLon": "117"
+      }
+    },
+    {
+      "legacy_path": "music/station_info_search/station_info_search_serialized_str_json.py",
+      "scenario": "station_info",
+      "operation": "serialized",
+      "format": "json",
+      "interface_id": "getStaInfoInRect",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "STA_INFO_SURF_CHN",
+        "elements": "Station_ID_C,Station_Name,Lat,Lon,Alti",
+        "minLat": "39",
+        "maxLat": "42",
+        "minLon": "115",
+        "maxLon": "117"
+      }
+    },
+    {
+      "legacy_path": "music/station_info_search/station_info_search_serialized_str_text.py",
+      "scenario": "station_info",
+      "operation": "serialized",
+      "format": "text",
+      "interface_id": "getStaInfoInRect",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "STA_INFO_SURF_CHN",
+        "elements": "Station_ID_C,Station_Name,Lat,Lon,Alti",
+        "minLat": "39",
+        "maxLat": "42",
+        "minLon": "115",
+        "maxLon": "117"
+      }
+    },
+    {
+      "legacy_path": "music/station_info_search/station_info_search_serialized_str_xml.py",
+      "scenario": "station_info",
+      "operation": "serialized",
+      "format": "xml",
+      "interface_id": "getStaInfoInRect",
+      "method": "callAPI_to_serializedStr",
+      "legacy_parameters": {
+        "dataCode": "STA_INFO_SURF_CHN",
+        "elements": "Station_ID_C,Station_Name,Lat,Lon,Alti",
+        "minLat": "39",
+        "maxLat": "42",
+        "minLon": "115",
+        "maxLon": "117"
+      }
+    }
+  ]
+}

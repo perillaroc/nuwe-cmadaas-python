@@ -19,6 +19,10 @@ music_readTimeout = 60
 
 INI 只读取上述连接字段，不读取账号和密码。端口、连接超时和读取超时按整数解析，节点 ID 按字符串读取。凭据通过构造参数或配置字典提供：
 
+仓库示例的 {download}`INI 模板 <../../../../examples/config/client.config.example>`
+提供相同连接字段与占位值；新旧示例的配置迁移见
+{doc}`示例维护 </development/examples>`。默认离线 CLI 不读取此文件。
+
 ```python
 from pathlib import Path
 from nuwe_cmadaas.music import CMADaaSClient

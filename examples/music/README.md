@@ -55,3 +55,5 @@ BytesIO/struct 读取结果、request/metadata、参数保留和每次调用的�
 四次响应全部关闭，不写文件，临时空目录清理。指南
 `docs/source/guide/low-level/data-block.md` 复用准备与断言，保留 LLB-001 待确认/默认关闭
 边界；真实替换要求先确认 RetDataBlock 接口、资料、近期受控样本和内容格式。
+
+统一入口、全部公开方法与旧场景迁移见 [examples/README.md](../README.md)。

@@ -7,88 +7,69 @@
 ![GitHub License](https://img.shields.io/github/license/perillaroc/nuwe-cmadaas-python)
 ![GitHub Action Workflow Status](https://github.com/perillaroc/nuwe-cmadaas-python/actions/workflows/ci.yml/badge.svg)
 
-为 CMADaaS MUSIC 接口封装 Python API，提供仿 MUSIC 原生接口及高层 API 接口，支持 Python 3 和 Windows。
+`nuwe-cmadaas` 是 Python 3.11+ 的 CMADaaS MUSIC 客户端，提供原生 MUSIC 调用与
+常用观测、模式资料的高层查询和下载函数。真实服务调用需要可访问的服务、账号和
+对应资料权限；源码仓库中的合成示例可在无账号时运行。
 
-文档：https://nuwe-cmadaas-python.readthedocs.io
-
-## 安装
-
-使用 `pip` 命令安装 nuwe-cmadaas 包。
-
-```
-pip install nuwe-cmadaas
-```
-
-## 开始使用
-
-> [!IMPORTANT]
-> MUSIC 接口仅适用于 CMA 内网用户，使用前请先申请账户。
-
-使用 `nuwe_cmadaas.CMADaaSClient` 类从 CMADaaS 中检索数据。
-
-需要提供 MUSIC 服务的相关参数，可以保存在当前目录 `client.conf` 文件中，
-或者在创建 `nuwe_cmadaas.CMADaaSClient` 对象显式指定。参数包括：
-
-- `music_server`: MUSIC 接口 ip 地址，必须指定
-- `music_port`：MUSIC 接口端口号，必须指定
-- `music_connTimeout`：连接超时，秒，可选
-- `music_readTimeout`：数据读取超时，秒，可选
-- `music_ServiceId`：默认服务节点 id
-
-下面的示例展示如何检索地面观测资料。
-
-```python
-from nuwe_cmadaas import CMADaaSClient
-
-client_config_path = "path/to/client.config"
-user = "user name"
-password = "user password"
-server_id = "server id"
-
-interface_id = "getSurfEleByTimeRange"
-
-params = {
-    "dataCode": "SURF_CHN_MUL_HOR",
-    "elements": "Station_Id_d,Lat,Lon,Alti,Day,Hour,PRS_Sea,TEM,DPT,WIN_D_INST,WIN_S_INST,PRE_1h,PRE_6h,PRE_24h,PRS",
-    "timeRange": "[20190817000000,20190817020000)",
-    "orderby": "Station_ID_d:ASC",
-    "limitCnt": "10",
-}
-
-client = CMADaaSClient(
-    user=user,
-    password=password,
-    config_file=client_config_path,
-)
-result = client.callAPI_to_array2D(interface_id, params)
-```
-
-更详细的接口使用方法请访问 CMADaaS 官网。
-
-## 示例
-
-请访问 `example` 目录查看示例。
-
-## 测试
-
-安装测试依赖并运行离线测试：
+## 安装与入门
 
 ```bash
-pip install -e ".[test]"
-pytest tests -m "not integration" --disable-socket --strict-markers
+python -m pip install nuwe-cmadaas
 ```
 
-离线测试只使用仓库中的人工合成数据，不需要 CMADaaS 账号、配置或网络。
-
-需要访问真实 CMADaaS 服务的端到端测试单独标记为 `integration`，可在具备服务访问条件时手动运行：
+发行包的导入名是 `nuwe_cmadaas`。若要运行无账号快速入门及仓库示例，请取得完整
+源码并在仓库根目录安装主项目；辅助模块不在 wheel 中：
 
 ```bash
-pytest tests -m integration
+git clone https://github.com/perillaroc/nuwe-cmadaas-python.git
+cd nuwe-cmadaas-python
+uv sync
+uv run python -m examples station
 ```
 
-在线测试从 `CEDARKIT_CONFIG` 指定的配置文件，或默认的
-`~/.config/cedarkit.yaml` 读取配置；缺少配置时会自动跳过。CI 仅运行离线测试。
+[安装说明](docs/source/getting-started/installation.rst)和
+[无账号快速入门](docs/source/getting-started/quickstart.md)给出第一个高层调用。
+构建后的[完整文档](https://nuwe-cmadaas-python.readthedocs.io/)按开始使用、指南、开发、
+参考组织。选择两层接口可看[接口选择指南](docs/source/guide/choosing-api.md)；
+完整参数、返回和验证记录分别见 [API 参考](docs/source/reference/index.rst)与
+[支持矩阵](docs/source/reference/support-matrix.rst)。
+
+## 示例与配置
+
+仓库的[统一示例集](examples/README.md)覆盖八个高层函数和九个底层方法，默认
+使用人工数据，不读取用户配置或访问真实服务。从仓库根目录可列出或运行全部入口：
+
+```bash
+uv run python -m examples --list
+uv run python -m examples --all
+```
+
+需要真实服务时，先根据[高层配置](docs/source/guide/configuration/high-level.md)
+或[底层 MUSIC 配置](docs/source/guide/configuration/music-client.md)创建客户端，
+核实接口、资料和权限，再按相应指南手动调用。原独立 `example/` 包仍在兼容过渡；
+[旧脚本迁移索引](example/MIGRATION.md)列出逐项替代，新项目使用 `examples/`。
+
+## 开发与验证
+
+```bash
+uv sync --group test --group docs
+uv run pytest tests --disable-socket --strict-markers -q
+uv run pytest tests/integration --collect-only -m integration -q --strict-markers
+python3 docs/check_simulated_pages.py
+uv run --group docs sphinx-build -b html -E -a -W --keep-going docs/source docs/build/html
+```
+
+默认 pytest 排除在线集成案例；收集命令只检查节点。真实服务测试须单独提供
+`CEDARKIT_CONFIG`、`NUWE_CMADAAS_TEST_PROFILE` 和相应权限，并显式选择
+`integration` marker。完整运行和结果记录见
+[测试开发指南](docs/source/development/testing.md)及
+[在线案例说明](tests/integration/README.md)。文档页面与示例维护分别见
+[文档开发指南](docs/source/development/documentation.rst)、
+[示例开发指南](docs/source/development/examples.rst)和
+[文档构建说明](docs/README.md)。原设计记录见
+[开发设计记录](docs/source/development/adr/index.rst)。
 
 ## License
 
-`nuwe-cmadaas-python` 未做特殊声明部分代码由 Wang Dapeng (CEMC/CMA) 开发，并采用 [Apache License 2.0 协议](LICENSE)。
+`nuwe-cmadaas-python` 未做特殊声明部分代码由 Wang Dapeng (CEMC/CMA) 开发，
+采用 [Apache License 2.0](LICENSE)。

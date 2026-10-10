@@ -1,5 +1,9 @@
 # 文档构建
 
+开发流程与维护约定见 `docs/source/development/documentation.rst`；
+测试命令见 `docs/source/development/testing.md`，示例维护见
+`docs/source/development/examples.rst`。
+
 在仓库根目录使用 Python 3.11 或更新版本：
 
 ```bash

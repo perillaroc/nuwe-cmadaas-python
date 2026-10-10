@@ -211,4 +211,9 @@ U/V 矢量格点等原生场景。JSON/XML/text/HTML 变体合并为参数：
    uv run pytest tests/unit/test_examples.py tests/unit/test_example_support.py --disable-socket --strict-markers -q
 
 默认离线示例、原生替代和旧 CLI 的 help 可在禁用 socket 的环境验证；真实服务
-片段不在这类检查中执行。完整文档构建命令见仓库 ``docs/README.md``。
+片段不在这类检查中执行。修改入口或原生场景时，先更新 ``examples/catalog.py``
+或 ``examples/music/scenarios.py``，保持脚本断言与指南中的可见调用一致；旧路径映射
+改动还须更新 ``examples/legacy-migration.json``，运行
+``python -m examples --write-migration-index`` 重新生成索引。然后运行上面的离线测试、
+``uv run python -m examples --all`` 和 :doc:`严格文档构建 <documentation>`。
+合成成功不更新在线案例状态；真实服务结果按 :doc:`测试说明 <testing>` 逐案记录。

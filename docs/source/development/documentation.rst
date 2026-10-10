@@ -11,8 +11,10 @@ MyST-NB 教程，以严格模式构建 HTML：
 
 ``-E -a`` 强制重新读取并执行全部页面，``-W`` 将 Sphinx 警告视为失败。
 Notebook 使用注入的人工客户端，不读取真实服务配置；Jupyter 内核需要本机
-socket 通信。构建成功只证明该环境中的页面执行与链接检查通过，完整的内核外连
-隔离仍须按独立验收执行。
+socket 通信。公共 CI 在 Sphinx 主进程和内核中安装 Python socket 审计钩子，
+允许本机通信并拒绝外部 DNS、TCP、UDP；实际内核探针须先通过。完整命令见仓库
+:download:`docs/README.md <../../README.md>`。该守卫不等同操作系统网络命名空间，
+完整外连隔离仍须按独立验收执行。
 
 新增可执行页面
 --------------
@@ -23,6 +25,10 @@ socket 通信。构建成功只证明该环境中的页面执行与链接检查�
 .. code-block:: bash
 
    python3 docs/check_simulated_pages.py
+
+该检查还从生产源码读取八个高层函数与九个底层方法，要求每个入口在可见的可执行
+单元中有调用。严格构建后运行 ``python docs/check_rendered_pages.py docs/build/html``，
+核对专章链接、默认折叠但可展开的准备代码，以及可见的业务代码和输出。
 
 页面使用 MyST-NB 的 Python 单元，准备及客户端注入放在可展开的 ``hide-input``
 单元；公开 API 调用和结果放在可见单元；仅校验用断言可用 ``remove-cell``。

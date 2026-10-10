@@ -22,6 +22,29 @@ RST 页面用于 API 参考，MyST-NB Markdown 页面用于可执行教程。配
 矩阵区分精确登记、测试实现与历史在线验证，每条案例均关联测试源码和指南锚点。
 构建时检查当前注册键覆盖并重新计算汇总；无需手工维护第二份状态表。
 
+## CI 离线验收
+
+公共 CI 安装主项目、test 和 docs 依赖后运行以下检查；不提供服务地址、凭据或
+私有测试 profile：
+
+```bash
+python docs/check_simulated_pages.py
+python -m pytest tests/unit/test_docs.py tests/unit/test_support_matrix.py tests/unit/test_examples.py -q --disable-socket --strict-markers
+export NUWE_CMADAAS_OFFLINE_DOCS=1
+export PYTHONPATH="$PWD/docs/_network_guard${PYTHONPATH:+:$PYTHONPATH}"
+python docs/check_offline_kernel.py
+python -m examples --all
+python -m sphinx -b html -E -a -W --keep-going docs/source docs/build/html
+python docs/check_rendered_pages.py docs/build/html
+```
+
+`sitecustomize.py` 在 Sphinx 主进程及其 Python Notebook 内核启动时安装 socket
+审计钩子：允许 loopback 与 Unix socket，拒绝外部 DNS、TCP、UDP。内核探针实际
+测试本机通信和外连拒绝；渲染检查逐页验证模拟专章链接、可展开的准备单元、可见
+调用与输出。页面清单检查从源码读取公开入口，确认八个高层函数和九个底层方法均
+出现在可执行的可见单元。该守卫覆盖 Python socket 调用；完整操作系统层面的网络
+隔离另归独立验收。
+
 ## 可执行模拟页面
 
 复制 `docs/templates/executable-page.md` 到 `docs/source/` 下的目标章节，并在
@@ -84,4 +107,4 @@ uv run --group docs sphinx-build -b latex -E -a -W --keep-going docs/source docs
 make -C docs/build/latex all-pdf
 ```
 
-PDF 的实际渲染验收属于 E05；后续文档与示例的 CI 检查属于 D22。
+PDF 的实际渲染验收属于 E05。

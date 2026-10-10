@@ -1,14 +1,51 @@
-"""Check the executable tutorial inventory and its shared display contract."""
+"""Check the executable tutorial inventory and public API coverage."""
 
+import ast
 import json
 import re
 from pathlib import Path
 
 
 DOCS = Path(__file__).resolve().parent
-SOURCE = DOCS / "source"
 SPECIAL_LINK = "{doc}`模拟数据与客户端注入 </guide/simulated-data>`"
 CELL = re.compile(r"^```\{code-cell\} ipython3\n(.*?)^```", re.M | re.S)
+
+
+def expected_api_calls(project_root: Path) -> set[str]:
+    """Read public names from source without importing clients or configuration."""
+    source = project_root / "src/nuwe_cmadaas"
+    names = set()
+    for family in ("obs", "model"):
+        tree = ast.parse((source / family / "__init__.py").read_text(encoding="utf-8"))
+        exported = next(
+            node.value for node in tree.body
+            if isinstance(node, ast.Assign)
+            and any(isinstance(target, ast.Name) and target.id == "__all__" for target in node.targets)
+        )
+        names.update(ast.literal_eval(exported))
+    tree = ast.parse((source / "music/client.py").read_text(encoding="utf-8"))
+    client = next(node for node in tree.body if isinstance(node, ast.ClassDef) and node.name == "CMADaaSClient")
+    names.update(node.name for node in client.body if isinstance(node, ast.FunctionDef)
+                 and node.name.startswith("callAPI_to_"))
+    return names
+
+
+def visible_api_calls(path: Path) -> set[str]:
+    names = set()
+    for cell in CELL.findall(path.read_text(encoding="utf-8")):
+        if any(tag in cell for tag in (":tags: [hide-input]", ":tags: [remove-cell]", ":tags: [remove-input]")):
+            continue
+        code = re.sub(r"^:[a-z-]+:.*\n", "", cell, flags=re.M)
+        tree = ast.parse(code, filename=str(path))
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            name = node.func.id if isinstance(node.func, ast.Name) else (
+                node.func.attr if isinstance(node.func, ast.Attribute) else ""
+            )
+            if name.startswith(("retrieve_", "download_", "callAPI_to_")):
+                names.add(name)
+    return names
 
 
 def check_page(path: Path) -> list[str]:
@@ -35,31 +72,49 @@ def check_page(path: Path) -> list[str]:
     return errors
 
 
-def main() -> int:
-    inventory = json.loads((DOCS / "simulated-pages.json").read_text(encoding="utf-8"))
+def check_inventory(docs_root: Path = DOCS, project_root: Path | None = None) -> list[str]:
+    project_root = project_root or docs_root.parent
+    inventory = json.loads((docs_root / "simulated-pages.json").read_text(encoding="utf-8"))
     entries = [inventory["template"], *inventory["pages"]]
     errors = []
     if len(entries) != len(set(entries)):
         errors.append("duplicate inventory entry")
     for entry in entries:
-        path = (DOCS / entry).resolve()
-        if not path.is_relative_to(DOCS) or not path.is_file():
+        path = (docs_root / entry).resolve()
+        if not path.is_relative_to(docs_root) or not path.is_file():
             errors.append(f"{entry}: file missing or outside docs")
             continue
         errors.extend(f"{entry}: {issue}" for issue in check_page(path))
 
     marked = {
-        path.relative_to(DOCS).as_posix()
-        for path in SOURCE.rglob("*.md")
+        path.relative_to(docs_root).as_posix()
+        for path in (docs_root / "source").rglob("*.md")
         if re.search(r"^simulated_data: true$", path.read_text(encoding="utf-8"), re.M)
     }
     missing = marked - set(inventory["pages"])
     errors.extend(f"{entry}: marked page missing from inventory" for entry in sorted(missing))
 
+    expected = expected_api_calls(project_root)
+    visible = set()
+    for entry in inventory["pages"]:
+        path = (docs_root / entry).resolve()
+        if path.is_relative_to(docs_root) and path.is_file():
+            try:
+                visible.update(visible_api_calls(path))
+            except SyntaxError as exc:
+                errors.append(f"{entry}: invalid visible Python cell: {exc}")
+    errors.extend(f"{name}: no visible executable API call" for name in sorted(expected - visible))
+    return errors
+
+
+def main() -> int:
+    errors = check_inventory()
+
     if errors:
         print("\n".join(errors))
         return 1
-    print(f"Checked {len(entries)} simulated page template/page(s)")
+    inventory = json.loads((DOCS / "simulated-pages.json").read_text(encoding="utf-8"))
+    print(f"Checked {len(inventory['pages'])} simulated pages and {len(expected_api_calls(DOCS.parent))} public API calls")
     return 0
 
 

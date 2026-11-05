@@ -15,6 +15,11 @@ simulated_data: true
 名称和元数据，再调用 `to_xarray()`。业务层的预报/分析筛选见
 {doc}`模式格点指南 </guide/high-level/model/grid>`。
 
+坐标优先保留响应中的显式经纬轴。仅有起终点、步长和点数时，按头信息重建规则网格。
+MUSIC 头字段使用 float32，部分服务用相邻坐标相减生成步长，累加后会偏离其声明的终点。
+当偏差不超过 float32 坐标分辨率乘以步数的界限时，使用声明起终点与点数等距重建。
+显式坐标、超出该精度界限的步长、原始头字段和场值均保留。
+
 | 方法 | 响应类型 | to_xarray() 结果 |
 | --- | --- | --- |
 | {py:meth}`~nuwe_cmadaas.music.CMADaaSClient.callAPI_to_gridArray2D` | GridArray2D | 二维 DataArray |

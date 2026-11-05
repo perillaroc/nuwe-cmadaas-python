@@ -40,6 +40,16 @@ def _grid_axis(
         axis = list(np.linspace(start, end, count, endpoint=True))
     else:
         axis = [start + i * step for i in range(count)]
+        if count > 1 and (end - start) * step > 0:
+            # MUSIC protobuf headers use float32. A step computed from adjacent
+            # float32 coordinates can accumulate rounding error across the grid.
+            # Use the declared endpoints only within that precision bound.
+            resolution = max(
+                abs(float(np.spacing(np.float32(start)))),
+                abs(float(np.spacing(np.float32(end)))),
+            )
+            if 0 < abs(axis[-1] - end) <= (count - 1) * resolution:
+                axis = list(np.linspace(start, end, count, endpoint=True))
     if len(axis) != count:
         raise ValueError(
             f"{axis_name} coordinate length does not match grid dimensions: "

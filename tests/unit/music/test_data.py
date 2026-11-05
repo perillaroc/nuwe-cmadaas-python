@@ -227,6 +227,34 @@ def test_grid_array2d_rejects_coordinate_length_mismatch():
         )
 
 
+def test_float32_header_step_drift_uses_declared_endpoints():
+    response = GridArray2D(
+        data=np.arange(201 * 201, dtype=float).reshape(201, 201),
+        start_lat=41.0, end_lat=39.0, lat_step=-0.009998321533203125,
+        start_lon=115.0, end_lon=117.0, lon_step=0.01000213623046875,
+        lat_count=201, lon_count=201,
+    )
+    array = response.to_xarray()
+    np.testing.assert_array_equal(array.latitude, np.linspace(41, 39, 201))
+    np.testing.assert_array_equal(array.longitude, np.linspace(115, 117, 201))
+    np.testing.assert_array_equal(array.values, response.data)
+    assert response.lon_step == 0.01000213623046875
+
+
+def test_explicit_coordinates_and_materially_different_steps_are_preserved():
+    response = GridArray2D(
+        data=np.zeros((2, 3)),
+        start_lat=41, end_lat=39, lat_step=-1, lat_count=2,
+        start_lon=115, end_lon=117, lon_step=0.5, lon_count=3,
+    )
+    array = response.to_xarray()
+    np.testing.assert_array_equal(array.latitude, [41, 40])
+    np.testing.assert_array_equal(array.longitude, [115, 115.5, 116])
+    response.lats, response.lons = [41, 39], [115, 116.2, 117]
+    array = response.to_xarray()
+    np.testing.assert_array_equal(array.longitude, response.lons)
+
+
 def test_grid_scalar2d_rejects_data_length_mismatch():
     with pytest.raises(ValueError, match="GridScalar2D data length"):
         GridScalar2D.create_from_protobuf(

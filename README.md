@@ -3,9 +3,9 @@
 ![Maturity-Sandbox](https://img.shields.io/badge/Maturity-Sandbox-F9D71C)
 ![GitHub Release](https://img.shields.io/github/v/release/perillaroc/nuwe-cmadaas-python)
 ![PyPI - Version](https://img.shields.io/pypi/v/nuwe-cmadaas)
-[![Documentation Status](https://readthedocs.org/projects/nuwe-cmadaas-python/badge/?version=latest)](https://nuwe-cmadaas-python.readthedocs.io/zh_CN/latest/?badge=latest)
 ![GitHub License](https://img.shields.io/github/license/perillaroc/nuwe-cmadaas-python)
 ![GitHub Action Workflow Status](https://github.com/perillaroc/nuwe-cmadaas-python/actions/workflows/ci.yml/badge.svg)
+[![Documentation Status](https://readthedocs.org/projects/nuwe-cmadaas-python/badge/?version=latest)](https://nuwe-cmadaas-python.readthedocs.io/zh_CN/latest/?badge=latest)
 
 `nuwe-cmadaas` 是 Python 3.11+ 的 CMADaaS MUSIC 客户端，提供原生 MUSIC 调用与
 常用观测、模式资料的高层查询和下载函数。真实服务调用需要可访问的服务、账号和
